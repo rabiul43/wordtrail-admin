@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wordtrail R2 Clip Admin</title>
+<style>
+:root{--bg:#fff;--fg:#1c1b1a;--mut:#6b6a66;--card:#f5f4f0;--line:#dcdad3;--acc:#2a6df4;--del:#c0392b;--keep:#2e8b57}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--fg:#eceae4;--mut:#a09e97;--card:#222220;--line:#3a3935;--acc:#6a9bff;--del:#ef6b5c;--keep:#5ec58f}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column}
+header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line)}
+header h1{font-size:16px;margin:0 8px 0 0}
+input,button,select{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:5px 10px}
+input{min-width:200px}button,select{cursor:pointer}button:hover{border-color:var(--acc)}
+button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+button.danger{background:var(--del);color:#fff;border-color:var(--del)}
+button:disabled{opacity:.5;cursor:default}
+main{flex:1;display:flex;min-height:0}
+nav{width:220px;border-right:1px solid var(--line);overflow:auto;padding:8px}
+nav .mood{display:block;width:100%;text-align:left;margin-bottom:6px;padding:8px}
+nav .mood.on{border-color:var(--acc);outline:1px solid var(--acc)}
+nav .bar{height:4px;background:var(--line);border-radius:2px;margin-top:5px;overflow:hidden}
+nav .bar i{display:block;height:100%;background:var(--acc)}
+small{color:var(--mut)}
+section{flex:1;overflow:auto;padding:8px 14px}
+table{width:100%;border-collapse:collapse}
+th{position:sticky;top:0;background:var(--bg);text-align:left;font-weight:600;color:var(--mut);padding:6px;border-bottom:1px solid var(--line)}
+td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr.playing td{background:var(--card)}
+tr.del td.name{text-decoration:line-through;color:var(--mut)}
+tr.ret td{opacity:.5}
+tr.ret td.name::after{content:"  (retired: removed from music.json)";color:var(--mut);font-size:12px}
+tr.keep td.name::before{content:"\2713 ";color:var(--keep)}
+.sm{padding:2px 8px}
+footer{border-top:1px solid var(--line);padding:8px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+footer audio{flex:1;min-width:240px}
+#now{min-width:200px;max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
+#msg{padding:30px 14px;color:var(--mut);max-width:620px}
+</style>
+</head>
+<body>
+<header>
+  <h1>R2 Clip Admin</h1>
+  <input id="base" placeholder="Worker URL, e.g. https://wordtrail-music-admin.you.workers.dev">
+  <input id="tok" type="password" placeholder="Admin token">
+  <button class="primary" id="go">Connect</button>
+  <select id="fstat"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
+  <span id="summary" style="color:var(--mut)"></span>
+  <span style="flex:1"></span>
+  <button id="sync" disabled>Sync music.json…</button>
+  <button id="retire" disabled>1 · Retire marked…</button>
+  <button class="danger" id="purge" disabled>2 · Delete retired…</button>
+</header>
+<main>
+  <nav id="moods"></nav>
+  <section id="list"><div id="msg">
+    <p><b>Connect</b> with your Worker URL and admin token (see SETUP.txt). Clips are grouped by their first folder (the mood).</p>
+    <p>Keys: <b>Space</b> play/pause, <b>K</b> keep, <b>D</b> mark to delete, <b>&larr; &rarr;</b> previous/next.</p>
+    <p><b>Safe removal in two steps:</b> “1 · Retire” takes marked clips out of music.json (files stay). After about 3 days, “2 · Delete retired” removes the files. “Sync music.json” cleans entries whose file is already gone.</p>
+  </div></section>
+</main>
+<footer>
+  <span id="now">Nothing playing</span>
+  <audio id="a" controls></audio>
+  <label><input type="checkbox" id="mid" checked> start at 30%</label>
+  <label><input type="checkbox" id="auto"> auto-next</label>
+  <label>JSON files <input id="jsons" value="music.json" style="min-width:120px;width:150px"></label>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const TARGET=100, FREE_GB=10;
+const $=id=>document.getElementById(id), enc=encodeURIComponent;
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{}};
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
+function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
+const mb=n=>(n/1048576).toFixed(1)+" MB";
+const stripMusic=k=>k.replace(/^music\//,"");
+const moodOf=k=>{ k=stripMusic(k); return k.includes("/")?k.split("/")[0]:"(root)"; };
+const nameOf=k=>k.split("/").pop();
+
+async function api(path,opt={}){
+  return fetch(st.base+path,{...opt,headers:{Authorization:"Bearer "+st.tok,...(opt.headers||{})}});
+}
+
+async function connect(){
+  st.base=$("base").value.trim().replace(/\/+$/,""); st.tok=$("tok").value.trim();
+  if(!/^https?:\/\//.test(st.base)||!st.tok){ alert("Enter the Worker URL and token."); return; }
+  ls("r2-base",st.base); try{sessionStorage.setItem("r2-tok",st.tok);}catch(e){}
+  $("summary").textContent="Loading list…";
+  const all=[]; let cursor=null;
+  try{
+    do{
+      const r=await api("/api/list"+(cursor?"?cursor="+enc(cursor):""));
+      if(r.status===401){ alert("Wrong token."); $("summary").textContent=""; return; }
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      const d=await r.json(); all.push(...d.objects); cursor=d.cursor;
+    }while(cursor);
+  }catch(e){ alert("Could not load: "+e.message+"\nCheck the Worker URL."); $("summary").textContent=""; return; }
+  st.objs=all; st.jsonKeys=all.filter(o=>/\.json$/i.test(o.key)).map(o=>o.key);
+  st.retired={}; try{ const rr=await api("/api/file?key=retired.json"); if(rr.ok) st.retired=JSON.parse(await rr.text()); }catch(e){}
+  try{ st.marks=JSON.parse(ls("r2-marks:"+st.base)||"{}"); }catch(e){ st.marks={}; }
+  regroup(); st.mood=Object.keys(st.moods).sort()[0]||null; st.idx=-1;
+  $("sync").disabled=false; renderNav(); renderList();
+}
+
+function regroup(){
+  st.moods={};
+  for(const o of st.objs){ if(!/\.mp3$/i.test(o.key)) continue; (st.moods[moodOf(o.key)] ||= []).push(o); }
+  for(const m in st.moods) st.moods[m].sort((a,b)=>a.key.localeCompare(b.key,undefined,{numeric:true}));
+}
+
+function counts(m){ let k=0,d=0,r=0; for(const o of st.moods[m]){ if(st.retired[o.key]){r++;continue;} const v=st.marks[o.key]; if(v==="keep")k++; else if(v==="del")d++; } return {n:st.moods[m].length,k,d,r}; }
+
+function renderNav(){
+  const nav=$("moods"); nav.textContent=""; let del=0,total=0,bytes=0;
+  for(const m of Object.keys(st.moods).sort()){
+    const c=counts(m); del+=c.d; total+=c.n; for(const o of st.moods[m]) bytes+=o.size;
+    const b=document.createElement("button"); b.className="mood"+(m===st.mood?" on":"");
+    const t=document.createElement("div"); t.textContent=m; b.appendChild(t);
+    const s=document.createElement("small"); s.textContent=(c.n-c.r)+" live · "+c.k+" kept · "+c.d+" marked"+(c.r?" · "+c.r+" retired":""); b.appendChild(s);
+    const bar=document.createElement("div"); bar.className="bar"; const i=document.createElement("i");
+    i.style.width=Math.min(100,(c.n-c.d-c.r)/TARGET*100)+"%"; bar.appendChild(i); b.appendChild(bar);
+    b.onclick=()=>{ st.mood=m; st.idx=-1; renderNav(); renderList(); };
+    nav.appendChild(b);
+  }
+  $("retire").disabled=del===0; $("retire").textContent="1 · Retire marked… ("+del+")";
+  const nret=Object.keys(st.retired).length; $("purge").disabled=nret===0; $("purge").textContent="2 · Delete retired… ("+nret+")";
+  $("summary").textContent=total?total+" clips · "+(bytes/1073741824).toFixed(2)+" GB of "+FREE_GB+" GB free tier":"No .mp3 objects found";
+}
+
+function renderList(){
+  const sec=$("list"); sec.textContent=""; if(!st.mood) return;
+  const f=$("fstat").value;
+  st.rows=(st.moods[st.mood]||[]).filter(o=>!f||(st.marks[o.key]||"none")===f);
+  const tbl=document.createElement("table"); const hr=tbl.insertRow();
+  ["","File","Size",""].forEach(h=>{ const th=document.createElement("th"); th.textContent=h; hr.appendChild(th); });
+  st.rows.forEach((o,i)=>{
+    const v=st.retired[o.key]?"ret":(st.marks[o.key]||""); const tr=tbl.insertRow(); tr.className=v+(i===st.idx?" playing":""); tr.id="r"+i;
+    const c0=tr.insertCell(); const p=document.createElement("button"); p.className="sm"; p.textContent="▶"; p.onclick=()=>play(i); c0.appendChild(p);
+    const c1=tr.insertCell(); c1.className="name"; c1.textContent=nameOf(o.key);
+    const c2=tr.insertCell(); c2.textContent=mb(o.size); c2.style.color="var(--mut)";
+    const c3=tr.insertCell(); c3.style.whiteSpace="nowrap";
+    const kb=document.createElement("button"); kb.className="sm"; kb.textContent="Keep"; kb.onclick=()=>mark(i,"keep");
+    const db=document.createElement("button"); db.className="sm"; db.textContent="Delete"; db.style.marginLeft="4px"; db.onclick=()=>mark(i,"del");
+    c3.append(kb,db);
+  });
+  sec.appendChild(tbl);
+  if(!st.rows.length){ const p=document.createElement("p"); p.style.color="var(--mut)"; p.textContent="No clips match the filter."; sec.appendChild(p); }
+}
+
+function mark(i,val){
+  const o=st.rows[i]; if(!o) return;
+  if(st.retired[o.key]) return; if(st.marks[o.key]===val) delete st.marks[o.key]; else st.marks[o.key]=val;
+  saveMarks(); const sc=$("list").scrollTop; renderNav(); renderList(); $("list").scrollTop=sc;
+}
+function advance(val){
+  const i=st.idx; if(i<0) return; mark(i,val);
+  const next=$("fstat").value?i:i+1; if(st.rows.length) play(Math.min(st.rows.length-1,next));
+}
+
+async function play(i){
+  const o=st.rows[i]; if(!o) return; st.idx=i;
+  $("now").textContent="Loading "+nameOf(o.key)+"…";
+  try{
+    const r=await api("/api/file?key="+enc(o.key)); if(!r.ok) throw new Error("HTTP "+r.status);
+    const b=await r.blob(); if(st.url) URL.revokeObjectURL(st.url); st.url=URL.createObjectURL(b);
+  }catch(e){ $("now").textContent="Error: "+e.message; return; }
+  const a=$("a"); a.src=st.url; a.play().catch(()=>{});
+  $("now").textContent=st.mood+" · "+nameOf(o.key);
+  document.querySelectorAll("tr.playing").forEach(r=>r.classList.remove("playing"));
+  const r=$("r"+i); if(r){ r.classList.add("playing"); r.scrollIntoView({block:"nearest"}); }
+}
+$("a").addEventListener("loadedmetadata",()=>{ const a=$("a"); if($("mid").checked&&isFinite(a.duration)&&a.duration>40) a.currentTime=a.duration*0.3; });
+$("a").addEventListener("ended",()=>{ if($("auto").checked) play(st.idx+1); });
+
+const putJson=(k,t)=>api("/api/json?key="+enc(k),{method:"PUT",headers:{"Content-Type":"application/json"},body:t});
+const normPath=s=>{ s=String(s).replace(/\?.*$/,""); try{s=decodeURIComponent(s);}catch(e){} return s.replace(/^[a-z]+:\/\/[^/]+\//i,"").replace(/^\/+/,"").replace(/^music\//i,"").toLowerCase(); };
+function mp3Raw(item){ const out=[]; (function w(v,d){ if(typeof v==="string"){ if(/\.mp3(\?.*)?$/i.test(v)) out.push(v); }
+  else if(d<2&&v&&typeof v==="object"&&!Array.isArray(v)) for(const k in v) w(v[k],d+1); })(item,0); return out; }
+function pruneRel(node,set,removed){   // drop clip entries whose file path (e.g. "peace/song.mp3") is in the set
+  if(Array.isArray(node)){ const out=[];
+    for(const it of node){ const hit=mp3Raw(it).find(x=>set.has(normPath(x))); if(hit){ removed.push(normPath(hit)); continue; } out.push(pruneRel(it,set,removed)); }
+    return out; }
+  if(node&&typeof node==="object"){ const out={}; for(const k of Object.keys(node)) out[k]=pruneRel(node[k],set,removed); return out; }
+  return node;
+}
+const saveRetired=()=>putJson("retired.json",JSON.stringify(st.retired));
+
+/* Step 1: take the clips out of music.json. The files stay in R2, so phones with an old cached list still find them. */
+async function retire(){
+  const keys=Object.keys(st.marks).filter(k=>st.marks[k]==="del"&&!st.retired[k]&&st.objs.some(o=>o.key===k));
+  if(!keys.length) return;
+  const set=new Set(keys.map(k=>stripMusic(k).toLowerCase()));
+  const names=$("jsons").value.split(",").map(s=>s.trim()).filter(Boolean);
+  let matched=0; const plan=[];
+  for(const name of names){
+    const r=await api("/api/file?key="+enc(name)); if(!r.ok){ alert(name+": not found in the bucket (HTTP "+r.status+"). Nothing changed."); return; }
+    let data; try{ data=JSON.parse(await r.text()); }catch(e){ alert(name+" is not valid JSON. Nothing changed."); return; }
+    const removed=[]; const clean=pruneRel(data,set,removed); matched+=removed.length; plan.push({name,data,clean,removed});
+  }
+  let msg="Retire "+keys.length+" clip(s)?\n\nThis removes "+matched+" entr"+(matched===1?"y":"ies")+" from "+names.join(", ")+" (a backup is saved first). The files stay in R2 so phones with the old list keep working.";
+  if(!matched) msg="WARNING: none of these clips were found in "+names.join(", ")+". Retiring would change nothing in the app's list. Continue anyway?\n\n"+keys.slice(0,5).join("\n");
+  if(!confirm(msg)) return;
+  const ts=new Date().toISOString().replace(/[-:T]/g,"").slice(0,14);
+  for(const p of plan){ if(!p.removed.length) continue;
+    const bak=p.name.replace(/\.json$/i,"")+".bak-"+ts+".json";
+    if(!(await putJson(bak,JSON.stringify(p.data))).ok){ alert("Backup failed; nothing changed."); return; }
+    if(!(await putJson(p.name,JSON.stringify(p.clean))).ok){ alert("Writing "+p.name+" failed; backup is "+bak); return; } }
+  const now=Date.now(); keys.forEach(k=>{ st.retired[k]=now; delete st.marks[k]; });
+  saveMarks(); await saveRetired(); renderNav(); renderList();
+  alert("Retired "+keys.length+". Wait about 3 days (the app caches music.json for 24 h), then use “2 · Delete retired…”.");
+}
+
+/* Step 2: delete retired files for good, once old caches have expired. */
+async function purge(){
+  const AGE=3*86400e3, all=Object.keys(st.retired).filter(k=>st.objs.some(o=>o.key===k));
+  const ready=all.filter(k=>Date.now()-st.retired[k]>=AGE);
+  let keys=ready;
+  if(!ready.length){
+    if(!all.length){ alert("Nothing retired."); return; }
+    if(!confirm("None of the "+all.length+" retired clips is 3 days old yet; phones may still use the old list. Delete them anyway?")) return;
+    keys=all;
+  } else if(!confirm("Permanently delete "+ready.length+" retired clip(s) from R2 (retired 3+ days ago)? This cannot be undone.")) return;
+  const a=$("a"); a.pause(); a.removeAttribute("src"); a.load();
+  let done=0;
+  try{
+    for(let i=0;i<keys.length;i+=500){
+      const chunk=keys.slice(i,i+500);
+      const r=await api("/api/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({keys:chunk})});
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      done+=chunk.length;
+    }
+  }catch(e){ alert("Stopped after "+done+" deletions: "+e.message); }
+  const gone=new Set(keys.slice(0,done)); gone.forEach(k=>delete st.retired[k]);
+  st.objs=st.objs.filter(o=>!gone.has(o.key)); regroup(); await saveRetired();
+  if(!st.moods[st.mood]) st.mood=Object.keys(st.moods).sort()[0]||null;
+  st.idx=-1; renderNav(); renderList();
+  alert("Deleted "+done+" file(s).");
+}
+
+/* ---- keep music.json in step with the bucket (removes entries whose mp3 no longer exists) ---- */
+const base=s=>{ s=String(s).replace(/\?.*$/,""); try{s=decodeURIComponent(s);}catch(e){} return s.split(/[\\/]/).pop().toLowerCase(); };
+function mp3Names(item){ const out=[]; (function w(v,d){ if(typeof v==="string"){ if(/\.mp3(\?.*)?$/i.test(v)) out.push(base(v)); }
+  else if(d<2&&v&&typeof v==="object"&&!Array.isArray(v)) for(const k in v) w(v[k],d+1); })(item,0); return out; }
+function countMp3(n){ if(typeof n==="string") return /\.mp3(\?.*)?$/i.test(n)?1:0; if(Array.isArray(n)) return n.reduce((s,x)=>s+countMp3(x),0);
+  if(n&&typeof n==="object") return Object.keys(n).reduce((s,k)=>s+(/\.mp3$/i.test(k)?1:0)+countMp3(n[k]),0); return 0; }
+function prune(node,have,removed){
+  if(Array.isArray(node)){ const out=[];
+    for(const it of node){ const names=mp3Names(it); const miss=names.find(n=>!have.has(n)); if(miss){ removed.push(miss); continue; } out.push(prune(it,have,removed)); }
+    return out; }
+  if(node&&typeof node==="object"){ const out={};
+    for(const k of Object.keys(node)){ if(/\.mp3$/i.test(k)&&!have.has(base(k))){ removed.push(base(k)); continue; } out[k]=prune(node[k],have,removed); }
+    return out; }
+  return node;
+}
+
+async function syncOne(name){
+  const have=new Set(st.objs.filter(o=>/\.mp3$/i.test(o.key)).map(o=>base(o.key)));
+  if(!have.size){ alert("No mp3 objects loaded; refusing to sync."); return; }
+  const r=await api("/api/file?key="+enc(name));
+  if(!r.ok){ alert(name+": not found in the bucket (HTTP "+r.status+")."); return; }
+  let data; try{ data=JSON.parse(await r.text()); }catch(e){ alert(name+" is not valid JSON."); return; }
+  const total=countMp3(data), removed=[]; const clean=prune(data,have,removed);
+  if(!removed.length){ alert(name+": already in sync ("+total+" clip references)."); return; }
+  let msg=name+": remove "+removed.length+" of "+total+" clip entries that no longer exist?\n\n"+removed.slice(0,10).join("\n")+(removed.length>10?"\n…":"");
+  if(removed.length>total*0.5) msg="WARNING: this removes more than half of the entries.\n\n"+msg;
+  if(!confirm(msg)) return;
+  const ts=new Date().toISOString().replace(/[-:T]/g,"").slice(0,14);
+  const bak=name.replace(/\.json$/i,"")+".bak-"+ts+".json";
+  const put=(k,t)=>api("/api/json?key="+enc(k),{method:"PUT",headers:{"Content-Type":"application/json"},body:t});
+  const b=await put(bak,JSON.stringify(data)); if(!b.ok){ alert("Backup failed (HTTP "+b.status+"); nothing changed."); return; }
+  const w=await put(name,JSON.stringify(clean)); if(!w.ok){ alert("Write failed (HTTP "+w.status+"); backup is "+bak); return; }
+  alert(name+" updated. Backup saved as "+bak+".\nPhones cache music.json for up to 24 h.");
+}
+async function syncAll(){ const names=$("jsons").value.split(",").map(s=>s.trim()).filter(Boolean); for(const n of names) await syncOne(n); }
+
+document.addEventListener("keydown",e=>{
+  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const a=$("a");
+  if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }
+  else if(e.key==="ArrowRight") play(Math.min(st.rows.length-1,st.idx+1));
+  else if(e.key==="ArrowLeft") play(Math.max(0,st.idx-1));
+  else if(e.key==="k"||e.key==="K") advance("keep");
+  else if(e.key==="d"||e.key==="D") advance("del");
+});
+$("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("sync").onclick=syncAll; $("fstat").onchange=renderList;
+const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER; try{ $("tok").value=sessionStorage.getItem("r2-tok")||""; }catch(e){}
+})();
+</script>
+</body>
+</html>

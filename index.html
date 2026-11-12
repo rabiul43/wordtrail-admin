@@ -46,6 +46,7 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
   <input id="base" placeholder="Worker URL, e.g. https://wordtrail-music-admin.you.workers.dev">
   <input id="tok" type="password" placeholder="Admin token">
   <button class="primary" id="go">Connect</button>
+  <input id="q" type="search" placeholder="Search clips (all moods)…" style="min-width:170px;width:200px">
   <select id="fstat"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
   <span id="summary" style="color:var(--mut)"></span>
   <span style="flex:1"></span>
@@ -133,15 +134,19 @@ function renderNav(){
 }
 
 function renderList(){
-  const sec=$("list"); sec.textContent=""; if(!st.mood) return;
+  const sec=$("list"); sec.textContent="";
+  const words=($("q")?$("q").value:"").toLowerCase().split(/\s+/).filter(Boolean), searching=words.length>0;
+  if(!st.mood&&!searching) return;
   const f=$("fstat").value;
-  st.rows=(st.moods[st.mood]||[]).filter(o=>!f||(st.marks[o.key]||"none")===f);
+  let pool=searching?Object.values(st.moods).flat().filter(o=>{ const k=stripMusic(o.key).toLowerCase(); return words.every(w=>k.includes(w)); }).sort((a,b)=>a.key.localeCompare(b.key,undefined,{numeric:true})):(st.moods[st.mood]||[]);
+  st.rows=pool.filter(o=>!f||(st.marks[o.key]||"none")===f);
+  if(searching){ const h=document.createElement("p"); h.style.cssText="color:var(--mut);margin:8px 14px"; h.textContent="Search results: "+st.rows.length+" clip(s) in all moods. Clear the box to go back."; sec.appendChild(h); }
   const tbl=document.createElement("table"); const hr=tbl.insertRow();
   ["","File","Size",""].forEach(h=>{ const th=document.createElement("th"); th.textContent=h; hr.appendChild(th); });
   st.rows.forEach((o,i)=>{
     const v=st.retired[o.key]?"ret":(st.marks[o.key]||""); const tr=tbl.insertRow(); tr.className=v+(i===st.idx?" playing":""); tr.id="r"+i;
     const c0=tr.insertCell(); const p=document.createElement("button"); p.className="sm"; p.textContent="▶"; p.onclick=()=>play(i); c0.appendChild(p);
-    const c1=tr.insertCell(); c1.className="name"; c1.textContent=nameOf(o.key);
+    const c1=tr.insertCell(); c1.className="name"; c1.textContent=searching?stripMusic(o.key):nameOf(o.key);
     const c2=tr.insertCell(); c2.textContent=mb(o.size); c2.style.color="var(--mut)";
     const c3=tr.insertCell(); c3.style.whiteSpace="nowrap";
     const kb=document.createElement("button"); kb.className="sm"; kb.textContent="Keep"; kb.onclick=()=>mark(i,"keep");
@@ -149,7 +154,7 @@ function renderList(){
     c3.append(kb,db);
   });
   sec.appendChild(tbl);
-  if(!st.rows.length){ const p=document.createElement("p"); p.style.color="var(--mut)"; p.textContent="No clips match the filter."; sec.appendChild(p); }
+  if(!st.rows.length){ const p=document.createElement("p"); p.style.color="var(--mut)"; p.textContent=searching?"No clips match the search.":"No clips match the filter."; sec.appendChild(p); }
 }
 
 function mark(i,val){
@@ -170,7 +175,7 @@ async function play(i){
     const b=await r.blob(); if(st.url) URL.revokeObjectURL(st.url); st.url=URL.createObjectURL(b);
   }catch(e){ $("now").textContent="Error: "+e.message; return; }
   const a=$("a"); a.src=st.url; a.play().catch(()=>{});
-  $("now").textContent=st.mood+" · "+nameOf(o.key);
+  $("now").textContent=moodOf(o.key)+" · "+nameOf(o.key);
   document.querySelectorAll("tr.playing").forEach(r=>r.classList.remove("playing"));
   const r=$("r"+i); if(r){ r.classList.add("playing"); r.scrollIntoView({block:"nearest"}); }
 }
@@ -286,7 +291,7 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="k"||e.key==="K") advance("keep");
   else if(e.key==="d"||e.key==="D") advance("del");
 });
-$("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("sync").onclick=syncAll; $("fstat").onchange=renderList;
+$("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("sync").onclick=syncAll; $("fstat").onchange=renderList; $("q").oninput=()=>{ st.idx=-1; renderList(); };
 const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER; try{ $("tok").value=sessionStorage.getItem("r2-tok")||""; }catch(e){}
 })();
 </script>

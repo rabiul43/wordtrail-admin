@@ -71,12 +71,22 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
 .acts{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.acts button{min-height:48px;padding:0 20px;font-weight:800;border-radius:14px}
 .acts .go{flex:1;background:var(--acc);color:#fff;border-color:var(--acc)}.acts .no{color:var(--del);border-color:var(--del)}
 .hint{color:var(--mut);font-size:12px;margin-top:10px}
+.sw{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px}
+.sw button{border:0;background:transparent;border-radius:999px;min-height:34px;padding:4px 16px;font-weight:800;color:var(--mut)}
+.sw button.on{background:var(--acc);color:#fff;box-shadow:0 0 18px color-mix(in srgb,var(--acc) 55%,transparent)}
+header{position:relative}
+#gmenu{position:absolute;right:24px;top:58px;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.werr{background:rgba(194,54,43,.12);border:1px solid var(--del);color:var(--del);border-radius:12px;padding:10px 12px;font-size:13px}
+#toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ok);color:var(--okfg);border:1px solid var(--keep);padding:10px 16px;border-radius:12px;z-index:9}
+.wcard details summary{cursor:pointer;color:var(--mut)}.wcard details input{margin-top:8px}.wcard p{margin:0;color:var(--mut)}
+[hidden]{display:none!important}
 @media (max-width:900px){#queue{display:none}nav{width:150px}.cards{flex-wrap:wrap}.card{flex:1 1 140px}}
 </style>
 </head>
 <body>
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
+  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button></div>
   <span id="mode" class="chip needconn"></span>
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
@@ -84,15 +94,20 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
   <button id="sync" class="needconn" disabled>Sync list…</button>
   <button id="retire" class="needconn" disabled>1 · Retire marked…</button>
   <button class="danger needconn" id="purge" disabled>2 · Delete retired…</button>
+  <button id="gear" class="needconn" title="Connection">⚙</button>
+  <div id="gmenu" class="needconn" hidden><small id="gwho"></small><button id="chg">Change token / Worker</button><button id="forget" class="danger">Disconnect &amp; forget</button></div>
 </header>
 <div id="summary" class="needconn"></div>
 <div id="prog" class="needconn"></div>
 <div id="welcome"><div class="wcard">
   <h2>Connect</h2>
-  <input id="base" placeholder="Worker URL">
-  <input id="tok" type="password" placeholder="Admin token">
+  <p>One password opens both Music and Ambient.</p>
+  <div id="werr" class="werr" hidden></div>
+  <input id="tok" type="password" placeholder="Admin token" autocomplete="current-password">
+  <label><input type="checkbox" id="rem" checked> Remember on this device</label>
   <button class="primary" id="go">Connect</button>
-  <ol><li>Connect. If the bucket has <b>ambient-candidates.json</b>, the page opens in <b>Ambient</b> review; otherwise in <b>Music</b>.</li>
+  <details><summary>Worker URL</summary><input id="base" placeholder="Worker URL"></details>
+  <ol><li>Connect once. Next time the page connects by itself. Use <b>Music | Ambient</b> at the top to switch.</li>
   <li>Pick a section on the left, play clips, press <b>Keep</b> or <b>Delete</b>. In Ambient, <b>Make best</b> picks the live clip for a folder.</li>
   <li>When done: <b>1 · Retire</b>, wait about 3 days, then <b>2 · Delete retired</b>.</li></ol>
 </div></div>
@@ -101,6 +116,7 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
   <section id="list"></section>
   <aside id="queue"></aside>
 </main>
+<div id="toast" hidden></div>
 <footer class="needconn">
   <span id="now">Nothing playing</span>
   <audio id="a" controls></audio>
@@ -114,7 +130,8 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
 "use strict";
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false};
+function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(ls0("r2-which")==="amb"?"amb":"music")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
@@ -133,24 +150,34 @@ async function connect(){
   const b=$("go"); b.disabled=true; b.textContent="Connecting…";
   try{ await connect0(); } finally{ b.disabled=false; b.textContent="Connect"; }
 }
+function showErr(m){ const e=$("werr"); e.textContent=m; e.hidden=false; document.body.classList.remove("conn"); $("summary").textContent=""; }
+function toast(m){ const t=$("toast"); t.textContent=m; t.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>{t.hidden=true;},6000); }
+function updateSw(){ document.querySelectorAll("#sw button").forEach(b=>b.classList.toggle("on",b.dataset.m===st.which)); }
+function forgetTok(){ try{localStorage.removeItem("r2-tok");sessionStorage.removeItem("r2-tok");}catch(e){} }
 async function connect0(){
-  st.base=$("base").value.trim().replace(/\/+$/,""); st.tok=$("tok").value.trim();
-  if(!/^https?:\/\//.test(st.base)||!st.tok){ alert("Enter the Worker URL and token."); return; }
-  ls("r2-base",st.base); try{sessionStorage.setItem("r2-tok",st.tok);}catch(e){}
+  $("werr").hidden=true;
+  st.root=$("base").value.trim().replace(/\/+$/,""); st.tok=$("tok").value.trim();
+  if(!/^https?:\/\//.test(st.root)||!st.tok){ showErr("Enter your admin token."); return; }
+  st.base=st.root+(st.which==="amb"?"/ambient":"");
+  ls("r2-base",st.root); forgetTok();
+  try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
   $("summary").textContent="Loading list…";
   const all=[]; let cursor=null;
   try{
     do{
       const r=await api("/api/list"+(cursor?"?cursor="+enc(cursor):""));
-      if(r.status===401){ alert("Wrong token."); $("summary").textContent=""; return; }
-      if(!r.ok) throw new Error("HTTP "+r.status);
+      if(r.status===401){ showErr("That token didn't work (401). Check it and try again."); return; }
+      if(!r.ok){ let t=""; try{ t=(await r.json()).error||""; }catch(e){} throw new Error(t||("HTTP "+r.status)); }
       const d=await r.json(); all.push(...d.objects); cursor=d.cursor;
     }while(cursor);
-  }catch(e){ alert("Could not load: "+e.message+"\nCheck the Worker URL."); $("summary").textContent=""; return; }
+  }catch(e){ showErr(/AMBIENT binding/.test(e.message)?"Ambient is not set up on the Worker (AMBIENT binding missing). Add it in Cloudflare, Worker, Settings, Bindings.":"Can't reach the Worker ("+e.message+"). Check the Worker URL below."); return; }
   st.objs=all; st.jsonKeys=all.filter(o=>/\.json$/i.test(o.key)).map(o=>o.key);
   st.retired={}; try{ const rr=await api("/api/file?key=retired.json"); if(rr.ok) st.retired=JSON.parse(await rr.text()); }catch(e){}
   try{ st.marks=JSON.parse(ls("r2-marks:"+st.base)||"{}"); }catch(e){ st.marks={}; }
   await loadAmbient(all);
+  if(st.which==="amb"&&!st.amb){ st.which="music"; ls("r2-which","music"); toast("Ambient has no clips yet (ambient-candidates.json not found). Showing Music."); return connect0(); }
+  if(!st.amb&&/ambient/.test($("jsons").value)) $("jsons").value="music.json";
+  updateSw(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,"");
   $("mode").textContent=st.amb?"AMBIENT BUCKET":"MUSIC BUCKET"; document.body.classList.add("conn");
   regroup(); st.mood=Object.keys(st.moods).sort()[0]||null; st.idx=-1;
   $("sync").disabled=false; renderNav(); renderList();
@@ -464,7 +491,15 @@ document.addEventListener("keydown",e=>{
   else if((e.key==="b"||e.key==="B")&&st.amb&&st.idx>=0) bestAndNext(st.idx);
 });
 $("tok").addEventListener("keydown",e=>{ if(e.key==="Enter") connect(); }); $("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("sync").onclick=syncAll; $("fstat").onchange=renderList; $("q").oninput=()=>{ st.idx=-1; renderList(); };
-const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER; try{ $("tok").value=sessionStorage.getItem("r2-tok")||""; }catch(e){}
+const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER;
+let t0=ls0("r2-tok")||""; try{ if(!t0){ t0=sessionStorage.getItem("r2-tok")||""; if(t0) $("rem").checked=false; } }catch(e){}
+$("tok").value=t0; updateSw();
+document.querySelectorAll("#sw button").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
+$("gear").onclick=e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; };
+document.addEventListener("click",e=>{ if(!$("gmenu").contains(e.target)) $("gmenu").hidden=true; });
+$("chg").onclick=()=>{ $("a").pause(); $("gmenu").hidden=true; document.body.classList.remove("conn"); $("tok").value=""; $("tok").focus(); };
+$("forget").onclick=()=>{ $("a").pause(); $("gmenu").hidden=true; forgetTok(); $("tok").value=""; document.body.classList.remove("conn"); };
+if(t0) connect();
 })();
 </script>
 </body>

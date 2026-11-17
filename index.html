@@ -81,6 +81,37 @@ header{position:relative}
 .wcard details summary{cursor:pointer;color:var(--mut)}.wcard details input{margin-top:8px}.wcard p{margin:0;color:var(--mut)}
 [hidden]{display:none!important}
 @media (max-width:900px){#queue{display:none}nav{width:150px}.cards{flex-wrap:wrap}.card{flex:1 1 140px}}
+#tabs,#fpane,#cpane,#spane{display:none}
+@media (max-width:700px){
+body{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
+header{padding:10px 14px;gap:8px}header h1{font-size:17px;margin:0}
+.sw{margin-left:auto}.sw button{padding:4px 12px;font-size:13px}
+#mode,#gear,#gmenu,#prog{display:none!important}
+#q,#fstat{display:none}body[data-tab=folders] #q,body[data-tab=folders] #fstat{display:block;flex:1 1 100%;width:100%!important}
+#summary{padding:6px 14px;font-size:12px}
+main{flex-direction:column;overflow:hidden}
+#queue{display:none!important}
+#moods,#list,#fpane,#cpane,#spane{display:none}
+#moods{width:100%;flex:none;flex-direction:row;gap:8px;overflow-x:auto;padding:10px 14px}
+body[data-tab=folders] #moods,body[data-tab=review]:not(.amb) #moods{display:flex}
+nav .mood{flex:none;width:auto;white-space:nowrap;margin:0;border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:0;background:var(--card)}
+nav .mood small,nav .mood .bar{display:none}nav .mood.on{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:none}
+body[data-tab=review] #list,body[data-tab=folders] #fpane,body[data-tab=clean] #cpane,body[data-tab=settings] #spane{display:block;flex:1;min-height:0;overflow:auto;padding:8px 14px}
+.ctitle h2{font-size:26px}.panel{padding:12px;gap:12px}.pp{width:48px;height:48px}.wv{height:56px}
+.cards{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.card{flex:0 0 150px}
+.acts{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 30%);padding:14px 0 8px;flex-wrap:nowrap;gap:8px}
+.acts button{min-height:50px;padding:0 10px;font-size:14px}.acts .go{flex:2.2}.acts .no,.acts button:nth-child(2){flex:1}
+.hint{display:none}
+footer{padding:6px 12px;gap:8px}#now{display:none}footer audio{min-width:0;height:40px}
+#tabs{display:flex;position:fixed;left:0;right:0;bottom:0;height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);z-index:6}
+#tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--mut);font-weight:700;font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:0}
+#tabs button b{font-size:19px;font-weight:400}#tabs button.on{color:var(--acc)}
+.fb{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:13px 14px;border-radius:16px;margin-bottom:8px}.fb.on{border-color:var(--acc)}.fb small{display:block}
+.card2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}.card2 h4{margin:0;font-size:15px}.card2 p{margin:0;color:var(--mut)}
+.card2 button,#cbtns button{width:100%;min-height:48px;font-weight:800}#cbtns{display:flex;flex-direction:column;gap:10px}
+#sp-play{display:flex;flex-direction:column;gap:12px}#sp-play label{display:flex}#ljson input{width:100%!important;min-width:0!important;margin-left:6px}
+#toast{bottom:150px;width:calc(100% - 28px);text-align:center}
+}
 </style>
 </head>
 <body>
@@ -91,9 +122,9 @@ header{position:relative}
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
   <span style="flex:1"></span>
-  <button id="sync" class="needconn" disabled>Sync list…</button>
+  <span id="hbtns" style="display:contents"><button id="sync" class="needconn" disabled>Sync list…</button>
   <button id="retire" class="needconn" disabled>1 · Retire marked…</button>
-  <button class="danger needconn" id="purge" disabled>2 · Delete retired…</button>
+  <button class="danger needconn" id="purge" disabled>2 · Delete retired…</button></span>
   <button id="gear" class="needconn" title="Connection">⚙</button>
   <div id="gmenu" class="needconn" hidden><small id="gwho"></small><button id="chg">Change token / Worker</button><button id="forget" class="danger">Disconnect &amp; forget</button></div>
 </header>
@@ -115,14 +146,20 @@ header{position:relative}
   <nav id="moods"></nav>
   <section id="list"></section>
   <aside id="queue"></aside>
+  <div id="fpane"></div>
+  <div id="cpane"><div class="card2"><h4>Clean-up in 2 steps</h4><p>Nothing is removed until you press. Retired files are only deleted when you press step 2.</p><div id="cbtns"></div></div></div>
+  <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
+    <div class="card2"><h4>Playback</h4><div id="sp-play"></div></div></div>
 </main>
+<div id="tabs" class="needconn"><button data-t="review"><b>🎧</b>Review</button><button data-t="folders"><b>📁</b>Folders</button><button data-t="clean"><b>🧹</b>Clean-up</button><button data-t="settings"><b>⚙</b>Settings</button></div>
 <div id="toast" hidden></div>
 <footer class="needconn">
   <span id="now">Nothing playing</span>
   <audio id="a" controls></audio>
-  <label><input type="checkbox" id="mid" checked> start at 30%</label>
-  <label><input type="checkbox" id="auto"> auto-next</label>
-  <label>JSON files <input id="jsons" value="music.json" style="min-width:120px;width:270px"></label>
+  <span id="fopts" style="display:contents">
+  <label id="lmid"><input type="checkbox" id="mid" checked> start at 30%</label>
+  <label id="lauto"><input type="checkbox" id="auto"> auto-next</label>
+  <label id="ljson">JSON files <input id="jsons" value="music.json" style="min-width:120px;width:270px"></label></span>
 </footer>
 
 <script>
@@ -177,7 +214,7 @@ async function connect0(){
   await loadAmbient(all);
   if(st.which==="amb"&&!st.amb){ st.which="music"; ls("r2-which","music"); toast("Ambient has no clips yet (ambient-candidates.json not found). Showing Music."); return connect0(); }
   if(!st.amb&&/ambient/.test($("jsons").value)) $("jsons").value="music.json";
-  updateSw(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,"");
+  updateSw(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent; document.body.classList.toggle("amb",st.amb);
   $("mode").textContent=st.amb?"AMBIENT BUCKET":"MUSIC BUCKET"; document.body.classList.add("conn");
   regroup(); st.mood=Object.keys(st.moods).sort()[0]||null; st.idx=-1;
   $("sync").disabled=false; renderNav(); renderList();
@@ -285,6 +322,18 @@ function renderQueue(){
   for(const it of items){ const b=el("button","qi"); b.appendChild(el("span","dot"+(it.ok?" ok":""))); const d=el("div"); d.appendChild(el("b",null,it.a)); d.appendChild(el("small",null,it.b)); b.appendChild(d); b.onclick=()=>play(it.i); q.appendChild(b); }
 }
 
+function renderFolders(){
+  const p=$("fpane"); p.textContent="";
+  if(!st.amb){ p.appendChild(el("p","hint","Pick a mood above, then open the Review tab.")); return; }
+  const seen=new Map(); st.rows.forEach((o,i)=>{ const f=fo(o.key); if(!seen.has(f)) seen.set(f,{i,n:0}); seen.get(f).n++; });
+  const cur=st.idx>=0&&st.rows[st.idx]?fo(st.rows[st.idx].key):null;
+  for(const [f,v] of seen){ const pt=f.split("/"), b=el("button","fb"+(f===cur?" on":"")); b.appendChild(el("span","dot"+(isRev(f)?" ok":"")));
+    const d=el("div"); d.appendChild(el("b",null,pretty(pt[2]||pt[1]))); d.appendChild(el("small",null,pt.slice(0,2).join(" / ")+" · "+v.n+" clips · "+(isRev(f)?"reviewed":"not reviewed"))); b.appendChild(d);
+    b.onclick=()=>{ setTab("review"); play(v.i); }; p.appendChild(b); }
+  if(!seen.size) p.appendChild(el("p","hint","No folders match."));
+}
+function setTab(t){ document.body.dataset.tab=t; document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t)); }
+
 function jumpFolder(dir){
   if(!st.rows.length) return; const i=Math.max(0,st.idx), f=fo(st.rows[i].key); let j;
   if(dir>0){ j=st.rows.findIndex((o,n)=>n>i&&fo(o.key)!==f); }
@@ -300,7 +349,7 @@ function renderList(){
   let pool=searching?Object.values(st.moods).flat().filter(o=>{ const k=stripMusic(o.key).toLowerCase(); return words.every(w=>k.includes(w)); }).sort((a,b)=>a.key.localeCompare(b.key,undefined,{numeric:true})):(st.moods[st.mood]||[]);
   if(searching&&st.amb) pool.sort((a,b)=>fo(a.key).localeCompare(fo(b.key))||a.key.localeCompare(b.key,undefined,{numeric:true}));
   st.rows=pool.filter(o=>!f||(f==="unrev"?!isRev(fo(o.key)):(st.marks[o.key]||"none")===f));
-  if(st.amb){ renderFocus(sec); renderQueue(); return; }
+  if(st.amb){ renderFocus(sec); renderQueue(); renderFolders(); return; }
   if(searching){ const h=document.createElement("p"); h.style.cssText="color:var(--mut);margin:8px 14px"; h.textContent="Search results: "+st.rows.length+" clip(s) in all moods. Clear the box to go back."; sec.appendChild(h); }
   const tbl=document.createElement("table"); const hr=tbl.insertRow();
   ["","File","Size",""].forEach(h=>{ const th=document.createElement("th"); th.textContent=h; hr.appendChild(th); });
@@ -316,7 +365,7 @@ function renderList(){
   });
   sec.appendChild(tbl);
   if(!st.rows.length){ const p=document.createElement("p"); p.style.color="var(--mut)"; p.textContent=searching?"No clips match the search.":"No clips match the filter."; sec.appendChild(p); }
-  renderQueue();
+  renderQueue(); renderFolders();
 }
 
 function mark(i,val){
@@ -497,8 +546,14 @@ $("tok").value=t0; updateSw();
 document.querySelectorAll("#sw button").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
 $("gear").onclick=e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; };
 document.addEventListener("click",e=>{ if(!$("gmenu").contains(e.target)) $("gmenu").hidden=true; });
-$("chg").onclick=()=>{ $("a").pause(); $("gmenu").hidden=true; document.body.classList.remove("conn"); $("tok").value=""; $("tok").focus(); };
-$("forget").onclick=()=>{ $("a").pause(); $("gmenu").hidden=true; forgetTok(); $("tok").value=""; document.body.classList.remove("conn"); };
+const chgTok=()=>{ $("a").pause(); $("gmenu").hidden=true; document.body.classList.remove("conn"); $("tok").value=""; $("tok").focus(); };
+const forgetAll=()=>{ $("a").pause(); $("gmenu").hidden=true; forgetTok(); $("tok").value=""; document.body.classList.remove("conn"); };
+$("chg").onclick=$("chg2").onclick=chgTok; $("forget").onclick=$("forget2").onclick=forgetAll;
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.t)); setTab("review");
+const mq=matchMedia("(max-width:700px)");
+function place(){ const m=mq.matches, a=m?$("sp-play"):$("fopts"), c=m?$("cbtns"):$("hbtns");
+  ["lmid","lauto","ljson"].forEach(i=>a.appendChild($(i))); ["sync","retire","purge"].forEach(i=>c.appendChild($(i))); }
+if(mq.addEventListener) mq.addEventListener("change",place); else mq.addListener(place); place();
 if(t0) connect();
 })();
 </script>

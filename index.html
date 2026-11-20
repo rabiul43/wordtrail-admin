@@ -582,7 +582,7 @@ async function syncAll(){ const names=$("jsons").value.split(",").map(s=>s.trim(
    Writes ONLY covers/overrides.json (plus a backup copy once per visit). It never touches the cover pictures. */
 const ORDER=["se","ol","pg","lv"], SRCN={se:"Standard Ebooks",ol:"Open Library",pg:"Gutenberg",lv:"LibriVox"};
 const OV_KEY="covers/overrides.json", DEF_COVERS="https://huggingface.co/datasets/rabiul43/Book_Covers/resolve/main/covers";
-const cv={books:{},ids:[],ov:{},rows:[],sel:null,shown:150,baked:false,busy:false,err:""};
+const cv={books:{},ids:[],ov:{},rows:[],sel:null,shown:150,baked:false,busy:false,err:"",info:""};
 const cvBase=()=>(ls("cov-base")||DEF_COVERS).replace(/\/+$/,"");
 const cvPath=(id,s)=>Math.floor(id/1000)+"/"+id+"/"+s+".webp";
 const covHave=id=>{ const h=cv.books[id]&&cv.books[id].have; return Array.isArray(h)?h.filter(s=>ORDER.includes(s)):[]; };
@@ -610,11 +610,12 @@ async function connectCov(){
   cv.sel=null; $("covpane").classList.remove("pick"); covFilter(); if(cv.rows.length) cv.sel=cv.rows[0]; renderCov();
 }
 async function loadCovIndex(){
-  cv.err=""; cv.books={};
+  cv.err=""; cv.info=""; cv.books={};
   try{
     const r=await fetch(cvBase()+"/index.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
     const d=await r.json(), b=(d&&d.books)||d;
     for(const k in b) if(/^\d+$/.test(k)&&b[k]&&typeof b[k]==="object") cv.books[k]=b[k];
+    const n=Object.keys(cv.books).length; cv.info="Opened "+cvBase()+"/index.json and it worked, but it lists "+n+" book(s)."+(n?"":" The file contains: "+(Array.isArray(d)?"an empty list":(Object.keys(d||{}).slice(0,6).join(", ")||"nothing"))+".");
   }catch(e){ cv.err=e.message; }
   cv.ids=Object.keys(cv.books).sort((a,b)=>a-b);
 }
@@ -648,7 +649,7 @@ function renderCov(){
 function renderCovMain(){
   const m=$("cvmain"); m.textContent="";
   if(cv.err) m.appendChild(el("div","werr","Could not read the cover list (index.json) from "+cvBase()+" ("+cv.err+"). Open “Covers address” on the left and check it. If the covers are not uploaded yet, this is expected."));
-  const id=cv.sel; if(!id||!cv.books[id]){ if(!cv.err) m.appendChild(el("p","note",cv.ids.length?"No book matches. Change the search or the filter.":"No books yet.")); return; }
+  const id=cv.sel; if(!id||!cv.books[id]){ if(!cv.err) m.appendChild(el("p","note",cv.ids.length?"No book matches. Change the search or the filter.":(cv.info||"No books yet.")+" The list stays empty until the Kaggle notebook (Tasks 1 and 2) has uploaded covers and index.json.")); return; }
   const b=cv.books[id], o=cv.ov[id]||{}, rm=o.removed||[], e=eff(id), have=covHave(id);
   const bk=el("button","cvback","← Back to list"); bk.onclick=()=>$("covpane").classList.remove("pick"); m.appendChild(bk);
   m.appendChild(el("div","crumb","Book #"+id+(b.gid?" · Gutenberg "+b.gid:"")+" · "+(cv.rows.indexOf(id)+1)+" of "+cv.rows.length));

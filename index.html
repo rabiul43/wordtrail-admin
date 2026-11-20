@@ -112,12 +112,47 @@ footer{padding:6px 12px;gap:8px}#now{display:none}footer audio{min-width:0;heigh
 #sp-play{display:flex;flex-direction:column;gap:12px}#sp-play label{display:flex}#ljson input{width:100%!important;min-width:0!important;margin-left:6px}
 #toast{bottom:150px;width:calc(100% - 28px);text-align:center}
 }
+
+/* ---- Covers tab ---- */
+#covpane{display:none}
+body.cov #covpane{display:flex!important;flex:1;min-width:0;min-height:0}
+body.cov #moods,body.cov #list,body.cov #queue,body.cov #fpane,body.cov #cpane,body.cov #spane,body.cov #tabs,body.cov footer,body.cov #prog,body.cov #q,body.cov #fstat,body.cov #hbtns{display:none!important}
+#cvlist{width:340px;flex:none;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--line)}
+#cvlist .ctl{display:flex;flex-direction:column;gap:8px}#cvlist .ctl input,#cvlist .ctl select{width:100%;min-width:0}
+#cvitems{display:flex;flex-direction:column;gap:6px}
+.cvi{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:12px;margin:0}
+.cvi.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.cvi b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cvi small{display:flex;gap:6px;align-items:center;overflow:hidden;white-space:nowrap}
+.note{color:var(--mut);font-size:12px;line-height:1.45}
+#cvmain{flex:1;min-width:0;overflow:auto;padding:14px 20px}
+.ccards{display:flex;gap:12px;margin:12px 0 14px;flex-wrap:wrap;align-items:stretch}
+.ccard{flex:1 1 170px;max-width:250px;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.ccard.keep{border:2px solid var(--keep);padding:9px}.ccard.del .im{opacity:.35}.ccard.none{opacity:.6}
+.ccard .top{display:flex;justify-content:space-between;align-items:center;font-weight:800;gap:6px}
+.ccard .im{aspect-ratio:2/3;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--mut);font-size:12px;text-align:center;padding:6px}
+.ccard .im img{width:100%;height:100%;object-fit:contain;display:block}
+.ccard button{width:100%;min-height:42px;font-weight:800}
+.cvback{display:none}
+@media (max-width:700px){
+body.cov{padding-bottom:0!important}
+body.cov #covpane{flex-direction:column}
+#cvlist{width:100%;border-right:0;flex:1;min-height:0;padding:10px 14px}
+#cvmain{padding:12px 14px;min-height:0}
+#cvmain .acts{position:static;background:none;padding:4px 0 16px;flex-wrap:wrap}
+#cvmain .acts button{min-height:46px}#cvmain .acts .go{flex:1 1 120px}
+#covpane.pick #cvlist{display:none}
+#covpane:not(.pick) #cvmain{display:none}
+.cvback{display:inline-block;margin-bottom:8px}
+.ccards{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.ccard{flex:0 0 165px}
+.sw button{padding:4px 9px;font-size:12px}
+}
 </style>
 </head>
 <body>
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
-  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button></div>
+  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button></div>
   <span id="mode" class="chip needconn"></span>
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
@@ -147,6 +182,17 @@ footer{padding:6px 12px;gap:8px}#now{display:none}footer audio{min-width:0;heigh
   <section id="list"></section>
   <aside id="queue"></aside>
   <div id="fpane"></div>
+  <div id="covpane">
+    <div id="cvlist">
+      <div class="ctl"><input id="cvq" type="search" placeholder="Search title, author, or book number…">
+        <select id="cvf"><option value="">All books</option><option value="none">No cover</option><option value="one">Only one candidate</option><option value="changed">I changed this</option></select></div>
+      <div id="cvstat" class="note"></div>
+      <button id="cvcopy" hidden>2 · Copy removed-file list…</button>
+      <div id="cvitems"></div>
+      <details id="cvset"><summary class="note">Covers address</summary><input id="cvbase" style="width:100%;margin-top:8px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+    </div>
+    <div id="cvmain"></div>
+  </div>
   <div id="cpane"><div class="card2"><h4>Clean-up in 2 steps</h4><p>Nothing is removed until you press. Retired files are only deleted when you press step 2.</p><div id="cbtns"></div></div></div>
   <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
     <div class="card2"><h4>Playback</h4><div id="sp-play"></div></div></div>
@@ -168,7 +214,7 @@ footer{padding:6px 12px;gap:8px}#now{display:none}footer audio{min-width:0;heigh
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
 function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(ls0("r2-which")==="amb"?"amb":"music")};
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["amb","cov"].includes(ls0("r2-which"))?ls0("r2-which"):"music")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
@@ -198,6 +244,8 @@ async function connect0(){
   st.base=st.root+(st.which==="amb"?"/ambient":"");
   ls("r2-base",st.root); forgetTok();
   try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
+  document.body.classList.toggle("cov",st.which==="cov");
+  if(st.which==="cov") return connectCov();
   $("summary").textContent="Loading list…";
   const all=[]; let cursor=null;
   try{
@@ -528,8 +576,146 @@ async function syncOne(name){
 }
 async function syncAll(){ const names=$("jsons").value.split(",").map(s=>s.trim()).filter(Boolean); for(const n of names) await syncOne(n); }
 
+
+/* =================== Covers tab ===================
+   Reads the program's index.json (public, from the covers address) and your choices (covers/overrides.json in the Worker's bucket).
+   Writes ONLY covers/overrides.json (plus a backup copy once per visit). It never touches the cover pictures. */
+const ORDER=["se","ol","pg","lv"], SRCN={se:"Standard Ebooks",ol:"Open Library",pg:"Gutenberg",lv:"LibriVox"};
+const OV_KEY="covers/overrides.json", DEF_COVERS="https://huggingface.co/datasets/rabiul43/Book_Covers/resolve/main/covers";
+const cv={books:{},ids:[],ov:{},rows:[],sel:null,shown:150,baked:false,busy:false,err:""};
+const cvBase=()=>(ls("cov-base")||DEF_COVERS).replace(/\/+$/,"");
+const cvPath=(id,s)=>Math.floor(id/1000)+"/"+id+"/"+s+".webp";
+const covHave=id=>{ const h=cv.books[id]&&cv.books[id].have; return Array.isArray(h)?h.filter(s=>ORDER.includes(s)):[]; };
+
+/* What the app will show: your choice, else the program's best, else the first left in the order se, ol, pg, lv. Removed covers never count. */
+function eff(id){
+  const b=cv.books[id]||{}, o=cv.ov[id]||{}, rm=o.removed||[], have=covHave(id).filter(s=>!rm.includes(s));
+  if(o.best&&have.includes(o.best)) return {have,pick:o.best,why:"your choice"};
+  if(b.best&&have.includes(b.best)) return {have,pick:b.best,why:"the program's pick"};
+  const p=ORDER.find(s=>have.includes(s))||null; return {have,pick:p,why:p?"next in the order":""};
+}
+
+async function connectCov(){
+  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Loading covers…";
+  let r; try{ r=await api("/api/file?key="+enc(OV_KEY)); }
+  catch(e){ showErr("Can't reach the Worker ("+e.message+"). Check the Worker URL below."); return; }
+  if(r.status===401){ showErr("That token didn't work (401). Check it and try again."); return; }
+  cv.ov={};
+  if(r.ok){ try{ const d=JSON.parse(await r.text()); cv.ov=(d&&d.books)||{}; }catch(e){ showErr("covers/overrides.json in the bucket is not valid JSON. Nothing was changed. Fix or delete that file in Cloudflare R2."); return; } }
+  else if(r.status!==404){ showErr("Could not read overrides (HTTP "+r.status+")."); return; }
+  cv.baked=false; $("cvbase").value=cvBase();
+  await loadCovIndex();
+  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
+  updateSw(); $("mode").textContent="COVERS"; document.body.classList.add("conn");
+  cv.sel=null; $("covpane").classList.remove("pick"); covFilter(); if(cv.rows.length) cv.sel=cv.rows[0]; renderCov();
+}
+async function loadCovIndex(){
+  cv.err=""; cv.books={};
+  try{
+    const r=await fetch(cvBase()+"/index.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
+    const d=await r.json(), b=(d&&d.books)||d;
+    for(const k in b) if(/^\d+$/.test(k)&&b[k]&&typeof b[k]==="object") cv.books[k]=b[k];
+  }catch(e){ cv.err=e.message; }
+  cv.ids=Object.keys(cv.books).sort((a,b)=>a-b);
+}
+function covFilter(){
+  const words=$("cvq").value.toLowerCase().split(/\s+/).filter(Boolean), f=$("cvf").value;
+  cv.rows=cv.ids.filter(id=>{
+    const e=eff(id);
+    if(f==="none"&&e.have.length) return false; if(f==="one"&&e.have.length!==1) return false; if(f==="changed"&&!cv.ov[id]) return false;
+    if(!words.length) return true; const b=cv.books[id]; const hay=(id+" "+(b.title||"")+" "+(b.author||"")).toLowerCase(); return words.every(w=>hay.includes(w));
+  });
+}
+function removedList(){   // every removed file: {id,s,at}
+  const out=[]; for(const id in cv.ov){ const o=cv.ov[id]; for(const s of (o.removed||[])) out.push({id,s,at:(o.removedAt||{})[s]||0}); } return out;
+}
+function renderCov(){
+  const none=cv.ids.filter(id=>!eff(id).have.length).length, ch=Object.keys(cv.ov).length, rl=removedList().length;
+  $("summary").textContent=cv.ids.length?cv.ids.length+" books · "+none+" with no cover · "+ch+" changed by you":"No cover list loaded yet";
+  $("cvstat").textContent=cv.ids.length?(cv.rows.length+" book(s) match"+(cv.rows.length>cv.shown?" · showing the first "+cv.shown:"")):"";
+  const cb=$("cvcopy"); cb.hidden=!rl; cb.textContent="2 · Copy removed-file list… ("+rl+")";
+  const box=$("cvitems"), sc=$("cvlist").scrollTop; box.textContent="";
+  cv.rows.slice(0,cv.shown).forEach(id=>{
+    const b=cv.books[id], e=eff(id), it=el("button","cvi"+(id===cv.sel?" on":"")); it.dataset.id=id;
+    it.appendChild(el("b",null,b.title||("Book "+id)));
+    const s=el("small"); s.appendChild(el("span",null,(b.author||"")+" · #"+id)); s.appendChild(el("span","chip",e.have.length?e.have.length+" cover"+(e.have.length>1?"s":""):"none"));
+    if(cv.ov[id]) s.appendChild(el("span","chip hi","changed")); it.appendChild(s);
+    it.onclick=()=>{ cv.sel=id; $("covpane").classList.add("pick"); renderCov(); $("cvmain").scrollTop=0; }; box.appendChild(it);
+  });
+  if(cv.rows.length>cv.shown){ const m=el("button",null,"Show 150 more"); m.onclick=()=>{ cv.shown+=150; renderCov(); }; box.appendChild(m); }
+  $("cvlist").scrollTop=sc; renderCovMain();
+}
+function renderCovMain(){
+  const m=$("cvmain"); m.textContent="";
+  if(cv.err) m.appendChild(el("div","werr","Could not read the cover list (index.json) from "+cvBase()+" ("+cv.err+"). Open “Covers address” on the left and check it. If the covers are not uploaded yet, this is expected."));
+  const id=cv.sel; if(!id||!cv.books[id]){ if(!cv.err) m.appendChild(el("p","note",cv.ids.length?"No book matches. Change the search or the filter.":"No books yet.")); return; }
+  const b=cv.books[id], o=cv.ov[id]||{}, rm=o.removed||[], e=eff(id), have=covHave(id);
+  const bk=el("button","cvback","← Back to list"); bk.onclick=()=>$("covpane").classList.remove("pick"); m.appendChild(bk);
+  m.appendChild(el("div","crumb","Book #"+id+(b.gid?" · Gutenberg "+b.gid:"")+" · "+(cv.rows.indexOf(id)+1)+" of "+cv.rows.length));
+  const t=el("div","ctitle"); t.appendChild(el("h2",null,b.title||("Book "+id)));
+  t.appendChild(el("span","chip"+(e.pick?" hi":""),e.pick?"app shows: "+SRCN[e.pick]:"no cover: colored box")); if(cv.ov[id]) t.appendChild(el("span","chip hi","changed by you")); m.appendChild(t);
+  if(b.author) m.appendChild(el("div","note",b.author));
+  const cs=el("div","ccards");
+  for(const s of ORDER){
+    const inIdx=have.includes(s), gone=rm.includes(s), pick=e.pick===s;
+    const c=el("div","ccard"+(gone?" del":"")+(pick?" keep":"")+(inIdx?"":" none"));
+    const top=el("div","top"); top.appendChild(el("span",null,SRCN[s])); top.appendChild(el("span","chip"+(pick?" hi":""),gone?"REMOVED":pick?"SHOWN":"")); c.appendChild(top);
+    const im=el("div","im"), meta=el("div","note",inIdx?"loading…":"");
+    if(inIdx){ const img=document.createElement("img"); img.alt=SRCN[s]+" cover"; img.loading="lazy"; img.src=cvBase()+"/"+cvPath(id,s);
+      img.onload=()=>{ meta.textContent=img.naturalWidth+"×"+img.naturalHeight+(s===o.best?" · your choice":s===b.best&&!o.best?" · program's pick":""); };
+      img.onerror=()=>{ im.textContent="File not found. The list says it exists."; meta.textContent="missing file"; }; im.appendChild(img); }
+    else im.textContent="No picture from this source";
+    c.append(im,meta);
+    if(inIdx&&!gone){ const mb1=el("button",pick&&o.best===s?"":"primary",pick&&o.best===s?"Your best ✓":"Make best"); mb1.disabled=cv.busy||o.best===s; mb1.onclick=()=>covSet(id,x=>{ x.best=s; return x; }); c.appendChild(mb1);
+      const rb=el("button","danger","Remove"); rb.disabled=cv.busy; rb.onclick=()=>covSet(id,x=>{ x.removed=[...new Set([...(x.removed||[]),s])]; x.removedAt={...(x.removedAt||{}),[s]:Date.now()}; if(x.best===s) delete x.best; return x; }); c.appendChild(rb); }
+    if(inIdx&&gone){ const ub=el("button",null,"Undo remove"); ub.disabled=cv.busy; ub.onclick=()=>covSet(id,x=>{ x.removed=(x.removed||[]).filter(v=>v!==s); if(x.removedAt) delete x.removedAt[s]; return x; }); c.appendChild(ub); }
+    cs.appendChild(c);
+  }
+  m.appendChild(cs);
+  const ac=el("div","acts"); const pv=el("button",null,"← Previous"); pv.onclick=()=>covStep(-1); const nx=el("button","go","Next →"); nx.onclick=()=>covStep(1);
+  ac.append(pv,nx); if(cv.ov[id]){ const rs=el("button","no","Reset this book"); rs.disabled=cv.busy; rs.onclick=()=>{ if(confirm("Forget all your changes for this book? Removed covers come back, and the program's pick is used again.")) covSet(id,()=>null); }; ac.appendChild(rs); }
+  m.appendChild(ac);
+  m.appendChild(el("p","note",e.pick?"The app will show "+SRCN[e.pick]+" ("+e.why+"). If it fails to load, the app tries the next one in the order Standard Ebooks, Open Library, Gutenberg, LibriVox. Keys: ← → change book.":"No cover is left for this book, so the app shows the colored title box."));
+  m.appendChild(el("p","note","Remove only hides a cover. The file stays on Hugging Face until you do step 2, at least 3 days later."));
+}
+function covStep(d){
+  if(!cv.rows.length) return; const i=cv.rows.indexOf(cv.sel), j=Math.max(0,Math.min(cv.rows.length-1,(i<0?0:i+d)));
+  cv.sel=cv.rows[j]; if(j>=cv.shown) cv.shown=j+1; $("covpane").classList.add("pick"); renderCov();
+  const on=document.querySelector("#cvitems .cvi.on"); if(on) on.scrollIntoView({block:"nearest"});
+}
+/* Save one book's change: read the newest overrides.json first, change only this book, then write (so a second device is never overwritten). */
+async function covSet(id,fn){
+  if(cv.busy) return; cv.busy=true; renderCovMain();
+  try{
+    let cur={version:1,books:{}}; const r=await api("/api/file?key="+enc(OV_KEY));
+    if(r.ok){ cur=JSON.parse(await r.text()); if(!cur||typeof cur!=="object") cur={}; if(!cur.books) cur.books={}; }
+    else if(r.status!==404) throw new Error("could not read the current file (HTTP "+r.status+")");
+    if(r.ok&&!cv.baked){ const ts=new Date().toISOString().replace(/[-:T]/g,"").slice(0,14);
+      if(!(await putJson("covers/overrides.bak-"+ts+".json",JSON.stringify(cur))).ok) throw new Error("backup failed"); cv.baked=true; }
+    const x=fn(JSON.parse(JSON.stringify(cur.books[id]||{})));
+    if(x&&(x.best||(x.removed&&x.removed.length))){ if(!(x.removed&&x.removed.length)){ delete x.removed; delete x.removedAt; } x.changed=Date.now(); cur.books[id]=x; } else delete cur.books[id];
+    cur.version=1; cur.updated=new Date().toISOString();
+    const w=await putJson(OV_KEY,JSON.stringify(cur)); if(!w.ok) throw new Error("writing failed (HTTP "+w.status+")");
+    cv.ov=cur.books;
+  }catch(e){ alert("Not saved: "+e.message+". Nothing was changed."); }
+  finally{ cv.busy=false; covFilter(); if(cv.sel&&!cv.rows.includes(cv.sel)&&$("cvf").value){ const k=cv.rows[0]; cv.sel=k||cv.sel; } renderCov(); }
+}
+/* Step 2 helper: lists removed files that are at least 3 days old. The Kaggle notebook deletes them later (it holds the Hugging Face key; this page never does). */
+async function covCopy(){
+  const AGE=3*86400e3, all=removedList(), ready=all.filter(x=>Date.now()-x.at>=AGE); let use=ready;
+  if(!ready.length){ if(!confirm("None of the "+all.length+" removed covers is 3 days old yet; phones may still show them. Copy the list anyway?")) return; use=all; }
+  const txt=use.map(x=>"covers/"+cvPath(x.id,x.s)).join("\n");
+  try{ await navigator.clipboard.writeText(txt); toast("Copied "+use.length+" file path(s)."); }catch(e){ prompt("Copy this list (Ctrl+C):",txt); }
+}
+$("cvq").oninput=()=>{ cv.shown=150; covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
+$("cvf").onchange=()=>{ cv.shown=150; covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
+$("cvcopy").onclick=covCopy;
+$("cvsave").onclick=async()=>{ const v=$("cvbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
+  ls("cov-base",v); await loadCovIndex(); covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
+
 document.addEventListener("keydown",e=>{
   if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const a=$("a");
+  if(st.which==="cov"){ if(e.key==="ArrowRight") covStep(1); else if(e.key==="ArrowLeft") covStep(-1); return; }
   if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }
   else if(e.key==="ArrowRight") play(Math.min(st.rows.length-1,st.idx+1));
   else if(e.key==="ArrowLeft") play(Math.max(0,st.idx-1));

@@ -189,7 +189,7 @@ body.cov #covpane{flex-direction:column}
       <div id="cvstat" class="note"></div>
       <button id="cvcopy" hidden>2 · Copy removed-file list…</button>
       <div id="cvitems"></div>
-      <details id="cvset"><summary class="note">Covers address</summary><input id="cvbase" style="width:100%;margin-top:8px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+      <details id="cvset"><summary class="note">Covers address · page version covers-3</summary><input id="cvbase" style="width:100%;margin-top:8px"><div class="note" style="margin-top:8px">Catalog address (for titles)</div><input id="cvcat" style="width:100%;margin-top:4px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
     </div>
     <div id="cvmain"></div>
   </div>
@@ -582,7 +582,9 @@ async function syncAll(){ const names=$("jsons").value.split(",").map(s=>s.trim(
    Writes ONLY covers/overrides.json (plus a backup copy once per visit). It never touches the cover pictures. */
 const ORDER=["se","ol","pg","lv"], SRCN={se:"Standard Ebooks",ol:"Open Library",pg:"Gutenberg",lv:"LibriVox"};
 const OV_KEY="covers/overrides.json", DEF_COVERS="https://huggingface.co/datasets/rabiul43/Book_Covers/resolve/main/covers";
-const cv={books:{},ids:[],ov:{},rows:[],sel:null,shown:150,baked:false,busy:false,err:"",info:""};
+const cv={books:{},ids:[],ov:{},rows:[],sel:null,shown:150,baked:false,busy:false,err:"",info:"",catNote:""};
+const CAT_DEF="https://raw.githubusercontent.com/rabiul43/wordtrail-data/main/catalog.json";
+const catUrl=()=>ls("cov-catalog")||CAT_DEF;
 const cvBase=()=>(ls("cov-base")||DEF_COVERS).replace(/\/+$/,"");
 const cvPath=(id,s)=>Math.floor(id/1000)+"/"+id+"/"+s+".webp";
 const covHave=id=>{ const h=cv.books[id]&&cv.books[id].have; return Array.isArray(h)?h.filter(s=>ORDER.includes(s)):[]; };
@@ -603,7 +605,7 @@ async function connectCov(){
   cv.ov={};
   if(r.ok){ try{ const d=JSON.parse(await r.text()); cv.ov=(d&&d.books)||{}; }catch(e){ showErr("covers/overrides.json in the bucket is not valid JSON. Nothing was changed. Fix or delete that file in Cloudflare R2."); return; } }
   else if(r.status!==404){ showErr("Could not read overrides (HTTP "+r.status+")."); return; }
-  cv.baked=false; $("cvbase").value=cvBase();
+  cv.baked=false; $("cvbase").value=cvBase(); $("cvcat").value=catUrl();
   await loadCovIndex();
   $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
   updateSw(); $("mode").textContent="COVERS"; document.body.classList.add("conn");
@@ -613,11 +615,28 @@ async function loadCovIndex(){
   cv.err=""; cv.info=""; cv.books={};
   try{
     const r=await fetch(cvBase()+"/index.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
-    const d=await r.json(), b=(d&&d.books)||d;
-    for(const k in b) if(/^\d+$/.test(k)&&b[k]&&typeof b[k]==="object") cv.books[k]=b[k];
+    const d=await r.json();
+    if(d&&d.b&&typeof d.b==="object"&&!Array.isArray(d.b)){          // real shape: "b":{"23075":["ol","ol",0], ...} = [best, "se,ol", gutenbergId]
+      for(const k in d.b){ const a=d.b[k]; if(/^\d+$/.test(k)&&Array.isArray(a)) cv.books[k]={best:a[0]||"",have:String(a[1]||"").split(",").map(x=>x.trim()).filter(Boolean),gid:Number(a[2])||0}; }
+    }else{                                                          // older/simple shape: "books":{"1":{"have":[..],"best":".."}}
+      const b=(d&&d.books)||d; for(const k in b) if(/^\d+$/.test(k)&&b[k]&&typeof b[k]==="object") cv.books[k]=b[k];
+    }
     const n=Object.keys(cv.books).length; cv.info="Opened "+cvBase()+"/index.json and it worked, but it lists "+n+" book(s)."+(n?"":" The file contains: "+(Array.isArray(d)?"an empty list":(Object.keys(d||{}).slice(0,6).join(", ")||"nothing"))+".");
   }catch(e){ cv.err=e.message; }
   cv.ids=Object.keys(cv.books).sort((a,b)=>a-b);
+  await loadCovTitles();
+}
+/* Titles and authors come from catalog.json (row: [0]=LibriVox id, [1]=title, [2]=authors). If it cannot be read, books show as "Book #id". */
+async function loadCovTitles(){
+  cv.catNote="";
+  if(!cv.ids.length) return;
+  try{
+    const r=await fetch(catUrl(),{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
+    const j=JSON.parse(await r.text());
+    const rows=Array.isArray(j)?j:(Object.values(j||{}).find(v=>Array.isArray(v))||[]);
+    let n=0; for(const row of rows){ if(!Array.isArray(row)) continue; const b=cv.books[String(row[0])]; if(b){ b.title=String(row[1]||""); b.author=String(row[2]||""); n++; } }
+    if(!n) throw new Error("no matching rows; the file format was not recognised");
+  }catch(e){ cv.catNote="Book titles could not be loaded ("+e.message+"). Books show as numbers. Check the catalog address under “Covers address”."; }
 }
 function covFilter(){
   const words=$("cvq").value.toLowerCase().split(/\s+/).filter(Boolean), f=$("cvf").value;
@@ -633,7 +652,7 @@ function removedList(){   // every removed file: {id,s,at}
 function renderCov(){
   const none=cv.ids.filter(id=>!eff(id).have.length).length, ch=Object.keys(cv.ov).length, rl=removedList().length;
   $("summary").textContent=cv.ids.length?cv.ids.length+" books · "+none+" with no cover · "+ch+" changed by you":"No cover list loaded yet";
-  $("cvstat").textContent=cv.ids.length?(cv.rows.length+" book(s) match"+(cv.rows.length>cv.shown?" · showing the first "+cv.shown:"")):"";
+  $("cvstat").textContent=cv.ids.length?(cv.rows.length+" book(s) match"+(cv.rows.length>cv.shown?" · showing the first "+cv.shown:"")+(cv.catNote?"\n"+cv.catNote:"")):""; $("cvstat").style.whiteSpace="pre-wrap";
   const cb=$("cvcopy"); cb.hidden=!rl; cb.textContent="2 · Copy removed-file list… ("+rl+")";
   const box=$("cvitems"), sc=$("cvlist").scrollTop; box.textContent="";
   cv.rows.slice(0,cv.shown).forEach(id=>{
@@ -712,7 +731,7 @@ $("cvq").oninput=()=>{ cv.shown=150; covFilter(); cv.sel=cv.rows[0]||null; rende
 $("cvf").onchange=()=>{ cv.shown=150; covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
 $("cvcopy").onclick=covCopy;
 $("cvsave").onclick=async()=>{ const v=$("cvbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
-  ls("cov-base",v); await loadCovIndex(); covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
+  ls("cov-base",v); const c=$("cvcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await loadCovIndex(); covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
 
 document.addEventListener("keydown",e=>{
   if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const a=$("a");

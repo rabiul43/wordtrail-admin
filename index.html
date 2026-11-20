@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
 <title>Wordtrail R2 Clip Admin</title>
 <style>
-:root{--bg:#F2F3F8;--card:#fff;--line:#DDE0EA;--fg:#14161F;--mut:#5A6074;--acc:#4338CA;--del:#C2362B;--keep:#2E9E5B;--soft:#E9E8FB;--ok:#E6F6EC;--okfg:#13693A}
-@media (prefers-color-scheme:dark){:root{--bg:#12131A;--card:#1C1E28;--line:#323645;--fg:#ECEDF4;--mut:#A3A8BC;--acc:#8C86FF;--del:#FF7A6B;--keep:#5EC58F;--soft:#2A2850;--ok:#1C3A2B;--okfg:#7EE2B8}}
+:root{--bg:#F2F3F8;--card:#fff;--line:#DDE0EA;--fg:#14161F;--mut:#5A6074;--acc:#4338CA;--del:#C2362B;--keep:#2E9E5B;--soft:#E9E8FB;--ok:#E6F6EC;--okfg:#13693A;--warn:#9A6700}
+@media (prefers-color-scheme:dark){:root{--bg:#12131A;--card:#1C1E28;--line:#323645;--fg:#ECEDF4;--mut:#A3A8BC;--acc:#8C86FF;--del:#FF7A6B;--keep:#5EC58F;--soft:#2A2850;--ok:#1C3A2B;--okfg:#7EE2B8;--warn:#E8B84A}}
 *{box-sizing:border-box}html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);font:14px/1.4 Manrope,system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column}
 header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--line)}
@@ -147,12 +147,55 @@ body.cov #covpane{flex-direction:column}
 .ccards{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.ccard{flex:0 0 165px}
 .sw button{padding:4px 9px;font-size:12px}
 }
+/* ---- Books tab (Task 6b) ---- */
+#bkpane{display:none}
+body.bk #bkpane{display:flex!important;flex:1;min-width:0;min-height:0}
+body.bk #moods,body.bk #list,body.bk #queue,body.bk #fpane,body.bk #cpane,body.bk #spane,body.bk #tabs,body.bk footer,body.bk #prog,body.bk #q,body.bk #fstat,body.bk #hbtns{display:none!important}
+#bklist{width:360px;flex:none;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--line)}
+#bklist .ctl{display:flex;flex-direction:column;gap:8px}#bklist .ctl input,#bklist .ctl select{width:100%;min-width:0}
+#bkitems{display:flex;flex-direction:column;gap:6px}
+.bki{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:12px;margin:0}
+.bki.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.bki b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bki small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+#bkmain{flex:1;min-width:0;overflow:auto;padding:14px 20px}
+.bkcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0;display:flex;flex-direction:column;gap:10px;max-width:760px}
+.bkcard h4{margin:0;font-size:15px}
+.bkcard .row{display:flex;gap:10px;flex-wrap:wrap}.bkcard .row button{min-height:44px;font-weight:800}
+.src{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 12px;font-size:13px;margin:0}
+.src dt{color:var(--mut)}.src dd{margin:0;overflow-wrap:anywhere}.src a{color:var(--acc)}
+#bkmain textarea{width:100%;min-height:150px;font:13px/1.4 JetBrains Mono,monospace;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;resize:vertical}
+.vd{font-size:13px;padding:8px 10px;border-radius:10px;overflow-wrap:anywhere}
+.vd.bad{background:rgba(194,54,43,.12);color:var(--del);border:1px solid var(--del)}
+.vd.warn{background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn);border:1px solid var(--warn)}
+.vd.ok{background:var(--ok);color:var(--okfg);border:1px solid var(--keep)}
+.bkprev{white-space:pre-wrap;font:12px/1.5 JetBrains Mono,monospace;background:var(--bg);border-radius:10px;padding:10px;max-height:220px;overflow:auto;overflow-wrap:anywhere}
+.bkback{display:none}
+.bkcard>button{min-height:48px;font-weight:800}
+#bkmain .chip:not(.hi){background:var(--card);border:1px solid var(--line)}
+.pdl{display:flex;gap:10px;align-items:flex-start;color:var(--fg);font-weight:700}
+@media (max-width:700px){
+body.bk{padding-bottom:0!important}
+body.bk #bkpane{flex-direction:column}
+#bklist{width:100%;border-right:0;flex:1;min-height:0;padding:10px 14px}
+#bkmain{padding:12px 14px;min-height:0}
+#bkpane.pick #bklist{display:none}
+#bkpane:not(.pick) #bkmain{display:none}
+.bkback{display:inline-block;margin-bottom:8px}
+.src{grid-template-columns:1fr}.src dt{margin-top:6px}
+.bkcard .row button{flex:1 1 140px}
+#bkmain textarea,#bklist input,#bklist select{font-size:16px}
+#bkmain .acts{position:static;background:none;padding:4px 0 16px;flex-wrap:wrap}
+#bkmain .acts button{min-height:46px}#bkmain .acts .go{flex:1 1 120px}
+#bkmain h2{font-size:26px!important}
+}
 </style>
 </head>
 <body>
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
-  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button></div>
+  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button><button data-m="bk">📚 Books</button></div>
   <span id="mode" class="chip needconn"></span>
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
@@ -189,9 +232,20 @@ body.cov #covpane{flex-direction:column}
       <div id="cvstat" class="note"></div>
       <button id="cvcopy" hidden>2 · Copy removed-file list…</button>
       <div id="cvitems"></div>
-      <details id="cvset"><summary class="note">Covers address · page version covers-3</summary><input id="cvbase" style="width:100%;margin-top:8px"><div class="note" style="margin-top:8px">Catalog address (for titles)</div><input id="cvcat" style="width:100%;margin-top:4px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+      <details id="cvset"><summary class="note">Covers address · page version books-1</summary><input id="cvbase" style="width:100%;margin-top:8px"><div class="note" style="margin-top:8px">Catalog address (for titles)</div><input id="cvcat" style="width:100%;margin-top:4px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
     </div>
     <div id="cvmain"></div>
+  </div>
+  <div id="bkpane">
+    <div id="bklist">
+      <div class="ctl"><input id="bkq" type="search" placeholder="Search title, author, or book number…">
+        <select id="bkf"><option value="">All books</option><option value="none">No text anywhere</option><option value="noneen">No text anywhere · English</option><option value="mine">Uploaded by me</option><option value="search">Found by search</option><option value="review">Doubtful matches to review</option><option value="removed">Removed, waiting to delete</option></select></div>
+      <div id="bkstat" class="note"></div>
+      <button id="bkdel" hidden>2 · Delete removed texts…</button>
+      <div id="bkitems"></div>
+      <details id="bkset"><summary class="note">Books settings · page version books-1</summary><div class="note" style="margin-top:8px">Status list address (Hugging Face, Book_Text/status)</div><input id="bkbase" style="width:100%;margin-top:4px"><div class="note" style="margin-top:8px">Catalog address (same one the Covers tab uses)</div><input id="bkcat" style="width:100%;margin-top:4px"><button id="bksave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+    </div>
+    <div id="bkmain"></div>
   </div>
   <div id="cpane"><div class="card2"><h4>Clean-up in 2 steps</h4><p>Nothing is removed until you press. Retired files are only deleted when you press step 2.</p><div id="cbtns"></div></div></div>
   <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
@@ -214,7 +268,7 @@ body.cov #covpane{flex-direction:column}
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
 function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["amb","cov"].includes(ls0("r2-which"))?ls0("r2-which"):"music")};
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["amb","cov","bk"].includes(ls0("r2-which"))?ls0("r2-which"):"music")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
@@ -244,8 +298,9 @@ async function connect0(){
   st.base=st.root+(st.which==="amb"?"/ambient":"");
   ls("r2-base",st.root); forgetTok();
   try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
-  document.body.classList.toggle("cov",st.which==="cov");
+  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk");
   if(st.which==="cov") return connectCov();
+  if(st.which==="bk") return connectBk();
   $("summary").textContent="Loading list…";
   const all=[]; let cursor=null;
   try{
@@ -733,9 +788,277 @@ $("cvcopy").onclick=covCopy;
 $("cvsave").onclick=async()=>{ const v=$("cvbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
   ls("cov-base",v); const c=$("cvcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await loadCovIndex(); covFilter(); cv.sel=cv.rows[0]||null; renderCov(); };
 
+/* =================== Books tab (Task 6b) ===================
+   Lists every book of catalog.json and where a text can come from (the status list the Kaggle notebook of Task 6a made:
+   Book_Text/status/texts.json), and lets you upload a public-domain text for a book that has none.
+   It writes ONLY text/<LibriVox id>.json in the Worker's bucket (plus one backup copy per visit, text/<id>.bak-<time>.json).
+   It never writes to Hugging Face and never holds a Hugging Face key. Remove is two steps: mark first, delete at least 3 days later. */
+const TXT_DEF="https://huggingface.co/datasets/rabiul43/Book_Text/resolve/main/status";
+const TXT_MAX=4500000, BODY_MAX=4900000, AGE3=3*86400e3, WPM=150;
+const bk={cat:{},ids:[],tx:null,found:{},maybe:{},up:{},baks:{},rows:[],sel:null,shown:150,busy:false,baked:{},draft:{},prev:{},err:"",note:"",oldWorker:false};
+const bkBase=()=>(ls("bk-base")||TXT_DEF).replace(/\/+$/,"");
+const tkey=id=>"text/"+id+".json";
+const nfmt=n=>Number(n||0).toLocaleString("en-US");
+const fmtDur=s=>{ s=Math.round(+s||0); if(!s) return "unknown"; const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h?h+" h "+m+" min":m+" min"; };
+const fmtDate=ms=>{ try{ return ms?new Date(ms).toISOString().slice(0,10):""; }catch(e){ return ""; } };
+const lnk=(t,h)=>{ const a=el("a",null,t); a.href=h; a.target="_blank"; a.rel="noopener"; return a; };
+async function bkErr(r){ try{ const j=await r.json(); if(j&&j.error) return j.error; }catch(e){} return "HTTP "+r.status; }
+
+/* One book's picture of where a text can come from. If the status list is not there yet, only the catalog is used. */
+function bkInfo(id){
+  const c=bk.cat[id]||{}, t=bk.tx&&bk.tx[id], u=bk.up[id]||null, fl=t?String(t[1]||""):"", num=t?(Number(t[0])||0):(c.gid||0);
+  return {c,num,h:fl.includes("h"),p:fl.includes("p"),a:fl.includes("a")||!!c.ia,s:fl.includes("s"),live:u&&!u.removed?u:null,gone:u&&u.removed?u:null,maybe:bk.maybe[id]||null,found:bk.found[id]||null};
+}
+const bkNone=i=>!i.num&&!i.p&&!i.a&&!i.live;
+function bkChips(i){
+  const o=[]; if(i.live) o.push(["uploaded by me",1]); if(i.num) o.push(["Gutenberg text",0]); if(i.p) o.push(["timing-file text",0]); if(i.a) o.push(["archive.org link",0]);
+  if(i.s) o.push(["found by search",0]); if(i.gone) o.push(["removed",0]); if(bkNone(i)) o.push(["no text",0]); return o;
+}
+const bkRemoved=()=>Object.keys(bk.up).filter(id=>bk.up[id].removed).map(id=>({id,at:bk.up[id].removedAt||0}));
+
+async function connectBk(){
+  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Loading books…";
+  bk.baked={}; bk.draft={}; bk.prev={};
+  let ok; try{ ok=await bkLoadUploads(); }catch(e){ showErr("Can't reach the Worker ("+e.message+"). Check the Worker URL below."); return; }
+  if(ok==="401"){ showErr("That token didn't work (401). Check it and try again."); return; }
+  bk.oldWorker=false; try{ const pr=await fetch(st.root+"/public/texts-index.json",{cache:"no-store"}); bk.oldWorker=!pr.ok; }catch(e){}
+  await bkLoadBooks();
+  $("bkbase").value=bkBase(); $("bkcat").value=catUrl();
+  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
+  updateSw(); $("mode").textContent="BOOKS"; document.body.classList.add("conn");
+  bk.sel=null; $("bkpane").classList.remove("pick"); bkFilter(); if(bk.rows.length) bk.sel=bk.rows[0]; renderBk();
+}
+async function bkLoadUploads(){   // every text/<id>.json in the bucket (and its backups), with the live/removed tag the Worker keeps
+  const up={}, baks={}; let cursor=null;
+  do{
+    const r=await api("/api/list?prefix="+enc("text/")+(cursor?"&cursor="+enc(cursor):""));
+    if(r.status===401) return "401";
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d=await r.json(); cursor=d.cursor;
+    for(const o of d.objects){
+      let m=/^text\/(\d+)\.json$/.exec(o.key);
+      if(m){ const md=o.meta||{}; up[m[1]]={size:o.size,uploaded:o.uploaded,words:Number(md.words)||0,at:Number(md.at)||Date.parse(o.uploaded)||0,removed:md.removed==="1",removedAt:Number(md.removedAt)||0}; continue; }
+      m=/^text\/(\d+)\.bak-[^\/]*\.json$/.exec(o.key); if(m) (baks[m[1]]=baks[m[1]]||[]).push(o.key);
+    }
+  }while(cursor);
+  bk.up=up; bk.baks=baks; return "ok";
+}
+async function bkLoadBooks(){
+  bk.cat={}; bk.ids=[]; bk.tx=null; bk.found={}; bk.maybe={}; bk.note=""; bk.err="";
+  try{
+    const r=await fetch(catUrl(),{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
+    const j=JSON.parse(await r.text()), rows=Array.isArray(j)?j:(Array.isArray(j&&j.b)?j.b:(Object.values(j||{}).find(v=>Array.isArray(v))||[]));
+    for(const row of rows){
+      if(!Array.isArray(row)||!/^\d+$/.test(String(row[0]))) continue; const id=String(row[0]);
+      bk.cat[id]={id,title:String(row[1]||("Book "+id)),author:String(row[2]||""),last:String(row[3]||""),lang:String(row[4]||""),gid:Number(row[5])||0,secs:Number(row[6])||0,ia:String(row[8]||""),url:String(row[10]||"")};
+    }
+    bk.ids=Object.keys(bk.cat).sort((a,b)=>a-b);
+    if(!bk.ids.length) throw new Error("no books found; the file format was not recognised");
+  }catch(e){ bk.err="Could not read the catalog ("+e.message+"). Check the catalog address under “Books settings”."; return; }
+  const get=async f=>{ const r=await fetch(bkBase()+"/"+f,{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status); const d=await r.json(); return (d&&d.b&&typeof d.b==="object"&&!Array.isArray(d.b))?d.b:null; };
+  try{ const b=await get("texts.json"); if(!b) throw new Error("unexpected format"); bk.tx=b; }
+  catch(e){ bk.note="The status list (texts.json) could not be read ("+e.message+"), so only the catalog is used for now. Run the Task 6a notebook first, or check the address under “Books settings”."; }
+  try{ bk.found=(await get("found-gutenberg.json"))||{}; }catch(e){}
+  try{ bk.maybe=(await get("maybe-gutenberg.json"))||{}; }catch(e){}
+}
+function bkFilter(){
+  const words=$("bkq").value.toLowerCase().split(/\s+/).filter(Boolean), f=$("bkf").value;
+  bk.rows=bk.ids.filter(id=>{
+    const i=bkInfo(id);
+    if(f==="none"&&!bkNone(i)) return false;
+    if(f==="noneen"&&!(bkNone(i)&&/^english$/i.test(i.c.lang))) return false;
+    if(f==="mine"&&!i.live) return false;
+    if(f==="search"&&!i.s) return false;
+    if(f==="review"&&!(i.maybe&&!i.num)) return false;
+    if(f==="removed"&&!i.gone) return false;
+    if(!words.length) return true; const hay=(id+" "+i.c.title+" "+i.c.author+" "+(i.num||"")).toLowerCase(); return words.every(w=>hay.includes(w));
+  });
+}
+function renderBk(){
+  const none=bk.ids.filter(id=>bkNone(bkInfo(id))).length, mine=Object.keys(bk.up).filter(id=>!bk.up[id].removed).length, rl=bkRemoved(), ready=rl.filter(x=>Date.now()-x.at>=AGE3).length;
+  $("summary").textContent=bk.ids.length?nfmt(bk.ids.length)+" books · "+nfmt(none)+" with no text anywhere · "+mine+" uploaded by you":"No book list loaded yet";
+  $("bkstat").textContent=bk.ids.length?(nfmt(bk.rows.length)+" book(s) match"+(bk.rows.length>bk.shown?" · showing the first "+bk.shown:"")+(bk.note?"\n"+bk.note:"")):""; $("bkstat").style.whiteSpace="pre-wrap";
+  const db=$("bkdel"); db.hidden=!rl.length; db.textContent="2 · Delete removed texts… ("+ready+" ready of "+rl.length+")"; db.disabled=bk.busy;
+  const box=$("bkitems"), sc=$("bklist").scrollTop; box.textContent="";
+  bk.rows.slice(0,bk.shown).forEach(id=>{
+    const i=bkInfo(id), it=el("button","bki"+(id===bk.sel?" on":"")); it.dataset.id=id;
+    it.appendChild(el("b",null,i.c.title)); it.appendChild(el("small",null,(i.c.author||"")+" · #"+id+" · "+i.c.lang));
+    const ch=el("div","chips"); for(const [t,hi] of bkChips(i)) ch.appendChild(el("span","chip"+(hi?" hi":""),t)); it.appendChild(ch);
+    it.onclick=()=>{ bk.sel=id; $("bkpane").classList.add("pick"); renderBk(); $("bkmain").scrollTop=0; }; box.appendChild(it);
+  });
+  if(bk.rows.length>bk.shown){ const m=el("button",null,"Show 150 more"); m.onclick=()=>{ bk.shown+=150; renderBk(); }; box.appendChild(m); }
+  $("bklist").scrollTop=sc; renderBkMain();
+}
+
+/* The length check and word count (like archiveCheck in the app, about 150 words a minute). "hard" stops saving; "warn" asks first. */
+function bkCheck(raw,c){
+  const text=String(raw||"").replace(/^\uFEFF/,"").replace(/\u0000/g,"").replace(/\r\n?/g,"\n").trim();
+  const r={text,len:text.length,words:0,expected:0,ratio:0,hard:[],warn:[],good:[]};
+  if(!text.length) return r;
+  r.words=text.split(/\s+/).length;
+  if(r.len<200) r.hard.push("This is too short to be a book text (under 200 characters).");
+  if(/^\s*<(!doctype|html)/i.test(text)) r.hard.push("This looks like a web page (HTML), not a plain text.");
+  if(r.len>TXT_MAX) r.hard.push("Too long for one file: "+nfmt(r.len)+" characters (the limit is "+nfmt(TXT_MAX)+", about 800,000 words). Cut it or split it.");
+  else if(JSON.stringify(text).length>BODY_MAX-1000) r.hard.push("Too long for one file once it is saved. Cut it a little.");
+  if(r.len>=2000){
+    const sample=text.slice(0,200000), toks=sample.split(/\s+/).filter(Boolean);
+    const plain=(sample.match(/[\p{L}\p{N}\s.,;:!?'"“”‘’()\-—_]/gu)||[]).length/sample.length;
+    const wl=toks.filter(w=>/^\p{L}+(?:['’-]\p{L}+)*$/u.test(w.replace(/^[^\p{L}]+|[^\p{L}]+$/gu,""))).length/(toks.length||1);
+    if(plain<0.9||wl<0.75) r.warn.push("Much of this text looks unreadable (scan errors or strange symbols).");
+    if(/^english$/i.test((c&&c.lang)||"")&&toks.length>=300){
+      const stop=new Set("the and of to a in that was he it is with as his for had you her but not be at on by this which from she they have were".split(" "));
+      if(toks.filter(w=>stop.has(w.toLowerCase().replace(/[^a-z]/g,""))).length/toks.length<0.12) r.warn.push("This does not look like English, but the book is in English.");
+    }
+  }
+  const secs=(c&&+c.secs)||0; r.expected=secs?Math.round(secs/60*WPM):0;
+  if(secs>=600){
+    r.ratio=r.words/r.expected;
+    if(r.ratio>2.5) r.warn.push("Much longer than the recording ("+Math.round(r.ratio*100)+"% of the expected length). It may hold other books or plays too.");
+    else if(r.ratio<0.25) r.warn.push("Much shorter than the recording ("+Math.round(r.ratio*100)+"% of the expected length). Part of the book may be missing.");
+    else r.good.push("About as long as the recording ("+Math.round(r.ratio*100)+"% of the expected length).");
+  }else r.good.push("The recording is short, so the length was not compared.");
+  return r;
+}
+function bkStep(d){
+  if(!bk.rows.length) return; const i=bk.rows.indexOf(bk.sel), j=Math.max(0,Math.min(bk.rows.length-1,i<0?0:i+d));
+  bk.sel=bk.rows[j]; if(j>=bk.shown) bk.shown=j+1; $("bkpane").classList.add("pick"); renderBk();
+  const on=document.querySelector("#bkitems .bki.on"); if(on) on.scrollIntoView({block:"nearest"});
+}
+function renderBkMain(){
+  const m=$("bkmain"); m.textContent="";
+  if(bk.err){ m.appendChild(el("div","werr",bk.err)); return; }
+  const id=bk.sel; if(!id||!bk.cat[id]){ m.appendChild(el("p","note",bk.ids.length?"No book matches. Change the search or the filter.":"No books yet.")); return; }
+  const i=bkInfo(id), c=i.c;
+  const bb=el("button","bkback","← Back to list"); bb.onclick=()=>$("bkpane").classList.remove("pick"); m.appendChild(bb);
+  const pos=bk.rows.indexOf(id);
+  m.appendChild(el("div","crumb","Book #"+id+(i.num?" · Gutenberg "+i.num:"")+(pos>=0?" · "+(pos+1)+" of "+bk.rows.length:"")));
+  const t=el("div","ctitle"); t.appendChild(el("h2",null,c.title)); m.appendChild(t);
+  const ch=el("div","chips"); for(const [x,hi] of bkChips(i)) ch.appendChild(el("span","chip"+(hi?" hi":""),x)); m.appendChild(ch);
+  m.appendChild(el("div","note",(c.author||"Unknown author")+" · "+(c.lang||"language unknown")+" · recording "+fmtDur(c.secs)+(c.secs?" (about "+nfmt(Math.round(c.secs/60*WPM))+" words)":"")));
+  if(bk.oldWorker) m.appendChild(el("div","werr","Your Worker does not have the new text code yet, so saving, removing and deleting are switched off. Paste the new admin-worker.js into Cloudflare (step 1 of the Task 6b notes), then press Books again."));
+  if(bk.note) m.appendChild(el("div","note",bk.note));
+  if(bkNone(i)) m.appendChild(el("p","note","No text anywhere for this book. The app can only offer “Use my own text”. Upload one below."));
+  /* where a text can come from */
+  const sc=el("div","bkcard"); sc.appendChild(el("h4",null,"Where a text can come from"));
+  const dl=el("dl","src"), row=(a,b)=>{ dl.appendChild(el("dt",null,a)); const d=el("dd"); if(b&&b.nodeType) d.appendChild(b); else d.textContent=b; dl.appendChild(d); };
+  row("Uploaded by me",i.live?"yes · "+nfmt(i.live.words)+" words · "+fmtDate(i.live.at):(i.gone?"removed on "+fmtDate(i.gone.removedAt):"no"));
+  if(i.num){ const d=el("span"); d.appendChild(document.createTextNode(String(i.num)+(i.s?" (found by search":" (from the catalog")+(i.s&&i.found?": matched “"+i.found[1]+"” by "+i.found[2]:"")+") · ")); d.appendChild(lnk("open on Gutenberg","https://www.gutenberg.org/ebooks/"+i.num)); row("Gutenberg number",d); }
+  else row("Gutenberg number","none");
+  row("Own copy in Book_Text",i.num?(i.h?"yes":(bk.tx?"not there yet (the app uses the usual Gutenberg routes)":"unknown (no status list)")):"no number, so no copy");
+  row("Timing file (wordtrail-packs)",bk.tx?(i.p?"yes":"no"):"unknown (no status list)");
+  if(c.ia){ const d=el("span"); d.appendChild(lnk(c.ia,"https://archive.org/details/"+encodeURIComponent(c.ia))); row("archive.org id",d); } else row("archive.org id","none");
+  if(c.url){ const d=el("span"); d.appendChild(lnk(c.url,c.url)); row("Text link in catalog",d); } else row("Text link in catalog","none");
+  if(i.maybe){ const d=el("span"); d.appendChild(document.createTextNode(String(i.maybe[0])+" “"+i.maybe[1]+"” by "+i.maybe[2]+" · "+(i.maybe[3]||"")+" · ")); d.appendChild(lnk("look","https://www.gutenberg.org/ebooks/"+i.maybe[0])); row("Doubtful match (never used by the app)",d); }
+  sc.appendChild(dl); m.appendChild(sc);
+  /* the uploaded text (live or removed) */
+  if(i.live||i.gone){
+    const u=i.live||i.gone, uc=el("div","bkcard"); uc.appendChild(el("h4",null,i.live?"Uploaded text":"Removed text"));
+    const ud=el("dl","src"), r2=(a,b)=>{ ud.appendChild(el("dt",null,a)); ud.appendChild(el("dd",null,b)); };
+    r2("Words",nfmt(u.words)); r2("File size",(u.size/1048576).toFixed(2)+" MB"); r2("Uploaded",fmtDate(u.at));
+    if(i.gone){ const left=Math.max(0,Math.ceil((u.removedAt+AGE3-Date.now())/86400e3)); r2("Removed on",fmtDate(u.removedAt)); r2("Deleted by step 2",left?"in "+left+" day(s) at the earliest":"ready now"); }
+    uc.appendChild(ud);
+    if(bk.prev[id]!=null) uc.appendChild(el("div","bkprev",bk.prev[id]));
+    const rw=el("div","row");
+    if(i.live){
+      const pv=el("button",null,bk.prev[id]!=null?"Hide the start":"Show the start of the text"); pv.disabled=bk.busy; pv.onclick=()=>bkPreview(id); rw.appendChild(pv);
+      const rb=el("button","danger","Remove (step 1)"); rb.disabled=bk.busy||bk.oldWorker; rb.onclick=()=>{ if(confirm("Remove this text? The app stops using it (phones may take up to 5 minutes). The file is deleted for good only by step 2, at least 3 days later.")) bkMark(id,true); }; rw.appendChild(rb);
+    }else{ const ub=el("button","primary","Undo remove"); ub.disabled=bk.busy||bk.oldWorker; ub.onclick=()=>bkMark(id,false); rw.appendChild(ub); }
+    uc.appendChild(rw); m.appendChild(uc);
+  }
+  /* the upload box */
+  const dr=bk.draft[id]||(bk.draft[id]={text:"",pd:false}), up=el("div","bkcard");
+  up.appendChild(el("h4",null,i.live?"Replace the uploaded text":"Upload a text for this book"));
+  up.appendChild(el("div","note","One plain text (.txt) for the whole book, pasted or chosen from a file. Only texts that are in the public domain."));
+  const fi=document.createElement("input"); fi.type="file"; fi.accept=".txt,text/plain"; fi.hidden=true;
+  const fb=el("button",null,"Choose a .txt file…"); fb.disabled=bk.busy; fb.onclick=()=>fi.click();
+  const ta=document.createElement("textarea"); ta.placeholder="…or paste the text here"; ta.value=dr.text; ta.disabled=bk.busy; ta.spellcheck=false;
+  const an=el("div"), cb=document.createElement("input"); cb.type="checkbox"; cb.id="bkpd"; cb.checked=dr.pd; cb.disabled=bk.busy;
+  const pdl=el("label","pdl"); pdl.appendChild(cb); pdl.appendChild(el("span",null,"This text is public domain. I checked it.")); pdl.htmlFor="bkpd";
+  const sv=el("button","primary","Save text for this book"); sv.id="bksavetext";
+  function refresh(){
+    const r=bkCheck(dr.text,c); an.textContent="";
+    if(!r.text.length) an.appendChild(el("div","note","Nothing yet. Paste a text or choose a file."));
+    else{
+      an.appendChild(el("div","note","Words: "+nfmt(r.words)+" · characters: "+nfmt(r.len)+(r.expected?" · expected from the recording: about "+nfmt(r.expected)+" words":"")));
+      for(const x of r.hard) an.appendChild(el("div","vd bad","✗ "+x)); for(const x of r.warn) an.appendChild(el("div","vd warn","! "+x)); if(!r.hard.length&&!r.warn.length) for(const x of r.good) an.appendChild(el("div","vd ok","✓ "+x));
+    }
+    sv.disabled=bk.busy||bk.oldWorker||!r.text.length||r.hard.length>0||!dr.pd; sv.textContent=r.warn.length&&!r.hard.length?"Save anyway…":"Save text for this book";
+  }
+  let tm=0; ta.oninput=()=>{ dr.text=ta.value; clearTimeout(tm); tm=setTimeout(refresh,250); };
+  cb.onchange=()=>{ dr.pd=cb.checked; refresh(); };
+  fi.onchange=async()=>{ const f=fi.files&&fi.files[0]; if(!f) return; try{ dr.text=await f.text(); ta.value=dr.text; }catch(e){ alert("Could not read that file: "+e.message); } fi.value=""; refresh(); };
+  sv.onclick=async()=>{ const r=bkCheck(dr.text,c); if(r.hard.length||!dr.pd||!r.text.length) return; if(r.warn.length&&!confirm("Check before saving:\n\n• "+r.warn.join("\n• ")+"\n\nSave this text anyway?")) return; await bkSave(id,r); };
+  const rw2=el("div","row"); rw2.append(fb,fi); up.append(rw2,ta,an,pdl,sv); refresh(); m.appendChild(up);
+  const ac=el("div","acts"); const pv2=el("button",null,"← Previous"); pv2.onclick=()=>bkStep(-1); const nx=el("button","go","Next →"); nx.onclick=()=>bkStep(1); ac.append(pv2,nx); m.appendChild(ac);
+  m.appendChild(el("p","note","Saving only writes text/"+id+".json in your Worker's bucket. Remove only hides the text from the app; the file is deleted by step 2, at least 3 days later. Keys: ← → change book."));
+}
+async function bkPreview(id){
+  if(bk.prev[id]!=null){ delete bk.prev[id]; renderBkMain(); return; }
+  try{ const r=await api("/api/file?key="+enc(tkey(id))); if(!r.ok) throw new Error("HTTP "+r.status); const o=JSON.parse(await r.text()); bk.prev[id]=String(o.text||"").slice(0,700)+(String(o.text||"").length>700?" …":""); }
+  catch(e){ alert("Could not read the text: "+e.message); }
+  renderBkMain();
+}
+/* One backup copy of the current file per book per visit, before the first change. */
+async function bkBackup(id,raw){
+  if(bk.baked[id]||!bk.up[id]) return;
+  if(raw==null){ const r=await api("/api/file?key="+enc(tkey(id))); if(r.status===404) return; if(!r.ok) throw new Error("could not read the current file (HTTP "+r.status+")"); raw=await r.text(); }
+  const ts=new Date().toISOString().replace(/[-:T]/g,"").slice(0,14), k="text/"+id+".bak-"+ts+".json", b=await putJson(k,raw);
+  if(!b.ok) throw new Error("backup failed ("+await bkErr(b)+")");
+  (bk.baks[id]=bk.baks[id]||[]).push(k); bk.baked[id]=true;
+}
+async function bkSave(id,r){
+  if(bk.busy) return; bk.busy=true; renderBkMain();
+  try{
+    const c=bk.cat[id], o={v:1,id:Number(id),title:c.title,text:r.text,words:r.words,pd:true,at:Date.now()}, body=JSON.stringify(o);
+    if(body.length>BODY_MAX) throw new Error("the text is too big for one file");
+    await bkBackup(id);
+    const w=await putJson(tkey(id),body); if(!w.ok) throw new Error(await bkErr(w));
+    bk.up[id]={size:body.length,uploaded:new Date().toISOString(),words:r.words,at:o.at,removed:false,removedAt:0};
+    delete bk.draft[id]; delete bk.prev[id]; toast("Saved: "+nfmt(r.words)+" words for “"+c.title+"”.");
+  }catch(e){ alert("Not saved: "+e.message+". Nothing was changed."); }
+  finally{ bk.busy=false; bkFilter(); renderBk(); }
+}
+/* Step 1 of Remove (and Undo): read the newest file, change only the removed mark, write it back. */
+async function bkMark(id,remove){
+  if(bk.busy) return; bk.busy=true; renderBkMain();
+  try{
+    const r=await api("/api/file?key="+enc(tkey(id))); if(!r.ok) throw new Error("could not read the current file (HTTP "+r.status+")");
+    const raw=await r.text(), o=JSON.parse(raw); await bkBackup(id,raw);
+    if(remove) o.removedAt=Date.now(); else delete o.removedAt;
+    const w=await putJson(tkey(id),JSON.stringify(o)); if(!w.ok) throw new Error(await bkErr(w));
+    bk.up[id]=Object.assign({},bk.up[id],{removed:!!remove,removedAt:remove?o.removedAt:0});
+    toast(remove?"Removed. The app stops using it. Step 2 deletes the file after 3 days.":"Restored. The app can use this text again.");
+  }catch(e){ alert("Not saved: "+e.message+". Nothing was changed."); }
+  finally{ bk.busy=false; bkFilter(); renderBk(); }
+}
+/* Step 2: delete removed texts (and their backups) that were removed at least 3 days ago. The list is read again first, so a text restored on another device is never deleted. */
+async function bkDelete(){
+  if(bk.busy) return; bk.busy=true; renderBk();
+  try{
+    await bkLoadUploads();
+    const all=bkRemoved(), ready=all.filter(x=>Date.now()-x.at>=AGE3);
+    if(!ready.length){ toast(all.length?"None of the "+all.length+" removed text(s) is 3 days old yet.":"Nothing is marked as removed."); return; }
+    const keys=[]; for(const x of ready){ keys.push(tkey(x.id)); for(const k of (bk.baks[x.id]||[])) keys.push(k); }
+    if(!confirm("Delete "+ready.length+" removed text file(s) and "+(keys.length-ready.length)+" backup cop"+(keys.length-ready.length===1?"y":"ies")+" for good? This cannot be undone.")) return;
+    for(let n=0;n<keys.length;n+=500){
+      const r=await api("/api/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({keys:keys.slice(n,n+500)})});
+      if(!r.ok) throw new Error(await bkErr(r));
+    }
+    for(const x of ready){ delete bk.up[x.id]; delete bk.baks[x.id]; delete bk.baked[x.id]; delete bk.prev[x.id]; }
+    toast("Deleted "+ready.length+" removed text(s).");
+  }catch(e){ alert("Not finished: "+e.message+"."); }
+  finally{ bk.busy=false; bkFilter(); renderBk(); }
+}
+$("bkq").oninput=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
+$("bkf").onchange=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
+$("bkdel").onclick=bkDelete;
+$("bksave").onclick=async()=>{ const v=$("bkbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
+  ls("bk-base",v); const c=$("bkcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await bkLoadBooks(); bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
+
 document.addEventListener("keydown",e=>{
   if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const a=$("a");
   if(st.which==="cov"){ if(e.key==="ArrowRight") covStep(1); else if(e.key==="ArrowLeft") covStep(-1); return; }
+  if(st.which==="bk"){ if(e.key==="ArrowRight") bkStep(1); else if(e.key==="ArrowLeft") bkStep(-1); return; }
   if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }
   else if(e.key==="ArrowRight") play(Math.min(st.rows.length-1,st.idx+1));
   else if(e.key==="ArrowLeft") play(Math.max(0,st.idx-1));

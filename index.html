@@ -174,6 +174,10 @@ body.bk #moods,body.bk #list,body.bk #queue,body.bk #fpane,body.bk #cpane,body.b
 .bkback{display:none}
 .bkcard>button{min-height:48px;font-weight:800}
 #bkmain .chip:not(.hi){background:var(--card);border:1px solid var(--line)}
+.chip.no{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}.chip.me{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc)}
+#bkfl{display:grid;grid-template-columns:1fr 1fr;gap:8px}#bkfl button{min-height:44px;font-weight:700}#bkfl button.on{border-color:var(--acc);color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+#bklist .en{display:flex;align-items:center;gap:10px;min-height:44px;color:var(--mut);font-size:14px}#bklist .en input{width:20px;height:20px;min-width:0}
+#bknext{background:var(--card);border:1px solid var(--keep);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}#bknext button{min-height:44px;font-weight:800}
 .pdl{display:flex;gap:10px;align-items:flex-start;color:var(--fg);font-weight:700}
 @media (max-width:700px){
 body.bk{padding-bottom:0!important}
@@ -210,13 +214,13 @@ body.bk #bkpane{flex-direction:column}
 <div id="prog" class="needconn"></div>
 <div id="welcome"><div class="wcard">
   <h2>Connect</h2>
-  <p>One password opens both Music and Ambient.</p>
+  <p>One password opens Music, Ambient, Covers and Books.</p>
   <div id="werr" class="werr" hidden></div>
   <input id="tok" type="password" placeholder="Admin token" autocomplete="current-password">
   <label><input type="checkbox" id="rem" checked> Remember on this device</label>
   <button class="primary" id="go">Connect</button>
   <details><summary>Worker URL</summary><input id="base" placeholder="Worker URL"></details>
-  <ol><li>Connect once. Next time the page connects by itself. Use <b>Music | Ambient</b> at the top to switch.</li>
+  <ol><li>Connect once. Next time the page connects by itself. Use the buttons at the top to switch between Music, Ambient, Covers and Books.</li>
   <li>Pick a section on the left, play clips, press <b>Keep</b> or <b>Delete</b>. In Ambient, <b>Make best</b> picks the live clip for a folder.</li>
   <li>When done: <b>1 · Retire</b>, wait about 3 days, then <b>2 · Delete retired</b>.</li></ol>
 </div></div>
@@ -232,18 +236,20 @@ body.bk #bkpane{flex-direction:column}
       <div id="cvstat" class="note"></div>
       <button id="cvcopy" hidden>2 · Copy removed-file list…</button>
       <div id="cvitems"></div>
-      <details id="cvset"><summary class="note">Covers address · page version books-1</summary><input id="cvbase" style="width:100%;margin-top:8px"><div class="note" style="margin-top:8px">Catalog address (for titles)</div><input id="cvcat" style="width:100%;margin-top:4px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+      <details id="cvset"><summary class="note">Covers address</summary><input id="cvbase" style="width:100%;margin-top:8px"><div class="note" style="margin-top:8px">Catalog address (for titles)</div><input id="cvcat" style="width:100%;margin-top:4px"><button id="cvsave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
     </div>
     <div id="cvmain"></div>
   </div>
   <div id="bkpane">
     <div id="bklist">
-      <div class="ctl"><input id="bkq" type="search" placeholder="Search title, author, or book number…">
-        <select id="bkf"><option value="">All books</option><option value="none">No text anywhere</option><option value="noneen">No text anywhere · English</option><option value="mine">Uploaded by me</option><option value="search">Found by search</option><option value="review">Doubtful matches to review</option><option value="removed">Removed, waiting to delete</option></select></div>
+      <div id="bknext" hidden></div>
+      <div class="ctl"><input id="bkq" type="search" placeholder="Search title, author, or book number…"></div>
+      <div id="bkfl"><button data-f="none" aria-pressed="false">Needs text</button><button data-f="mine" aria-pressed="false">Uploaded by me</button><button data-f="review" aria-pressed="false">To check</button><button data-f="removed" aria-pressed="false">Removed</button></div>
+      <label class="en"><input type="checkbox" id="bken"> English books only</label>
       <div id="bkstat" class="note"></div>
-      <button id="bkdel" hidden>2 · Delete removed texts…</button>
+      <button id="bkdel" hidden>Delete for good…</button>
       <div id="bkitems"></div>
-      <details id="bkset"><summary class="note">Books settings · page version books-1</summary><div class="note" style="margin-top:8px">Status list address (Hugging Face, Book_Text/status)</div><input id="bkbase" style="width:100%;margin-top:4px"><div class="note" style="margin-top:8px">Catalog address (same one the Covers tab uses)</div><input id="bkcat" style="width:100%;margin-top:4px"><button id="bksave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
+      <details id="bkset"><summary class="note">Books settings · page version books-2</summary><div class="note" style="margin-top:8px">Status list address (Hugging Face, Book_Text/status)</div><input id="bkbase" style="width:100%;margin-top:4px"><div class="note" style="margin-top:8px">Catalog address (same one the Covers tab uses)</div><input id="bkcat" style="width:100%;margin-top:4px"><button id="bksave" style="width:100%;margin-top:8px">Save &amp; reload</button></details>
     </div>
     <div id="bkmain"></div>
   </div>
@@ -795,7 +801,7 @@ $("cvsave").onclick=async()=>{ const v=$("cvbase").value.trim().replace(/\/+$/,"
    It never writes to Hugging Face and never holds a Hugging Face key. Remove is two steps: mark first, delete at least 3 days later. */
 const TXT_DEF="https://huggingface.co/datasets/rabiul43/Book_Text/resolve/main/status";
 const TXT_MAX=4500000, BODY_MAX=4900000, AGE3=3*86400e3, WPM=150;
-const bk={cat:{},ids:[],tx:null,found:{},maybe:{},up:{},baks:{},rows:[],sel:null,shown:150,busy:false,baked:{},draft:{},prev:{},err:"",note:"",oldWorker:false};
+const bk={cat:{},ids:[],tx:null,found:{},maybe:{},up:{},baks:{},rows:[],sel:null,shown:150,fl:"",en:false,busy:false,baked:{},draft:{},prev:{},err:"",note:"",oldWorker:false};
 const bkBase=()=>(ls("bk-base")||TXT_DEF).replace(/\/+$/,"");
 const tkey=id=>"text/"+id+".json";
 const nfmt=n=>Number(n||0).toLocaleString("en-US");
@@ -810,9 +816,9 @@ function bkInfo(id){
   return {c,num,h:fl.includes("h"),p:fl.includes("p"),a:fl.includes("a")||!!c.ia,s:fl.includes("s"),live:u&&!u.removed?u:null,gone:u&&u.removed?u:null,maybe:bk.maybe[id]||null,found:bk.found[id]||null};
 }
 const bkNone=i=>!i.num&&!i.p&&!i.a&&!i.live;
-function bkChips(i){
-  const o=[]; if(i.live) o.push(["uploaded by me",1]); if(i.num) o.push(["Gutenberg text",0]); if(i.p) o.push(["timing-file text",0]); if(i.a) o.push(["archive.org link",0]);
-  if(i.s) o.push(["found by search",0]); if(i.gone) o.push(["removed",0]); if(bkNone(i)) o.push(["no text",0]); return o;
+function bkChips(i){   // one clear status per book (the sources are listed in the detail view)
+  const o=[]; if(i.live) o.push(["Added by me","me"]); else if(i.num||i.p) o.push(["Has text","hi"]); else if(i.a) o.push(["Archive link only",""]); else o.push(["No text","no"]);
+  if(i.gone) o.push(["Removed",""]); return o;
 }
 const bkRemoved=()=>Object.keys(bk.up).filter(id=>bk.up[id].removed).map(id=>({id,at:bk.up[id].removedAt||0}));
 
@@ -862,28 +868,30 @@ async function bkLoadBooks(){
   try{ bk.maybe=(await get("maybe-gutenberg.json"))||{}; }catch(e){}
 }
 function bkFilter(){
-  const words=$("bkq").value.toLowerCase().split(/\s+/).filter(Boolean), f=$("bkf").value;
+  const words=$("bkq").value.toLowerCase().split(/\s+/).filter(Boolean), f=bk.fl;
   bk.rows=bk.ids.filter(id=>{
     const i=bkInfo(id);
     if(f==="none"&&!bkNone(i)) return false;
-    if(f==="noneen"&&!(bkNone(i)&&/^english$/i.test(i.c.lang))) return false;
     if(f==="mine"&&!i.live) return false;
-    if(f==="search"&&!i.s) return false;
     if(f==="review"&&!(i.maybe&&!i.num)) return false;
     if(f==="removed"&&!i.gone) return false;
+    if(bk.en&&!/^english$/i.test(i.c.lang)) return false;
     if(!words.length) return true; const hay=(id+" "+i.c.title+" "+i.c.author+" "+(i.num||"")).toLowerCase(); return words.every(w=>hay.includes(w));
   });
 }
 function renderBk(){
   const none=bk.ids.filter(id=>bkNone(bkInfo(id))).length, mine=Object.keys(bk.up).filter(id=>!bk.up[id].removed).length, rl=bkRemoved(), ready=rl.filter(x=>Date.now()-x.at>=AGE3).length;
   $("summary").textContent=bk.ids.length?nfmt(bk.ids.length)+" books · "+nfmt(none)+" with no text anywhere · "+mine+" uploaded by you":"No book list loaded yet";
-  $("bkstat").textContent=bk.ids.length?(nfmt(bk.rows.length)+" book(s) match"+(bk.rows.length>bk.shown?" · showing the first "+bk.shown:"")+(bk.note?"\n"+bk.note:"")):""; $("bkstat").style.whiteSpace="pre-wrap";
-  const db=$("bkdel"); db.hidden=!rl.length; db.textContent="2 · Delete removed texts… ("+ready+" ready of "+rl.length+")"; db.disabled=bk.busy;
+  $("bkstat").textContent=bk.ids.length?(nfmt(bk.rows.length)+" book(s) match"+(bk.rows.length>bk.shown?" · showing the first "+bk.shown:"")+(bk.fl==="removed"?"\nMarked removed: the app already stopped using these texts. You can delete them for good after 3 days.":"")+(bk.note?"\n"+bk.note:"")):""; $("bkstat").style.whiteSpace="pre-wrap";
+  const db=$("bkdel"); db.hidden=!rl.length; db.textContent="Delete for good… ("+ready+" ready of "+rl.length+")"; db.disabled=bk.busy;
+  document.querySelectorAll("#bkfl button").forEach(b=>{ const on=b.dataset.f===bk.fl; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false"); }); $("bken").checked=bk.en;
+  const nx=$("bknext"), ne=bk.ids.filter(id=>{ const i=bkInfo(id); return bkNone(i)&&/^english$/i.test(i.c.lang); }).length; nx.textContent="";
+  if(ne&&!(bk.fl==="none"&&bk.en)){ nx.appendChild(el("div","note","What to do next")); nx.appendChild(el("b",null,nfmt(ne)+" English book"+(ne===1?" has":"s have")+" no text yet")); const sb=el("button","primary","Show these books"); sb.onclick=()=>{ bk.fl="none"; bk.en=true; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); }; nx.appendChild(sb); nx.hidden=false; } else nx.hidden=true;
   const box=$("bkitems"), sc=$("bklist").scrollTop; box.textContent="";
   bk.rows.slice(0,bk.shown).forEach(id=>{
     const i=bkInfo(id), it=el("button","bki"+(id===bk.sel?" on":"")); it.dataset.id=id;
-    it.appendChild(el("b",null,i.c.title)); it.appendChild(el("small",null,(i.c.author||"")+" · #"+id+" · "+i.c.lang));
-    const ch=el("div","chips"); for(const [t,hi] of bkChips(i)) ch.appendChild(el("span","chip"+(hi?" hi":""),t)); it.appendChild(ch);
+    it.appendChild(el("b",null,i.c.title)); it.appendChild(el("small",null,(i.c.author||"")+" · #"+id+" · "+i.c.lang+(i.gone?" · delete allowed "+(Date.now()-(i.gone.removedAt||0)>=AGE3?"now":"in "+Math.ceil(((i.gone.removedAt||0)+AGE3-Date.now())/86400e3)+" day(s)"):"")));
+    const ch=el("div","chips"); for(const [t,cl] of bkChips(i)) ch.appendChild(el("span","chip"+(cl?" "+cl:""),t)); it.appendChild(ch);
     it.onclick=()=>{ bk.sel=id; $("bkpane").classList.add("pick"); renderBk(); $("bkmain").scrollTop=0; }; box.appendChild(it);
   });
   if(bk.rows.length>bk.shown){ const m=el("button",null,"Show 150 more"); m.onclick=()=>{ bk.shown+=150; renderBk(); }; box.appendChild(m); }
@@ -933,7 +941,7 @@ function renderBkMain(){
   const pos=bk.rows.indexOf(id);
   m.appendChild(el("div","crumb","Book #"+id+(i.num?" · Gutenberg "+i.num:"")+(pos>=0?" · "+(pos+1)+" of "+bk.rows.length:"")));
   const t=el("div","ctitle"); t.appendChild(el("h2",null,c.title)); m.appendChild(t);
-  const ch=el("div","chips"); for(const [x,hi] of bkChips(i)) ch.appendChild(el("span","chip"+(hi?" hi":""),x)); m.appendChild(ch);
+  const ch=el("div","chips"); for(const [x,cl] of bkChips(i)) ch.appendChild(el("span","chip"+(cl?" "+cl:""),x)); m.appendChild(ch);
   m.appendChild(el("div","note",(c.author||"Unknown author")+" · "+(c.lang||"language unknown")+" · recording "+fmtDur(c.secs)+(c.secs?" (about "+nfmt(Math.round(c.secs/60*WPM))+" words)":"")));
   if(bk.oldWorker) m.appendChild(el("div","werr","Your Worker does not have the new text code yet, so saving, removing and deleting are switched off. Paste the new admin-worker.js into Cloudflare (step 1 of the Task 6b notes), then press Books again."));
   if(bk.note) m.appendChild(el("div","note",bk.note));
@@ -955,13 +963,13 @@ function renderBkMain(){
     const u=i.live||i.gone, uc=el("div","bkcard"); uc.appendChild(el("h4",null,i.live?"Uploaded text":"Removed text"));
     const ud=el("dl","src"), r2=(a,b)=>{ ud.appendChild(el("dt",null,a)); ud.appendChild(el("dd",null,b)); };
     r2("Words",nfmt(u.words)); r2("File size",(u.size/1048576).toFixed(2)+" MB"); r2("Uploaded",fmtDate(u.at));
-    if(i.gone){ const left=Math.max(0,Math.ceil((u.removedAt+AGE3-Date.now())/86400e3)); r2("Removed on",fmtDate(u.removedAt)); r2("Deleted by step 2",left?"in "+left+" day(s) at the earliest":"ready now"); }
+    if(i.gone){ const left=Math.max(0,Math.ceil((u.removedAt+AGE3-Date.now())/86400e3)); r2("Removed on",fmtDate(u.removedAt)); r2("Delete for good allowed",left?"in "+left+" day(s) at the earliest":"ready now"); }
     uc.appendChild(ud);
     if(bk.prev[id]!=null) uc.appendChild(el("div","bkprev",bk.prev[id]));
     const rw=el("div","row");
     if(i.live){
       const pv=el("button",null,bk.prev[id]!=null?"Hide the start":"Show the start of the text"); pv.disabled=bk.busy; pv.onclick=()=>bkPreview(id); rw.appendChild(pv);
-      const rb=el("button","danger","Remove (step 1)"); rb.disabled=bk.busy||bk.oldWorker; rb.onclick=()=>{ if(confirm("Remove this text? The app stops using it (phones may take up to 5 minutes). The file is deleted for good only by step 2, at least 3 days later.")) bkMark(id,true); }; rw.appendChild(rb);
+      const rb=el("button","danger","Mark removed"); rb.disabled=bk.busy||bk.oldWorker; rb.onclick=()=>{ if(confirm("Mark this text as removed? The app stops using it (phones may take up to 5 minutes). The file is deleted only when you press Delete for good, at least 3 days later.")) bkMark(id,true); }; rw.appendChild(rb);
     }else{ const ub=el("button","primary","Undo remove"); ub.disabled=bk.busy||bk.oldWorker; ub.onclick=()=>bkMark(id,false); rw.appendChild(ub); }
     uc.appendChild(rw); m.appendChild(uc);
   }
@@ -990,7 +998,7 @@ function renderBkMain(){
   sv.onclick=async()=>{ const r=bkCheck(dr.text,c); if(r.hard.length||!dr.pd||!r.text.length) return; if(r.warn.length&&!confirm("Check before saving:\n\n• "+r.warn.join("\n• ")+"\n\nSave this text anyway?")) return; await bkSave(id,r); };
   const rw2=el("div","row"); rw2.append(fb,fi); up.append(rw2,ta,an,pdl,sv); refresh(); m.appendChild(up);
   const ac=el("div","acts"); const pv2=el("button",null,"← Previous"); pv2.onclick=()=>bkStep(-1); const nx=el("button","go","Next →"); nx.onclick=()=>bkStep(1); ac.append(pv2,nx); m.appendChild(ac);
-  m.appendChild(el("p","note","Saving only writes text/"+id+".json in your Worker's bucket. Remove only hides the text from the app; the file is deleted by step 2, at least 3 days later. Keys: ← → change book."));
+  m.appendChild(el("p","note","Saving only writes text/"+id+".json in your Worker's bucket. Mark removed only hides the text from the app; the file is deleted by Delete for good, at least 3 days later. Keys: ← → change book."));
 }
 async function bkPreview(id){
   if(bk.prev[id]!=null){ delete bk.prev[id]; renderBkMain(); return; }
@@ -1027,7 +1035,7 @@ async function bkMark(id,remove){
     if(remove) o.removedAt=Date.now(); else delete o.removedAt;
     const w=await putJson(tkey(id),JSON.stringify(o)); if(!w.ok) throw new Error(await bkErr(w));
     bk.up[id]=Object.assign({},bk.up[id],{removed:!!remove,removedAt:remove?o.removedAt:0});
-    toast(remove?"Removed. The app stops using it. Step 2 deletes the file after 3 days.":"Restored. The app can use this text again.");
+    toast(remove?"Marked removed. The app stops using it. You can delete the file for good after 3 days.":"Restored. The app can use this text again.");
   }catch(e){ alert("Not saved: "+e.message+". Nothing was changed."); }
   finally{ bk.busy=false; bkFilter(); renderBk(); }
 }
@@ -1050,7 +1058,8 @@ async function bkDelete(){
   finally{ bk.busy=false; bkFilter(); renderBk(); }
 }
 $("bkq").oninput=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
-$("bkf").onchange=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
+document.querySelectorAll("#bkfl button").forEach(b=>b.onclick=()=>{ bk.fl=(bk.fl===b.dataset.f)?"":b.dataset.f; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); });
+$("bken").onchange=()=>{ bk.en=$("bken").checked; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 $("bkdel").onclick=bkDelete;
 $("bksave").onclick=async()=>{ const v=$("bkbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
   ls("bk-base",v); const c=$("bkcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await bkLoadBooks(); bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };

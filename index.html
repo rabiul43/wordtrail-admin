@@ -215,12 +215,41 @@ body.bk #bkpane{flex-direction:column}
 #bkmain .acts button{min-height:46px}#bkmain .acts .go{flex:1 1 120px}
 #bkmain h2{font-size:26px!important}
 }
+/* ---- Home tab ---- */
+#homepane{display:none}
+body.home #homepane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:20px 24px 32px}
+body.home #moods,body.home #list,body.home #queue,body.home #fpane,body.home #cpane,body.home #spane,body.home #covpane,body.home #bkpane,body.home #tabs,body.home footer,body.home #prog,body.home #q,body.home #fstat,body.home #hbtns,body.home #mode{display:none!important}
+body.home{padding-bottom:0}
+.h-wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.h-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.h-top h2{margin:8px 0 0;font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.h-lab{font:600 11px/1 JetBrains Mono,monospace;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.h-cols,.h-tiles{display:flex;gap:16px;flex-wrap:wrap}
+.h-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0;text-align:left;color:var(--fg)}
+button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(--acc)}
+.h-hero{flex:5 1 320px;background:radial-gradient(120% 70% at 50% 0%,var(--soft),var(--card) 65%)}
+.h-rt{flex:7 1 420px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.h-tiles .h-card{flex:1 1 170px}
+.h-big{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1}.h-big small{font-size:18px;font-weight:700}
+.h-card h3{margin:0;font-size:18px;font-weight:800}
+.h-hh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.h-trk{height:8px;border-radius:4px;background:var(--line);overflow:hidden;display:flex;gap:2px}.h-trk i{display:block;height:100%}
+.h-lg{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:12px}.h-lg u{text-decoration:none;display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.h-ring{display:grid;place-items:center;position:relative;padding:4px 0}.h-ring>div{position:absolute;text-align:center}
+.h-mr{display:grid;grid-template-columns:84px 1fr 48px;gap:12px;align-items:center}
+.h-mr b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.h-mr span{font:600 12px JetBrains Mono,monospace;color:var(--mut);text-align:right}
+.h-bar{display:flex;gap:3px;height:14px}.h-bar i{display:block;height:100%;border-radius:7px}
+.h-k{background:var(--keep)}.h-d{background:var(--del)}.h-p{background:var(--line)}
+.h-li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.h-li:first-of-type{border-top:0}
+.h-li div{flex:1;min-width:0}.h-li b{display:block}
+.h-note{color:var(--mut);font-size:12px}
+@media (max-width:700px){body.home #homepane{padding:14px}.h-top h2{font-size:26px}}
 </style>
 </head>
 <body>
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
-  <div class="sw needconn" id="sw"><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button><button data-m="bk">📚 Books</button></div>
+  <div class="sw needconn" id="sw"><button data-m="home">🏠 Home</button><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button><button data-m="bk">📚 Books</button></div>
   <span id="mode" class="chip needconn"></span>
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
@@ -236,17 +265,18 @@ body.bk #bkpane{flex-direction:column}
 <div id="prog" class="needconn"></div>
 <div id="welcome"><div class="wcard">
   <h2>Connect</h2>
-  <p>One password opens Music, Ambient, Covers and Books.</p>
+  <p>One password opens Home, Music, Ambient, Covers and Books.</p>
   <div id="werr" class="werr" hidden></div>
   <input id="tok" type="password" placeholder="Admin token" autocomplete="current-password">
   <label><input type="checkbox" id="rem" checked> Remember on this device</label>
   <button class="primary" id="go">Connect</button>
   <details><summary>Worker URL</summary><input id="base" placeholder="Worker URL"></details>
-  <ol><li>Connect once. Next time the page connects by itself. Use the buttons at the top to switch between Music, Ambient, Covers and Books.</li>
+  <ol><li>Connect once. Next time the page connects by itself. Use the buttons at the top to switch between Home, Music, Ambient, Covers and Books.</li>
   <li>Pick a section on the left, play clips, press <b>Keep</b> or <b>Delete</b>. In Ambient, <b>Make best</b> picks the live clip for a folder.</li>
   <li>When done: <b>1 · Retire</b>, wait about 3 days, then <b>2 · Delete retired</b>.</li></ol>
 </div></div>
 <main class="needconn">
+  <div id="homepane"></div>
   <nav id="moods"></nav>
   <section id="list"></section>
   <aside id="queue"></aside>
@@ -296,7 +326,7 @@ body.bk #bkpane{flex-direction:column}
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
 function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["amb","cov","bk"].includes(ls0("r2-which"))?ls0("r2-which"):"music")};
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["home","music","amb","cov","bk"].includes(ls0("r2-which"))?ls0("r2-which"):"home")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
@@ -326,7 +356,8 @@ async function connect0(){
   st.base=st.root+(st.which==="amb"?"/ambient":"");
   ls("r2-base",st.root); forgetTok();
   try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
-  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk");
+  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk"); document.body.classList.toggle("home",st.which==="home");
+  if(st.which==="home") return connectHome();
   if(st.which==="cov") return connectCov();
   if(st.which==="bk") return connectBk();
   $("summary").textContent="Loading list…";
@@ -1235,6 +1266,145 @@ async function bkDelete(){
   }catch(e){ alert("Not finished: "+e.message+"."); }
   finally{ bk.busy=false; bkFilter(); renderBk(); }
 }
+/* =================== Home tab ===================
+   Read-only overview. It reads the same lists and files the other tabs read and never writes anything.
+   Kept / delete marks are the ones saved on this device by the Music tab. */
+const hm={run:0,d:null};
+const hGet=(base,path)=>fetch(base+path,{headers:{Authorization:"Bearer "+st.tok}});
+async function hList(base,prefix){
+  const out=[]; let cursor=null;
+  do{
+    const q=[prefix?"prefix="+enc(prefix):"",cursor?"cursor="+enc(cursor):""].filter(Boolean).join("&");
+    const r=await hGet(base,"/api/list"+(q?"?"+q:""));
+    if(r.status===401){ const e=new Error("401"); e.code=401; throw e; }
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d=await r.json(); out.push(...d.objects); cursor=d.cursor;
+  }while(cursor);
+  return out;
+}
+async function hJson(base,key){ const r=await hGet(base,"/api/file?key="+enc(key)); if(!r.ok) return null; try{ return JSON.parse(await r.text()); }catch(e){ return null; } }
+function goMode(m){ $("a").pause(); st.which=m; ls("r2-which",m); updateSw(); connect(); }
+async function hmMusic(){
+  const objs=await hList(st.root,""), retired=(await hJson(st.root,"retired.json"))||{}; let marks={};
+  try{ marks=JSON.parse(ls("r2-marks:"+st.root)||"{}"); }catch(e){}
+  const moods={}; let n=0,k=0,d=0,r=0,mbytes=0,other=0;
+  for(const o of objs){
+    if(!/\.mp3$/i.test(o.key)){ other+=o.size||0; continue; }
+    n++; mbytes+=o.size||0; const c=moods[moodOf(o.key)]||(moods[moodOf(o.key)]={n:0,k:0,d:0}); c.n++;
+    if(retired[o.key]){ r++; c.d++; } else if(marks[o.key]==="keep"){ k++; c.k++; } else if(marks[o.key]==="del"){ d++; c.d++; }
+  }
+  return {objs,moods,n,k,d,r,mbytes,other};
+}
+async function hmAmb(){
+  const base=st.root+"/ambient"; let objs;
+  try{ objs=await hList(base,""); }catch(e){ if(e.code===401) throw e; return {off:true}; }
+  if(!objs.some(o=>o.key==="ambient-candidates.json")) return {off:true};
+  const cand=(await hJson(base,"ambient-candidates.json"))||{}, idx=(await hJson(base,"ambient-index.json"))||{}, folderOf={}, fol=new Set(); let clips=0,bytes=0,rev=0;
+  for(const f in cand) for(const e of cand[f]) folderOf[e.r2_key]=f;
+  for(const o of objs){ if(!/\.mp3$/i.test(o.key)) continue; clips++; bytes+=o.size||0; fol.add(folderOf[o.key]||o.key.split("/").slice(0,-1).join("/")); }
+  for(const f of fol) if(idx[f]&&idx[f].reviewed) rev++;
+  return {clips,folders:fol.size,rev,bytes};
+}
+async function hmCov(){
+  const r=await fetch(cvBase()+"/index.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status);
+  const j=await r.json(), books={};
+  if(j&&j.b&&typeof j.b==="object"&&!Array.isArray(j.b)){ for(const k in j.b){ const a=j.b[k]; if(/^\d+$/.test(k)&&Array.isArray(a)) books[k]=String(a[1]||"").split(",").map(x=>x.trim()).filter(x=>ORDER.includes(x)); } }
+  else{ const b=(j&&j.books)||j; for(const k in b) if(/^\d+$/.test(k)&&b[k]&&typeof b[k]==="object"){ const h=b[k].have; books[k]=Array.isArray(h)?h.filter(x=>ORDER.includes(x)):[]; } }
+  const ov=((await hJson(st.root,"covers/overrides.json"))||{}).books||{}, ids=Object.keys(books); let none=0;
+  for(const id of ids){ const rm=(ov[id]&&ov[id].removed)||[]; if(!books[id].filter(x=>!rm.includes(x)).length) none++; }
+  return {total:ids.length,none,changed:Object.keys(ov).length};
+}
+async function hmBk(){
+  const up={}; let baks=0;
+  for(const o of await hList(st.root,"text/")){
+    const m=/^text\/(\d+)\.json$/.exec(o.key);
+    if(m){ const md=o.meta||{}; up[m[1]]={words:Number(md.words)||0,at:Number(md.at)||Date.parse(o.uploaded)||0,removed:md.removed==="1",removedAt:Number(md.removedAt)||0}; }
+    else if(/^text\/\d+\.bak-/.test(o.key)) baks++;
+  }
+  const rc=await fetch(catUrl(),{cache:"no-cache"}); if(!rc.ok) throw new Error("catalog HTTP "+rc.status);
+  const j=JSON.parse(await rc.text()), rows=Array.isArray(j)?j:(Array.isArray(j&&j.b)?j.b:(Object.values(j||{}).find(v=>Array.isArray(v))||[])), cat={};
+  for(const row of rows) if(Array.isArray(row)&&/^\d+$/.test(String(row[0]))) cat[row[0]]={title:String(row[1]||""),lang:String(row[4]||""),gid:Number(row[5])||0,ia:String(row[8]||"")};
+  let tx=null; try{ const t=await fetch(bkBase()+"/texts.json",{cache:"no-cache"}); if(t.ok){ const x=await t.json(); if(x&&x.b&&typeof x.b==="object"&&!Array.isArray(x.b)) tx=x.b; } }catch(e){}
+  const ids=Object.keys(cat); let none=0,noneEn=0;
+  for(const id of ids){ const c=cat[id], t=tx&&tx[id], fl=t?String(t[1]||""):"", num=t?(Number(t[0])||0):c.gid, u=up[id];
+    if(!num&&!fl.includes("p")&&!(fl.includes("a")||c.ia)&&!(u&&!u.removed)){ none++; if(/^english$/i.test(c.lang)) noneEn++; } }
+  const mine=Object.keys(up).filter(id=>!up[id].removed), rem=Object.keys(up).filter(id=>up[id].removed);
+  return {cat,up,total:ids.length,none,noneEn,mine:mine.length,words:mine.reduce((s,id)=>s+up[id].words,0),removed:rem.length,ready:rem.filter(id=>Date.now()-up[id].removedAt>=AGE3).length,baks,tx:!!tx};
+}
+async function connectHome(){
+  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Loading overview…";
+  const run=++hm.run; let music;
+  try{ music=await hmMusic(); }
+  catch(e){ showErr(e.code===401?"That token didn't work (401). Check it and try again.":"Can't reach the Worker ("+e.message+"). Check the Worker URL below."); return; }
+  if(run!==hm.run) return;
+  const d=hm.d={music,amb:null,cov:null,bk:null,err:{},pending:new Set(["amb","cov","bk"]),at:Date.now()};
+  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
+  updateSw(); document.body.classList.add("conn"); hmRender();
+  await Promise.all([["amb",hmAmb],["cov",hmCov],["bk",hmBk]].map(async([k,f])=>{
+    try{ d[k]=await f(); }catch(e){ d[k]=null; d.err[k]=e.message; }
+    d.pending.delete(k); if(run===hm.run){ d.at=Date.now(); hmRender(); }
+  }));
+}
+const ago=t=>{ const s=Math.max(0,(Date.now()-t)/1000); return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" d ago"; };
+function hmRender(){
+  const d=hm.d, p=$("homepane"); if(!d||st.which!=="home") return;
+  const m=d.music, W=el("div","h-wrap"), GB=1073741824, pct=(a,b)=>b?Math.max(0,Math.min(100,a/b*100)):0;
+  $("summary").textContent=d.pending.size?"Loading overview…":"Overview · updated "+new Date(d.at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  const lg=a=>{ const l=el("div","h-lg"); for(const [c,t,col] of a){ const s=el("span"), u=el("u",c); if(col) u.style.background=col; s.append(u,document.createTextNode(t)); l.appendChild(s); } return l; };
+  const top=el("div","h-top"), tl=el("div"), rf=el("button","primary","Refresh"); rf.onclick=()=>connect();
+  tl.append(el("div","h-lab","Overview"),el("h2",null,"Your library, live.")); top.append(tl,rf); W.appendChild(top);
+  /* hero ring */
+  const hero=el("section","h-card h-hero"), hh=el("div","h-hh"), ob=el("button","sm","Open"); ob.onclick=()=>goMode("music"); hh.append(el("h3",null,"Music review"),ob);
+  const C=2*Math.PI*76, kl=m.n?m.k/m.n*C:0, dl=m.n?(m.d+m.r)/m.n*C:0, ring=el("div","h-ring");
+  ring.innerHTML='<svg width="220" height="220" viewBox="0 0 200 200" role="img" aria-label="Music review progress"><g transform="rotate(-90 100 100)" fill="none" stroke-width="20"><circle cx="100" cy="100" r="76" style="stroke:var(--line)"/><circle cx="100" cy="100" r="76" style="stroke:var(--keep)" stroke-dasharray="'+kl+' '+C+'"/><circle cx="100" cy="100" r="76" style="stroke:var(--del)" stroke-dasharray="'+dl+' '+C+'" stroke-dashoffset="'+(-kl)+'"/></g></svg>';
+  const ct=el("div"); ct.append(el("div","h-big",m.n?Math.round((m.k+m.d+m.r)/m.n*100)+"%":"–"),el("div","h-note",nfmt(m.n)+" clips")); ring.appendChild(ct);
+  const go=el("button","primary","Continue reviewing"); go.onclick=()=>goMode("music"); go.style.minHeight="46px";
+  hero.append(hh,ring,lg([["h-k","Kept "+nfmt(m.k)],["h-d","Delete "+nfmt(m.d+m.r)],["h-p","Left "+nfmt(m.n-m.k-m.d-m.r)]]),go,el("div","h-note","Keep and delete marks are saved on this device."));
+  /* tiles */
+  const tile=(lab,key,mode,fn)=>{
+    const t=el("button","h-card"), s=d.pending.has(key)?"Loading…":(d[key]&&d[key].off)?"Not set up on the Worker":!d[key]?"Could not load ("+(d.err[key]||"no data")+")":"", r=s?null:fn(d[key]);
+    t.onclick=()=>goMode(mode); const b=el("div","h-big",s?"–":r.val);
+    if(r&&r.of!=null){ const o=el("small",null," / "+r.of); o.style.color="var(--mut)"; b.appendChild(o); }
+    const tr=el("div","h-trk"), i=document.createElement("i"); i.style.width=(r?r.pv:0)+"%"; i.style.background=r?r.col:"var(--line)"; tr.appendChild(i);
+    t.append(el("div","h-lab",lab),b,tr,el("div","h-note",s||r.sub)); return t;
+  };
+  const tiles=el("div","h-tiles");
+  tiles.append(
+    tile("Ambient folders","amb","amb",a=>({val:nfmt(a.rev),of:nfmt(a.folders),sub:nfmt(a.clips)+" clips · reviewed folders",pv:pct(a.rev,a.folders),col:"var(--acc)"})),
+    tile("Book covers","cov","cov",c=>({val:nfmt(c.total-c.none),of:nfmt(c.total),sub:c.none?nfmt(c.none)+" books still need a cover":"Every book has a cover",pv:pct(c.total-c.none,c.total),col:"var(--keep)"})),
+    tile("Book texts","bk","bk",b=>({val:nfmt(b.total-b.none),of:nfmt(b.total),sub:nfmt(b.mine)+" uploaded by you · "+nfmt(b.words)+" words"+(b.tx?"":" · status list missing"),pv:pct(b.total-b.none,b.total),col:"var(--warn)"})));
+  /* moods */
+  const mc=el("section","h-card"), mh=el("div","h-hh"); mh.append(el("h3",null,"Mood breakdown"),lg([["h-k","Kept"],["h-d","Delete"],["h-p","Left"]])); mc.appendChild(mh);
+  const mo=Object.entries(m.moods).sort((a,b)=>b[1].n-a[1].n).slice(0,8);
+  if(!mo.length) mc.appendChild(el("div","h-note","No music clips found."));
+  for(const [name,c] of mo){ const r=el("div","h-mr"), bar=el("div","h-bar"), k=el("i","h-k"), x=el("i","h-d"), l=el("i","h-p"); k.style.width=pct(c.k,c.n)+"%"; x.style.width=pct(c.d,c.n)+"%"; l.style.flex="1"; bar.append(k,x,l); r.append(el("b",null,pretty(name)),bar,el("span",null,nfmt(c.n))); mc.appendChild(r); }
+  const rt=el("div","h-rt"); rt.append(tiles,mc); const cols=el("div","h-cols"); cols.append(hero,rt); W.appendChild(cols);
+  /* attention */
+  const at=[], A=d.amb&&!d.amb.off?d.amb:null, left=m.n-m.k-m.d-m.r;
+  if(left>0) at.push([left,"Music clips to review","Mark each Keep or Delete","music","Review"]);
+  if(m.d>0) at.push([m.d,"Clips marked to delete","Step 1 · Retire marked","music","Open"]);
+  if(m.r>0) at.push([m.r,"Retired clips","Step 2 · Delete retired","music","Open"]);
+  if(d.cov&&d.cov.none>0) at.push([d.cov.none,"Books without a cover","Covers tab","cov","Open"]);
+  if(d.bk&&d.bk.noneEn>0) at.push([d.bk.noneEn,"English books with no text","Books tab","bk","Open"]);
+  if(d.bk&&d.bk.ready>0) at.push([d.bk.ready,"Removed texts ready to delete","Older than 3 days","bk","Open"]);
+  if(A&&A.folders>A.rev) at.push([A.folders-A.rev,"Ambient folders not reviewed","Ambient tab","amb","Open"]);
+  const ac=el("section","h-card"); ac.style.flex="1 1 300px"; ac.appendChild(el("h3",null,"Needs attention"));
+  if(!at.length&&!d.pending.size) ac.appendChild(el("div","h-note","All caught up."));
+  for(const [n,t,sub,mode,btn] of at.slice(0,5)){ const li=el("div","h-li"), tx=el("div"), b=el("button","sm",btn); b.onclick=()=>goMode(mode); tx.append(el("b",null,t),el("span","h-note",sub)); li.append(el("span","chip no",nfmt(n)),tx,b); ac.appendChild(li); }
+  /* storage */
+  const sc=el("section","h-card"); sc.style.flex="1 1 300px"; const A2=A?A.bytes:0, tot=m.mbytes+A2+m.other, cap=FREE_GB*GB, tr=el("div","h-trk");
+  tr.style.height="14px"; for(const [v,col] of [[m.mbytes,"var(--acc)"],[A2,"var(--keep)"],[m.other,"var(--mut)"]]){ const i=document.createElement("i"); i.style.width=pct(v,cap)+"%"; i.style.background=col; tr.appendChild(i); }
+  sc.append(el("h3",null,"Storage"),el("div","h-big",(tot/GB).toFixed(2)+" GB"),tr,lg([["","Music "+(m.mbytes/GB).toFixed(2),"var(--acc)"],["","Ambient "+(A2/GB).toFixed(2),"var(--keep)"],["","Other "+(m.other/GB).toFixed(2),"var(--mut)"]]),
+    el("div","h-note","of the "+FREE_GB+" GB free tier (Music and Ambient share it)"+(d.bk?" · "+nfmt(d.bk.baks)+" book-text backups":"")));
+  /* activity */
+  const ev=[]; if(d.bk) for(const id in d.bk.up){ const u=d.bk.up[id], t=u.removed?(u.removedAt||u.at):u.at; if(t) ev.push([t,(u.removed?"Marked removed: ":"Saved text: ")+((d.bk.cat[id]&&d.bk.cat[id].title)||"Book "+id)]); }
+  for(const o of m.objs){ const t=Date.parse(o.uploaded)||0; if(o.key==="retired.json") ev.push([t,"Retired list updated"]); else if(o.key==="covers/overrides.json") ev.push([t,"Cover choices saved"]); }
+  ev.sort((a,b)=>b[0]-a[0]); const rc=el("section","h-card"); rc.style.flex="1 1 300px"; rc.appendChild(el("h3",null,"Recent activity"));
+  if(!ev.length) rc.appendChild(el("div","h-note",d.pending.size?"Loading…":"Nothing yet."));
+  for(const [t,txt] of ev.slice(0,5)){ const li=el("div","h-li"), x=el("div",null,txt); li.append(el("span","chip",ago(t)),x); rc.appendChild(li); }
+  const bot=el("div","h-cols"); bot.append(ac,sc,rc); W.appendChild(bot);
+  const keep=p.scrollTop; p.textContent=""; p.appendChild(W); p.scrollTop=keep;
+}
 $("bkq").oninput=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 document.querySelectorAll("#bkfl button").forEach(b=>b.onclick=()=>{ bk.fl=(bk.fl===b.dataset.f)?"":b.dataset.f; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); });
 $("bken").onchange=()=>{ bk.en=$("bken").checked; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
@@ -1243,7 +1413,7 @@ $("bksave").onclick=async()=>{ const v=$("bkbase").value.trim().replace(/\/+$/,"
   ls("bk-base",v); const c=$("bkcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await bkLoadBooks(); bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 
 document.addEventListener("keydown",e=>{
-  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const a=$("a");
+  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; if(st.which==="home") return; const a=$("a");
   if(st.which==="cov"){ if(e.key==="ArrowRight") covStep(1); else if(e.key==="ArrowLeft") covStep(-1); return; }
   if(st.which==="bk"){ if(e.key==="ArrowRight") bkStep(1); else if(e.key==="ArrowLeft") bkStep(-1); return; }
   if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }

@@ -7,7 +7,7 @@
 <title>Wordtrail R2 Clip Admin</title>
 <style>
 :root{--bg:#F2F3F8;--card:#fff;--line:#DDE0EA;--fg:#14161F;--mut:#5A6074;--acc:#4338CA;--del:#C2362B;--keep:#2E9E5B;--soft:#E9E8FB;--ok:#E6F6EC;--okfg:#13693A;--warn:#9A6700}
-@media (prefers-color-scheme:dark){:root{--bg:#12131A;--card:#1C1E28;--line:#323645;--fg:#ECEDF4;--mut:#A3A8BC;--acc:#8C86FF;--del:#FF7A6B;--keep:#5EC58F;--soft:#2A2850;--ok:#1C3A2B;--okfg:#7EE2B8;--warn:#E8B84A}}
+@media (prefers-color-scheme:dark){:root{--bg:#0D0E14;--card:#151722;--line:#23263A;--fg:#ECEDF4;--mut:#A3A8BC;--acc:#8C86FF;--del:#FF7A6B;--keep:#5EC58F;--soft:#26225A;--ok:#173226;--okfg:#7EE2B8;--warn:#F2C55C}}
 *{box-sizing:border-box}html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);font:14px/1.4 Manrope,system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column}
 header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--line)}
@@ -75,7 +75,7 @@ label{display:inline-flex;gap:5px;align-items:center;color:var(--mut)}
 .sw button{border:0;background:transparent;border-radius:999px;min-height:34px;padding:4px 16px;font-weight:800;color:var(--mut)}
 .sw button.on{background:var(--acc);color:#fff;box-shadow:0 0 18px color-mix(in srgb,var(--acc) 55%,transparent)}
 header{position:relative}
-#gmenu{position:absolute;right:24px;top:58px;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#gmenu{position:fixed;right:24px;top:64px;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .werr{background:rgba(194,54,43,.12);border:1px solid var(--del);color:var(--del);border-radius:12px;padding:10px 12px;font-size:13px}
 #toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ok);color:var(--okfg);border:1px solid var(--keep);padding:10px 16px;border-radius:12px;z-index:9}
 .wcard details summary{cursor:pointer;color:var(--mut)}.wcard details input{margin-top:8px}.wcard p{margin:0;color:var(--mut)}
@@ -104,7 +104,6 @@ body.amb #queue{display:none!important}
 @media (max-width:900px){#queue{display:none}nav{width:150px}.cards{flex-wrap:wrap}.card{flex:1 1 140px}}
 #tabs,#fpane,#cpane,#spane{display:none}
 @media (max-width:700px){
-body{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
 header{padding:10px 14px;gap:8px}header h1{font-size:17px;margin:0}
 .sw{margin-left:auto}.sw button{padding:4px 12px;font-size:13px}
 #mode,#gear,#gmenu,#prog{display:none!important}
@@ -124,9 +123,9 @@ body[data-tab=review] #list,body[data-tab=folders] #fpane,body[data-tab=clean] #
 .acts button{min-height:50px;padding:0 10px;font-size:14px}.acts .go{flex:2.2}.acts .no,.acts button:nth-child(2){flex:1}
 .hint{display:none}
 footer{padding:6px 12px;gap:8px}#now{display:none}footer audio{min-width:0;height:40px}
-#tabs{display:flex;position:fixed;left:0;right:0;bottom:0;height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);z-index:6}
-#tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--mut);font-weight:700;font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:0}
-#tabs button b{font-size:19px;font-weight:400}#tabs button.on{color:var(--acc)}
+#tabs{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;flex:none}
+#tabs button{flex:none;display:flex;gap:6px;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;font-weight:700;font-size:13px;color:var(--mut)}
+#tabs button b{font-size:15px;font-weight:400}#tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 .fb{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:13px 14px;border-radius:16px;margin-bottom:8px}.fb.on{border-color:var(--acc)}.fb small{display:block}
 .card2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}.card2 h4{margin:0;font-size:15px}.card2 p{margin:0;color:var(--mut)}
 .card2 button,#cbtns button{width:100%;min-height:48px;font-weight:800}#cbtns{display:flex;flex-direction:column;gap:10px}
@@ -215,42 +214,67 @@ body.bk #bkpane{flex-direction:column}
 #bkmain .acts button{min-height:46px}#bkmain .acts .go{flex:1 1 120px}
 #bkmain h2{font-size:26px!important}
 }
+/* ---- Layout: rail on large screens, bottom bar on phones ---- */
+#app{flex:1;min-height:0;display:flex}
+#col{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+#rail{width:224px;flex:none;padding:24px 16px;display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--line);box-sizing:border-box;overflow:auto}
+.rl{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin:0 8px 24px}
+.rl i{width:34px;height:34px;border-radius:11px;background:var(--acc);display:grid;place-items:center;color:#fff;flex:none}
+#rail .nv{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 14px;border:0;border-radius:14px;background:transparent;color:var(--mut);font-weight:700;text-align:left}
+#rail .nv.on{background:var(--card);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}#rail .nv.on svg{color:var(--acc)}
+@media (min-width:701px){header h1{display:none}}
+@media (min-width:701px) and (max-width:1000px){#rail{width:76px;padding:20px 10px;align-items:center}.rl span,#rail .nv span{display:none}.rl{margin:0 0 20px}#rail .nv{justify-content:center;padding:0}}
+@media (max-width:700px){#app{flex-direction:column}#rail{order:2;width:100%;height:calc(72px + env(safe-area-inset-bottom));padding:0 0 env(safe-area-inset-bottom);flex-direction:row;gap:0;border-right:0;border-top:1px solid var(--line);overflow:visible}.rl{display:none}#rail .nv{flex:1;flex-direction:column;justify-content:center;gap:4px;padding:0;min-height:44px;border-radius:0;font-size:11px;text-align:center;background:transparent!important;box-shadow:none!important}#rail .nv.on{color:var(--acc)}}
 /* ---- Home tab ---- */
 #homepane{display:none}
-body.home #homepane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:20px 24px 32px}
-body.home #moods,body.home #list,body.home #queue,body.home #fpane,body.home #cpane,body.home #spane,body.home #covpane,body.home #bkpane,body.home #tabs,body.home footer,body.home #prog,body.home #q,body.home #fstat,body.home #hbtns,body.home #mode{display:none!important}
-body.home{padding-bottom:0}
-.h-wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.h-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.h-top h2{margin:8px 0 0;font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+body.home #homepane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto}
+body.home header,body.home #summary,body.home #moods,body.home #list,body.home #queue,body.home #fpane,body.home #cpane,body.home #spane,body.home #covpane,body.home #bkpane,body.home #tabs,body.home footer,body.home #prog{display:none!important}
+.h-wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.h-d{padding:28px 32px 40px}.h-m{padding:0 16px 16px;gap:12px}
+@media (max-width:700px){.h-d{display:none}}@media (min-width:701px){.h-m{display:none}}
+.h-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.h-top h2{margin:10px 0 0;font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.h-tr{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.h-tr button.primary{min-height:46px;padding:0 20px;font-weight:800;border-radius:14px}
+.h-ib{width:44px;height:44px;min-height:0;padding:0;border-radius:14px;display:grid;place-items:center;font-size:18px}
 .h-lab{font:600 11px/1 JetBrains Mono,monospace;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
 .h-cols,.h-tiles{display:flex;gap:16px;flex-wrap:wrap}
-.h-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0;text-align:left;color:var(--fg)}
+.h-card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0;text-align:left;color:var(--fg);box-sizing:border-box}
+.h-m .h-card{padding:16px;border-radius:22px;gap:12px}
 button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(--acc)}
-.h-hero{flex:5 1 320px;background:radial-gradient(120% 70% at 50% 0%,var(--soft),var(--card) 65%)}
-.h-rt{flex:7 1 420px;display:flex;flex-direction:column;gap:16px;min-width:0}
-.h-tiles .h-card{flex:1 1 170px}
-.h-big{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1}.h-big small{font-size:18px;font-weight:700}
-.h-card h3{margin:0;font-size:18px;font-weight:800}
+.h-hero{flex:5 1 320px;background:radial-gradient(120% 70% at 50% 0%,var(--soft),var(--card) 65%)}.h-m .h-hero{background:radial-gradient(120% 90% at 20% 0%,var(--soft),var(--card) 65%)}
+.h-rt{flex:7 1 440px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.h-tiles .h-card{flex:1 1 170px;gap:10px}
+.h-ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center}
+.h-big{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1}.h-big small{font-size:18px;font-weight:700}
+.h-card h3{margin:0;font-size:19px;font-weight:800}.h-m .h-card h3{font-size:17px}
 .h-hh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .h-trk{height:8px;border-radius:4px;background:var(--line);overflow:hidden;display:flex;gap:2px}.h-trk i{display:block;height:100%}
-.h-lg{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:12px}.h-lg u{text-decoration:none;display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
-.h-ring{display:grid;place-items:center;position:relative;padding:4px 0}.h-ring>div{position:absolute;text-align:center}
-.h-mr{display:grid;grid-template-columns:84px 1fr 48px;gap:12px;align-items:center}
+.h-lg{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:12px}.h-lg.c{justify-content:center}.h-lg.v{flex-direction:column;gap:6px;font-size:13px}.h-lg u{text-decoration:none;display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+.h-ring{display:grid;place-items:center;position:relative;padding:4px 0;flex:none}.h-ring>div{position:absolute;text-align:center}
+.h-hrow{display:flex;align-items:center;gap:16px}.h-hrow>div:last-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.h-mr{display:grid;grid-template-columns:72px 1fr 44px;gap:12px;align-items:center}.h-m .h-mr{grid-template-columns:60px 1fr 36px;gap:10px;min-height:30px}
 .h-mr b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.h-mr span{font:600 12px JetBrains Mono,monospace;color:var(--mut);text-align:right}
-.h-bar{display:flex;gap:3px;height:14px}.h-bar i{display:block;height:100%;border-radius:7px}
-.h-k{background:var(--keep)}.h-d{background:var(--del)}.h-p{background:var(--line)}
-.h-li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.h-li:first-of-type{border-top:0}
-.h-li div{flex:1;min-width:0}.h-li b{display:block}
+.h-bar{display:flex;gap:3px;height:16px}.h-m .h-bar{height:14px}.h-bar i{display:block;height:100%;border-radius:8px}
+.h-k{background:var(--keep)}.h-d2{background:var(--del)}.h-p{background:var(--line)}
+.h-li,.h-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}.h-li:first-of-type,.h-row.f{border-top:0}
+.h-row{min-height:56px;padding:0;border-left:0;border-right:0;border-bottom:0;border-radius:0;background:transparent;color:var(--fg);text-align:left;font:inherit;width:100%}
+.h-li div,.h-row div{flex:1;min-width:0}.h-li b,.h-row b{display:block}
 .h-note{color:var(--mut);font-size:12px}
-@media (max-width:700px){body.home #homepane{padding:14px}.h-top h2{font-size:26px}}
+.h-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.h-mbar{display:flex;align-items:center;gap:10px;min-height:64px;padding:12px 0}.h-mbar h1{flex:1;margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em}
+.h-lm{width:34px;height:34px;border-radius:11px;background:var(--acc);display:grid;place-items:center;color:#fff}
+.h-chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.h-d .chip,.h-m .chip{font-size:12px;padding:4px 9px;border-radius:8px}
+@media (prefers-color-scheme:dark){button.primary,.acts .go,.eacts .mk,.pp,.epl,.sw button.on,#tabs button.on,nav .mood.on,button.danger,.rl i,.h-lm{color:#0D0E14}}
 </style>
 </head>
 <body>
+<div id="app">
+<div id="rail" class="needconn" role="navigation" aria-label="Sections"><div class="rl"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></i><span>Wordtrail</span></div><button class="nv" data-m="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Home</span></button><button class="nv" data-m="music"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></button><button class="nv" data-m="amb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c3-8 6-8 9 0s6 8 9 0"/></svg><span>Ambient</span></button><button class="nv" data-m="cov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Covers</span></button><button class="nv" data-m="bk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span>Books</span></button></div>
+<div id="col">
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
-  <div class="sw needconn" id="sw"><button data-m="home">🏠 Home</button><button data-m="music">🎵 Music</button><button data-m="amb">🌧 Ambient</button><button data-m="cov">🖼 Covers</button><button data-m="bk">📚 Books</button></div>
-  <span id="mode" class="chip needconn"></span>
+    <span id="mode" class="chip needconn"></span>
   <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
   <span style="flex:1"></span>
@@ -263,6 +287,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 </header>
 <div id="summary" class="needconn"></div>
 <div id="prog" class="needconn"></div>
+<div id="tabs" class="needconn"><button data-t="review"><b>🎧</b>Review</button><button data-t="folders"><b>📁</b>Folders</button><button data-t="clean"><b>🧹</b>Clean-up</button><button data-t="settings"><b>⚙</b>Settings</button></div>
 <div id="welcome"><div class="wcard">
   <h2>Connect</h2>
   <p>One password opens Home, Music, Ambient, Covers and Books.</p>
@@ -271,7 +296,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
   <label><input type="checkbox" id="rem" checked> Remember on this device</label>
   <button class="primary" id="go">Connect</button>
   <details><summary>Worker URL</summary><input id="base" placeholder="Worker URL"></details>
-  <ol><li>Connect once. Next time the page connects by itself. Use the buttons at the top to switch between Home, Music, Ambient, Covers and Books.</li>
+  <ol><li>Connect once. Next time the page connects by itself. Use the menu on the left (bottom on a phone) to switch between Home, Music, Ambient, Covers and Books.</li>
   <li>Pick a section on the left, play clips, press <b>Keep</b> or <b>Delete</b>. In Ambient, <b>Make best</b> picks the live clip for a folder.</li>
   <li>When done: <b>1 · Retire</b>, wait about 3 days, then <b>2 · Delete retired</b>.</li></ol>
 </div></div>
@@ -309,8 +334,6 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
   <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
     <div class="card2"><h4>Playback</h4><div id="sp-play"></div></div></div>
 </main>
-<div id="tabs" class="needconn"><button data-t="review"><b>🎧</b>Review</button><button data-t="folders"><b>📁</b>Folders</button><button data-t="clean"><b>🧹</b>Clean-up</button><button data-t="settings"><b>⚙</b>Settings</button></div>
-<div id="toast" hidden></div>
 <footer class="needconn">
   <span id="now">Nothing playing</span>
   <audio id="a" controls></audio>
@@ -319,6 +342,8 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
   <label id="lauto"><input type="checkbox" id="auto"> auto-next</label>
   <label id="ljson">JSON files <input id="jsons" value="music.json" style="min-width:120px;width:270px"></label></span>
 </footer>
+</div></div>
+<div id="toast" hidden></div>
 
 <script>
 (function(){
@@ -347,7 +372,7 @@ async function connect(){
 }
 function showErr(m){ const e=$("werr"); e.textContent=m; e.hidden=false; document.body.classList.remove("conn"); $("summary").textContent=""; }
 function toast(m){ const t=$("toast"); t.textContent=m; t.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>{t.hidden=true;},6000); }
-function updateSw(){ document.querySelectorAll("#sw button").forEach(b=>b.classList.toggle("on",b.dataset.m===st.which)); }
+function updateSw(){ document.querySelectorAll("#rail .nv").forEach(b=>b.classList.toggle("on",b.dataset.m===st.which)); }
 function forgetTok(){ try{localStorage.removeItem("r2-tok");sessionStorage.removeItem("r2-tok");}catch(e){} }
 async function connect0(){
   $("werr").hidden=true;
@@ -1346,41 +1371,36 @@ async function connectHome(){
   }));
 }
 const ago=t=>{ const s=Math.max(0,(Date.now()-t)/1000); return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" d ago"; };
+const IC={amb:'<path d="M3 12c3-8 6-8 9 0s6 8 9 0"/>',cov:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',bk:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/>',ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',chev:'<path d="m9 6 6 6-6 6"/>',pulse:'<path d="M3 12h3l3-8 4 16 3-8h5"/>'};
+const ic=(k,sz)=>{ const e=document.createElement("span"); e.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'; return e.firstChild; };
 function hmRender(){
   const d=hm.d, p=$("homepane"); if(!d||st.which!=="home") return;
-  const m=d.music, W=el("div","h-wrap"), GB=1073741824, pct=(a,b)=>b?Math.max(0,Math.min(100,a/b*100)):0;
-  $("summary").textContent=d.pending.size?"Loading overview…":"Overview · updated "+new Date(d.at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-  const lg=a=>{ const l=el("div","h-lg"); for(const [c,t,col] of a){ const s=el("span"), u=el("u",c); if(col) u.style.background=col; s.append(u,document.createTextNode(t)); l.appendChild(s); } return l; };
-  const top=el("div","h-top"), tl=el("div"), rf=el("button","primary","Refresh"); rf.onclick=()=>connect();
-  tl.append(el("div","h-lab","Overview"),el("h2",null,"Your library, live.")); top.append(tl,rf); W.appendChild(top);
-  /* hero ring */
-  const hero=el("section","h-card h-hero"), hh=el("div","h-hh"), ob=el("button","sm","Open"); ob.onclick=()=>goMode("music"); hh.append(el("h3",null,"Music review"),ob);
-  const C=2*Math.PI*76, kl=m.n?m.k/m.n*C:0, dl=m.n?(m.d+m.r)/m.n*C:0, ring=el("div","h-ring");
-  ring.innerHTML='<svg width="220" height="220" viewBox="0 0 200 200" role="img" aria-label="Music review progress"><g transform="rotate(-90 100 100)" fill="none" stroke-width="20"><circle cx="100" cy="100" r="76" style="stroke:var(--line)"/><circle cx="100" cy="100" r="76" style="stroke:var(--keep)" stroke-dasharray="'+kl+' '+C+'"/><circle cx="100" cy="100" r="76" style="stroke:var(--del)" stroke-dasharray="'+dl+' '+C+'" stroke-dashoffset="'+(-kl)+'"/></g></svg>';
-  const ct=el("div"); ct.append(el("div","h-big",m.n?Math.round((m.k+m.d+m.r)/m.n*100)+"%":"–"),el("div","h-note",nfmt(m.n)+" clips")); ring.appendChild(ct);
-  const go=el("button","primary","Continue reviewing"); go.onclick=()=>goMode("music"); go.style.minHeight="46px";
-  hero.append(hh,ring,lg([["h-k","Kept "+nfmt(m.k)],["h-d","Delete "+nfmt(m.d+m.r)],["h-p","Left "+nfmt(m.n-m.k-m.d-m.r)]]),go,el("div","h-note","Keep and delete marks are saved on this device."));
-  /* tiles */
-  const tile=(lab,key,mode,fn)=>{
-    const t=el("button","h-card"), s=d.pending.has(key)?"Loading…":(d[key]&&d[key].off)?"Not set up on the Worker":!d[key]?"Could not load ("+(d.err[key]||"no data")+")":"", r=s?null:fn(d[key]);
-    t.onclick=()=>goMode(mode); const b=el("div","h-big",s?"–":r.val);
-    if(r&&r.of!=null){ const o=el("small",null," / "+r.of); o.style.color="var(--mut)"; b.appendChild(o); }
-    const tr=el("div","h-trk"), i=document.createElement("i"); i.style.width=(r?r.pv:0)+"%"; i.style.background=r?r.col:"var(--line)"; tr.appendChild(i);
-    t.append(el("div","h-lab",lab),b,tr,el("div","h-note",s||r.sub)); return t;
+  const m=d.music, GB=1073741824, pct=(a,b)=>b?Math.max(0,Math.min(100,a/b*100)):0, A=d.amb&&!d.amb.off?d.amb:null, left=m.n-m.k-m.d-m.r, pend=d.pending.size;
+  const upd=pend?"Loading…":"Updated "+new Date(d.at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  $("summary").textContent="Overview · "+upd;
+  const btn=(c,t,f)=>{ const b=el("button",c,t); b.onclick=f; return b; };
+  const lg=(a,cls)=>{ const l=el("div","h-lg"+(cls?" "+cls:"")); for(const [c,t,col] of a){ const s=el("span"), u=el("u",c); if(col) u.style.background=col; s.append(u,document.createTextNode(t)); l.appendChild(s); } return l; };
+  const leg=[["h-k","Kept "+nfmt(m.k)],["h-d2","Delete "+nfmt(m.d+m.r)],["h-p","Left "+nfmt(left)]];
+  const ring=(sz,fs,sub)=>{
+    const C=2*Math.PI*76, kl=m.n?m.k/m.n*C:0, dl=m.n?(m.d+m.r)/m.n*C:0, r=el("div","h-ring");
+    r.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 200 200" role="img" aria-label="Music review progress"><g transform="rotate(-90 100 100)" fill="none" stroke-width="22"><circle cx="100" cy="100" r="76" style="stroke:var(--line)"/><circle cx="100" cy="100" r="76" style="stroke:var(--keep)" stroke-dasharray="'+kl+' '+C+'"/><circle cx="100" cy="100" r="76" style="stroke:var(--del)" stroke-dasharray="'+dl+' '+C+'" stroke-dashoffset="'+(-kl)+'"/></g></svg>';
+    const c=el("div"), b=el("div","h-big",m.n?Math.round((m.k+m.d+m.r)/m.n*100)+"%":"–"); b.style.fontSize=fs+"px"; c.appendChild(b); if(sub) c.appendChild(el("div","h-note",sub)); r.appendChild(c); return r;
   };
-  const tiles=el("div","h-tiles");
-  tiles.append(
-    tile("Ambient folders","amb","amb",a=>({val:nfmt(a.rev),of:nfmt(a.folders),sub:nfmt(a.clips)+" clips · reviewed folders",pv:pct(a.rev,a.folders),col:"var(--acc)"})),
-    tile("Book covers","cov","cov",c=>({val:nfmt(c.total-c.none),of:nfmt(c.total),sub:c.none?nfmt(c.none)+" books still need a cover":"Every book has a cover",pv:pct(c.total-c.none,c.total),col:"var(--keep)"})),
-    tile("Book texts","bk","bk",b=>({val:nfmt(b.total-b.none),of:nfmt(b.total),sub:nfmt(b.mine)+" uploaded by you · "+nfmt(b.words)+" words"+(b.tx?"":" · status list missing"),pv:pct(b.total-b.none,b.total),col:"var(--warn)"})));
-  /* moods */
-  const mc=el("section","h-card"), mh=el("div","h-hh"); mh.append(el("h3",null,"Mood breakdown"),lg([["h-k","Kept"],["h-d","Delete"],["h-p","Left"]])); mc.appendChild(mh);
-  const mo=Object.entries(m.moods).sort((a,b)=>b[1].n-a[1].n).slice(0,8);
-  if(!mo.length) mc.appendChild(el("div","h-note","No music clips found."));
-  for(const [name,c] of mo){ const r=el("div","h-mr"), bar=el("div","h-bar"), k=el("i","h-k"), x=el("i","h-d"), l=el("i","h-p"); k.style.width=pct(c.k,c.n)+"%"; x.style.width=pct(c.d,c.n)+"%"; l.style.flex="1"; bar.append(k,x,l); r.append(el("b",null,pretty(name)),bar,el("span",null,nfmt(c.n))); mc.appendChild(r); }
-  const rt=el("div","h-rt"); rt.append(tiles,mc); const cols=el("div","h-cols"); cols.append(hero,rt); W.appendChild(cols);
-  /* attention */
-  const at=[], A=d.amb&&!d.amb.off?d.amb:null, left=m.n-m.k-m.d-m.r;
+  const tile=(lab,key,mode,fn,icn,col,mob)=>{
+    const t=el("button","h-card"), s=d.pending.has(key)?"Loading…":(d[key]&&d[key].off)?"Not set up on the Worker":!d[key]?"Could not load ("+(d.err[key]||"no data")+")":"", r=s?null:fn(d[key]);
+    t.onclick=()=>goMode(mode);
+    if(!mob){ const b=el("div","h-ic"); b.style.background="color-mix(in srgb,"+col+" 18%,transparent)"; b.style.color=col; b.appendChild(ic(icn,20)); t.appendChild(b); }
+    const big=el("div","h-big",s?"–":r.val); if(mob) big.style.fontSize="28px";
+    if(r&&r.of!=null){ const o=el("small",null," / "+r.of); o.style.color="var(--mut)"; big.appendChild(o); }
+    const tr=el("div","h-trk"), i=document.createElement("i"); i.style.width=(r?r.pv:0)+"%"; i.style.background=r?col:"var(--line)"; tr.appendChild(i);
+    t.append(el("div","h-lab",lab),big,tr,el("div","h-note",s||r.sub)); return t;
+  };
+  const specs=[
+    ["Ambient folders","amb","amb",a=>({val:nfmt(a.rev),of:nfmt(a.folders),sub:nfmt(a.clips)+" clips · reviewed folders",pv:pct(a.rev,a.folders)}),"amb","var(--acc)"],
+    ["Book covers","cov","cov",c=>({val:nfmt(c.total-c.none),of:nfmt(c.total),sub:c.none?nfmt(c.none)+" books still need a cover":"Every book has a cover",pv:pct(c.total-c.none,c.total)}),"cov","var(--keep)"],
+    ["Book texts","bk","bk",b=>({val:nfmt(b.total-b.none),of:nfmt(b.total),sub:nfmt(b.mine)+" uploaded by you · "+nfmt(b.words)+" words"+(b.tx?"":" · status list missing"),pv:pct(b.total-b.none,b.total)}),"bk","var(--warn)"]];
+  const T=(i,mob)=>tile(...specs[i],mob);
+  const at=[];
   if(left>0) at.push([left,"Music clips to review","Mark each Keep or Delete","music","Review"]);
   if(m.d>0) at.push([m.d,"Clips marked to delete","Step 1 · Retire marked","music","Open"]);
   if(m.r>0) at.push([m.r,"Retired clips","Step 2 · Delete retired","music","Open"]);
@@ -1388,22 +1408,56 @@ function hmRender(){
   if(d.bk&&d.bk.noneEn>0) at.push([d.bk.noneEn,"English books with no text","Books tab","bk","Open"]);
   if(d.bk&&d.bk.ready>0) at.push([d.bk.ready,"Removed texts ready to delete","Older than 3 days","bk","Open"]);
   if(A&&A.folders>A.rev) at.push([A.folders-A.rev,"Ambient folders not reviewed","Ambient tab","amb","Open"]);
-  const ac=el("section","h-card"); ac.style.flex="1 1 300px"; ac.appendChild(el("h3",null,"Needs attention"));
-  if(!at.length&&!d.pending.size) ac.appendChild(el("div","h-note","All caught up."));
-  for(const [n,t,sub,mode,btn] of at.slice(0,5)){ const li=el("div","h-li"), tx=el("div"), b=el("button","sm",btn); b.onclick=()=>goMode(mode); tx.append(el("b",null,t),el("span","h-note",sub)); li.append(el("span","chip no",nfmt(n)),tx,b); ac.appendChild(li); }
-  /* storage */
-  const sc=el("section","h-card"); sc.style.flex="1 1 300px"; const A2=A?A.bytes:0, tot=m.mbytes+A2+m.other, cap=FREE_GB*GB, tr=el("div","h-trk");
-  tr.style.height="14px"; for(const [v,col] of [[m.mbytes,"var(--acc)"],[A2,"var(--keep)"],[m.other,"var(--mut)"]]){ const i=document.createElement("i"); i.style.width=pct(v,cap)+"%"; i.style.background=col; tr.appendChild(i); }
-  sc.append(el("h3",null,"Storage"),el("div","h-big",(tot/GB).toFixed(2)+" GB"),tr,lg([["","Music "+(m.mbytes/GB).toFixed(2),"var(--acc)"],["","Ambient "+(A2/GB).toFixed(2),"var(--keep)"],["","Other "+(m.other/GB).toFixed(2),"var(--mut)"]]),
-    el("div","h-note","of the "+FREE_GB+" GB free tier (Music and Ambient share it)"+(d.bk?" · "+nfmt(d.bk.baks)+" book-text backups":"")));
-  /* activity */
   const ev=[]; if(d.bk) for(const id in d.bk.up){ const u=d.bk.up[id], t=u.removed?(u.removedAt||u.at):u.at; if(t) ev.push([t,(u.removed?"Marked removed: ":"Saved text: ")+((d.bk.cat[id]&&d.bk.cat[id].title)||"Book "+id)]); }
   for(const o of m.objs){ const t=Date.parse(o.uploaded)||0; if(o.key==="retired.json") ev.push([t,"Retired list updated"]); else if(o.key==="covers/overrides.json") ev.push([t,"Cover choices saved"]); }
-  ev.sort((a,b)=>b[0]-a[0]); const rc=el("section","h-card"); rc.style.flex="1 1 300px"; rc.appendChild(el("h3",null,"Recent activity"));
-  if(!ev.length) rc.appendChild(el("div","h-note",d.pending.size?"Loading…":"Nothing yet."));
-  for(const [t,txt] of ev.slice(0,5)){ const li=el("div","h-li"), x=el("div",null,txt); li.append(el("span","chip",ago(t)),x); rc.appendChild(li); }
-  const bot=el("div","h-cols"); bot.append(ac,sc,rc); W.appendChild(bot);
-  const keep=p.scrollTop; p.textContent=""; p.appendChild(W); p.scrollTop=keep;
+  ev.sort((a,b)=>b[0]-a[0]);
+  const attCard=mob=>{
+    const c=el("section","h-card"); c.style.flex="1 1 300px"; c.appendChild(el("h3",null,"Needs attention"));
+    if(!at.length&&!pend) c.appendChild(el("div","h-note","All caught up."));
+    at.slice(0,mob?3:5).forEach(([n,t,sub,mode,b],i)=>{ const tx=el("div"); tx.append(el("b",null,t),el("span","h-note",sub));
+      if(mob){ const r=el("button","h-row"+(i?"":" f")); r.onclick=()=>goMode(mode); r.append(el("span","chip no",nfmt(n)),tx,ic("chev",18)); c.appendChild(r); }
+      else{ const r=el("div","h-li"); r.append(el("span","chip no",nfmt(n)),tx,btn("sm",b,()=>goMode(mode))); c.appendChild(r); } });
+    return c;
+  };
+  const moodCard=(lim,mob)=>{
+    const c=el("section","h-card"), h=el("div","h-hh"); h.appendChild(el("h3",null,"Mood breakdown")); if(!mob) h.appendChild(lg([["h-k","Kept"],["h-d2","Delete"],["h-p","Left"]])); c.appendChild(h);
+    const mo=Object.entries(m.moods).sort((a,b)=>b[1].n-a[1].n); if(!mo.length) c.appendChild(el("div","h-note","No music clips found."));
+    for(const [name,x] of mo.slice(0,lim)){ const r=el("div","h-mr"), bar=el("div","h-bar"), k=el("i","h-k"), dd=el("i","h-d2"), l=el("i","h-p"); k.style.width=pct(x.k,x.n)+"%"; dd.style.width=pct(x.d,x.n)+"%"; l.style.flex="1"; bar.append(k,dd,l); r.append(el("b",null,pretty(name)),bar,el("span",null,nfmt(x.n))); c.appendChild(r); }
+    if(mob&&mo.length>lim) c.appendChild(el("div","h-note","Showing top "+lim+" · tap Music for all moods"));
+    return c;
+  };
+  const stoCard=mob=>{
+    const c=el("section","h-card"), A2=A?A.bytes:0, tot=m.mbytes+A2+m.other, cap=FREE_GB*GB, tr=el("div","h-bar"); c.style.flex="1 1 300px"; tr.style.height=mob?"12px":"14px";
+    for(const [v,col] of [[m.mbytes,"var(--acc)"],[A2,"var(--keep)"],[m.other,"var(--line)"]]){ const i=document.createElement("i"); i.style.width=pct(v,cap)+"%"; i.style.background=col; tr.appendChild(i); }
+    const big=el("div","h-big",(tot/GB).toFixed(tot<GB?2:1)+" "); const u=el("small",null,"GB"); u.style.color="var(--mut)"; big.appendChild(u);
+    const g=(x)=>(x/GB).toFixed(2), bk=d.bk?" · "+nfmt(d.bk.baks)+" book-text backups":"";
+    if(mob){ const h=el("div","h-hh"); h.append(el("h3",null,"Storage"),el("span","h-note","of "+FREE_GB+" GB free tier")); c.append(h,big,tr,el("div","h-note","Music "+g(m.mbytes)+" · Ambient "+g(A2)+" · Other "+g(m.other)+bk)); }
+    else c.append(el("h3",null,"Storage"),big,tr,lg([["","Music "+g(m.mbytes),"var(--acc)"],["","Ambient "+g(A2),"var(--keep)"],["","Other "+g(m.other),"var(--line)"]]),el("div","h-note","of the "+FREE_GB+" GB free tier (Music and Ambient share it)"+bk));
+    return c;
+  };
+  const actCard=()=>{
+    const c=el("section","h-card"); c.style.flex="1 1 300px"; c.appendChild(el("h3",null,"Recent activity"));
+    if(!ev.length) c.appendChild(el("div","h-note",pend?"Loading…":"Nothing yet."));
+    for(const [t,txt] of ev.slice(0,5)){ const li=el("div","h-li"); li.append(el("span","chip",ago(t)),el("div",null,txt)); c.appendChild(li); }
+    return c;
+  };
+  const go=()=>{ const b=btn("primary","Continue reviewing",()=>goMode("music")); b.style.minHeight="48px"; return b; };
+  /* large screens */
+  const D=el("div","h-wrap h-d"), top=el("div","h-top"), tl=el("div"), tr=el("div","h-tr"), gear=btn("h-ib","⚙",e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; }); gear.setAttribute("aria-label","Connection");
+  tl.append(el("div","h-lab","Overview"),el("h2",null,"Your library, live.")); tr.append(el("span","chip hi","Connected"),el("span","chip",upd),gear,btn("primary","Refresh",()=>connect())); top.append(tl,tr);
+  const hero=el("section","h-card h-hero"), hh=el("div","h-hh"); hh.append(el("h3",null,"Music review"),btn("sm","Open",()=>goMode("music")));
+  hero.append(hh,ring(240,56,nfmt(m.n)+" clips"),lg(leg,"c"),go(),el("div","h-note","Keep and delete marks are saved on this device."));
+  const tiles=el("div","h-tiles"); tiles.append(T(0),T(1),T(2)); const rt=el("div","h-rt"); rt.append(tiles,moodCard(8)); const cols=el("div","h-cols"); cols.append(hero,rt);
+  const bot=el("div","h-cols"); bot.append(attCard(),stoCard(),actCard()); D.append(top,cols,bot);
+  /* phones */
+  const M=el("div","h-wrap h-m"), bar=el("div","h-mbar"), lm=el("div","h-lm"); lm.appendChild(ic("pulse",18));
+  const rf=btn("h-ib",null,()=>connect()); rf.appendChild(ic("ref",20)); rf.setAttribute("aria-label","Refresh"); bar.append(lm,el("h1",null,"Overview"),rf);
+  const chips=el("div","h-chips"); chips.append(el("span","chip hi","Connected"),el("span","h-note",upd));
+  const heroM=el("section","h-card h-hero"), row=el("div","h-hrow"), side=el("div"), mb=el("div","h-big",nfmt(m.n)), mu=el("small",null," clips"); mu.style.color="var(--mut)"; mb.appendChild(mu); mb.style.fontSize="34px";
+  side.append(el("div","h-lab","Music review"),mb,lg(leg,"v")); row.append(ring(112,24),side); heroM.append(row,go());
+  const g2=el("div","h-g2"); g2.append(T(0,true),T(1,true));
+  M.append(bar,chips,heroM,attCard(true),g2,T(2,true),moodCard(4,true),stoCard(true),actCard());
+  const keep=p.scrollTop; p.textContent=""; p.append(D,M); p.scrollTop=keep;
 }
 $("bkq").oninput=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 document.querySelectorAll("#bkfl button").forEach(b=>b.onclick=()=>{ bk.fl=(bk.fl===b.dataset.f)?"":b.dataset.f; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); });
@@ -1429,7 +1483,7 @@ $("tok").addEventListener("keydown",e=>{ if(e.key==="Enter") connect(); }); $("g
 const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER;
 let t0=ls0("r2-tok")||""; try{ if(!t0){ t0=sessionStorage.getItem("r2-tok")||""; if(t0) $("rem").checked=false; } }catch(e){}
 $("tok").value=t0; updateSw();
-document.querySelectorAll("#sw button").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
+document.querySelectorAll("#rail .nv").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
 $("gear").onclick=e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; };
 document.addEventListener("click",e=>{ if(!$("gmenu").contains(e.target)) $("gmenu").hidden=true; });
 const chgTok=()=>{ $("a").pause(); $("gmenu").hidden=true; document.body.classList.remove("conn"); $("tok").value=""; $("tok").focus(); };

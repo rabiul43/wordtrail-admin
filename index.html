@@ -519,22 +519,41 @@ function advance(val){
   const next=$("fstat").value?i:i+1; if(st.rows.length) play(Math.min(st.rows.length-1,next));
 }
 
+const streamUrl=k=>st.base+"/api/file?key="+enc(k)+"&token="+encodeURIComponent(st.tok);
+// Warm the browser cache with the next clip in the list, so auto-next / advance starts almost instantly.
+// Runs only once the current clip can play (so it doesn't compete for bandwidth). Best effort: the browser decides how much to buffer.
+function preloadNext(){
+  const n=st.rows[st.idx+1]; if(!n) return;
+  if(st.pre&&st.pre.dataset.key===n.key) return;
+  if(st.pre){ st.pre.removeAttribute("src"); st.pre.load(); }
+  const p=new Audio(); p.preload="auto"; p.dataset.key=n.key; p.src=streamUrl(n.key); st.pre=p;
+}
+$("a").addEventListener("canplay",()=>{ if($("a").dataset.mode==="stream") preloadNext(); });
 async function play(i){
   const o=st.rows[i]; if(!o) return; const pf=st.amb&&st.rows[st.idx]?fo(st.rows[st.idx].key):null; st.idx=i;
   if(st.amb&&fo(o.key)!==pf) renderList(); else if(st.amb) renderQueue();
   document.querySelectorAll("tr.playing,.card.playing").forEach(r=>r.classList.remove("playing")); const r0=$("r"+i); if(r0) r0.classList.add("playing");
   $("now").textContent="Loading "+nameOf(o.key)+"…";
-  try{
-    const r=await api("/api/file?key="+enc(o.key)); if(!r.ok) throw new Error("HTTP "+r.status);
-    const b=await r.blob(); if(st.url) URL.revokeObjectURL(st.url); st.url=URL.createObjectURL(b);
-  }catch(e){ $("now").textContent="Error: "+e.message; return; }
-  const a=$("a"); a.src=st.url; a.play().catch(()=>{});
+  // Stream straight from the Worker (starts after the first chunk) instead of downloading the whole blob first.
+  // <audio> can't send an Authorization header, so the token goes in the query string (&token=).
+  // If streaming fails (e.g. Worker doesn't accept ?token=), the "error" handler below falls back to the blob method.
+  const a=$("a"); if(st.url){ URL.revokeObjectURL(st.url); st.url=null; }
+  a.dataset.key=o.key; a.dataset.mode="stream";
+  a.src=streamUrl(o.key); a.play().catch(()=>{});
   $("now").textContent=(st.amb?fo(o.key):moodOf(o.key))+" · "+nameOf(o.key);
   document.querySelectorAll("tr.playing,.card.playing").forEach(r=>r.classList.remove("playing"));
   const r=$("r"+i); if(r){ r.classList.add("playing"); r.scrollIntoView({block:"nearest"}); }
 }
 $("a").addEventListener("loadedmetadata",()=>{ const a=$("a"); if($("mid").checked&&isFinite(a.duration)&&a.duration>40) a.currentTime=a.duration*0.3; });
 $("a").addEventListener("timeupdate",()=>{ const a=$("a"),w=$("wf"),t=$("tm"); if(w&&isFinite(a.duration)&&a.duration>0) w.style.width=(a.currentTime/a.duration*100)+"%"; if(t) t.textContent=fmt(a.currentTime)+" / "+fmt(a.duration); });
+$("a").addEventListener("error",async()=>{   // streaming failed -> old behaviour: fetch whole file with the auth header
+  const a=$("a"); if(a.dataset.mode!=="stream") return; a.dataset.mode="blob"; const key=a.dataset.key;
+  try{
+    const r=await api("/api/file?key="+enc(key)); if(!r.ok) throw new Error("HTTP "+r.status);
+    const b=await r.blob(); if(a.dataset.key!==key) return;
+    if(st.url) URL.revokeObjectURL(st.url); st.url=URL.createObjectURL(b); a.src=st.url; a.play().catch(()=>{});
+  }catch(e){ $("now").textContent="Error: "+e.message; }
+});
 $("a").addEventListener("play",setPP); $("a").addEventListener("pause",setPP);
 $("a").addEventListener("ended",()=>{ if($("auto").checked) play(st.idx+1); });
 

@@ -548,7 +548,12 @@ $("a").addEventListener("loadedmetadata",()=>{ const a=$("a"); if($("mid").check
 $("a").addEventListener("timeupdate",()=>{ const a=$("a"),w=$("wf"),t=$("tm"); if(w&&isFinite(a.duration)&&a.duration>0) w.style.width=(a.currentTime/a.duration*100)+"%"; if(t) t.textContent=fmt(a.currentTime)+" / "+fmt(a.duration); });
 $("a").addEventListener("error",async()=>{   // streaming failed -> old behaviour: fetch whole file with the auth header
   const a=$("a"); if(a.dataset.mode!=="stream") return; a.dataset.mode="blob"; const key=a.dataset.key;
-  $("now").textContent="⚠ Streaming failed (Worker not updated/deployed?) – downloading the whole file instead… "+nameOf(key);
+  $("now").textContent="⚠ Streaming failed – downloading the whole file instead… "+nameOf(key);
+  try{   // probe what the server says to the streaming URL, so the cause is visible
+    const pr=await fetch(streamUrl(key),{headers:{Range:"bytes=0-99"}});
+    const why=pr.status===401?"401 = this Worker doesn't accept ?token= (old code / different Worker)":pr.status===206?"206 OK (server fine; browser rejected the audio: "+(a.error?("code "+a.error.code):"?")+", type "+pr.headers.get("content-type")+")":pr.status===200?"200 = Range ignored by Worker":"HTTP "+pr.status;
+    $("now").textContent="⚠ Streaming failed: "+why+" · "+nameOf(key);
+  }catch(e){ $("now").textContent="⚠ Streaming failed: could not reach "+st.base+" ("+e.message+")"; }
   try{
     const r=await api("/api/file?key="+enc(key)); if(!r.ok) throw new Error("HTTP "+r.status);
     const b=await r.blob(); if(a.dataset.key!==key) return;

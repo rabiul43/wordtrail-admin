@@ -225,26 +225,6 @@ body.bk #bkpane{flex-direction:column}
 @media (min-width:701px){header h1{display:none}}
 @media (min-width:701px) and (max-width:1000px){#rail{width:76px;padding:20px 10px;align-items:center}.rl span,#rail .nv span{display:none}.rl{margin:0 0 20px}#rail .nv{justify-content:center;padding:0}}
 @media (max-width:700px){#app{flex-direction:column}#rail{order:2;width:100%;height:calc(72px + env(safe-area-inset-bottom));padding:0 0 env(safe-area-inset-bottom);flex-direction:row;gap:0;border-right:0;border-top:1px solid var(--line);overflow:visible}.rl{display:none}#rail .nv{flex:1;flex-direction:column;justify-content:center;gap:4px;padding:0;min-height:44px;border-radius:0;font-size:11px;text-align:center;background:transparent!important;box-shadow:none!important}#rail .nv.on{color:var(--acc)}}
-/* ---- Reviews tab ---- */
-#rvpane{display:none}
-body.rv #rvpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}
-body.rv #moods,body.rv #list,body.rv #queue,body.rv #fpane,body.rv #cpane,body.rv #spane,body.rv #tabs,body.rv footer,body.rv #prog,body.rv #q,body.rv #fstat,body.rv #hbtns{display:none!important}
-.rv-wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-#rvpane .card2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0;display:flex;flex-direction:column;gap:10px}#rvpane .card2 h4{margin:0;font-size:15px}#rvpane .card2 p{margin:0;color:var(--mut)}
-.rv-view{display:flex;flex-direction:column;gap:12px;min-width:0}
-.rv-bar,.rv-seg,.rv-meta,.rv-act{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.rv-bar button.on,.rv-seg button.on{background:var(--soft);border-color:var(--acc)}
-.rv-bar .rv-sp{flex:1}
-.rv-card .rv-hd{display:flex;flex-direction:column;gap:2px}
-.rv-st{color:var(--warn);letter-spacing:2px;font-size:15px}
-.rv-txt{margin:0;padding:10px 12px;border-left:3px solid var(--line);background:var(--bg);border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
-.rv-txt.gone{color:var(--mut);font-style:italic}
-.rv-act button{flex:1 1 130px;min-height:44px;font-weight:800}
-.rv-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.rv-row:first-of-type{border-top:0}
-.rv-row>div{flex:1;min-width:0}.rv-row b{display:block}.rv-row button{flex:none;width:auto!important;min-height:40px!important;padding:0 14px}
-.rv-err{border-color:var(--del)!important}.rv-err b{color:var(--del)}
-.rv-in{display:flex;gap:8px;flex-wrap:wrap}.rv-in input{flex:1 1 220px}.rv-in button{width:auto!important;flex:none;padding:0 16px}
-@media (max-width:700px){body.rv{padding-bottom:0!important}body.rv #rvpane{padding:12px 14px}}
 /* ---- Home tab ---- */
 #homepane{display:none}
 body.home #homepane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto}
@@ -286,11 +266,26 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 .h-chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .h-d .chip,.h-m .chip{font-size:12px;padding:4px 9px;border-radius:8px}
 @media (prefers-color-scheme:dark){button.primary,.acts .go,.eacts .mk,.pp,.epl,.sw button.on,#tabs button.on,nav .mood.on,button.danger,.rl i,.h-lm{color:#0D0E14}}
+/* ---- Notebooks tab ---- */
+#nbpane{display:none}
+body.nb #nbpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto}
+body.nb header,body.nb #summary,body.nb #moods,body.nb #list,body.nb #queue,body.nb #fpane,body.nb #cpane,body.nb #spane,body.nb #covpane,body.nb #bkpane,body.nb #tabs,body.nb footer,body.nb #prog{display:none!important}
+.nb-wrap{max-width:1240px;margin:0 auto;padding:28px 32px 40px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box}
+.nb-cols{display:flex;gap:16px;flex-wrap:wrap}.nb-l{flex:7 1 480px;display:flex;flex-direction:column;gap:16px;min-width:0}.nb-r{flex:4 1 300px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.nb-ic{width:44px;height:44px;border-radius:14px;background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--acc);display:grid;place-items:center;flex:none}
+.nb-sp{display:flex;gap:6px}.nb-sp div{flex:1;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--mut)}.nb-sp i{height:6px;border-radius:3px;background:var(--line)}.nb-sp .d i{background:var(--keep)}.nb-sp .n{color:var(--fg);font-weight:700}.nb-sp .n i{background:var(--acc)}.nb-sp .er i{background:var(--del)}
+.nb-log{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:14px;font:500 12px/1.7 JetBrains Mono,monospace;color:var(--fg);max-height:260px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.nb-a{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-weight:800;text-decoration:none;box-sizing:border-box}
+.nb-stats{display:flex;gap:12px}.nb-stats>div{flex:1}.nb-stats b{display:block;font-size:18px;margin-top:6px}
+a.h-li{color:var(--fg);text-decoration:none}
+.chip.rn{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc)}.chip.er{background:color-mix(in srgb,var(--del) 22%,transparent);color:var(--del)}
+@media (max-width:700px){.nb-wrap{padding:0 16px 16px;gap:12px}.nb-dtop{display:none}.nb-cols{flex-direction:column;flex-wrap:nowrap;gap:12px}.nb-l,.nb-r{display:contents}.nb-c1{order:1}.nb-c2{order:2}.nb-c3{order:3}.nb-c4{order:4}.nb-c5{order:5}#rail .nv{font-size:10px}}
+@media (min-width:701px){.nb-mtop{display:none}}
 </style>
 </head>
 <body>
 <div id="app">
-<div id="rail" class="needconn" role="navigation" aria-label="Sections"><div class="rl"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></i><span>Wordtrail</span></div><button class="nv" data-m="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Home</span></button><button class="nv" data-m="music"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></button><button class="nv" data-m="amb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c3-8 6-8 9 0s6 8 9 0"/></svg><span>Ambient</span></button><button class="nv" data-m="cov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Covers</span></button><button class="nv" data-m="bk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span>Books</span></button><button class="nv" data-m="rv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/></svg><span>Reviews</span></button></div>
+<div id="rail" class="needconn" role="navigation" aria-label="Sections"><div class="rl"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></i><span>Wordtrail</span></div><button class="nv" data-m="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Home</span></button><button class="nv" data-m="music"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></button><button class="nv" data-m="amb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c3-8 6-8 9 0s6 8 9 0"/></svg><span>Ambient</span></button><button class="nv" data-m="cov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Covers</span></button><button class="nv" data-m="bk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span>Books</span></button><button class="nv" data-m="nb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m14 4-4 16"/></svg><span>Notebooks</span></button></div>
 <div id="col">
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
@@ -310,18 +305,19 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 <div id="tabs" class="needconn"><button data-t="review"><b>🎧</b>Review</button><button data-t="folders"><b>📁</b>Folders</button><button data-t="clean"><b>🧹</b>Clean-up</button><button data-t="settings"><b>⚙</b>Settings</button></div>
 <div id="welcome"><div class="wcard">
   <h2>Connect</h2>
-  <p>One password opens Home, Music, Ambient, Covers, Books and Reviews.</p>
+  <p>One password opens Home, Music, Ambient, Covers, Books and Notebooks.</p>
   <div id="werr" class="werr" hidden></div>
   <input id="tok" type="password" placeholder="Admin token" autocomplete="current-password">
   <label><input type="checkbox" id="rem" checked> Remember on this device</label>
   <button class="primary" id="go">Connect</button>
   <details><summary>Worker URL</summary><input id="base" placeholder="Worker URL"></details>
-  <ol><li>Connect once. Next time the page connects by itself. Use the menu on the left (bottom on a phone) to switch between Home, Music, Ambient, Covers, Books and Reviews.</li>
+  <ol><li>Connect once. Next time the page connects by itself. Use the menu on the left (bottom on a phone) to switch between Home, Music, Ambient, Covers, Books and Notebooks.</li>
   <li>Pick a section on the left, play clips, press <b>Keep</b> or <b>Delete</b>. In Ambient, <b>Make best</b> picks the live clip for a folder.</li>
   <li>When done: <b>1 · Retire</b>, wait about 3 days, then <b>2 · Delete retired</b>.</li></ol>
 </div></div>
 <main class="needconn">
   <div id="homepane"></div>
+  <div id="nbpane"></div>
   <nav id="moods"></nav>
   <section id="list"></section>
   <aside id="queue"></aside>
@@ -350,7 +346,6 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
     </div>
     <div id="bkmain"></div>
   </div>
-  <div id="rvpane"></div>
   <div id="cpane"><div class="card2"><h4>Clean-up in 2 steps</h4><p>Nothing is removed until you press. Retired files are only deleted when you press step 2.</p><div id="cbtns"></div></div></div>
   <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
     <div class="card2"><h4>Playback</h4><div id="sp-play"></div></div></div>
@@ -372,7 +367,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
 function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["home","music","amb","cov","bk","rv"].includes(ls0("r2-which"))?ls0("r2-which"):"home")};
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["home","music","amb","cov","bk","nb"].includes(ls0("r2-which"))?ls0("r2-which"):"home")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
@@ -402,11 +397,11 @@ async function connect0(){
   st.base=st.root+(st.which==="amb"?"/ambient":"");
   ls("r2-base",st.root); forgetTok();
   try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
-  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk"); document.body.classList.toggle("rv",st.which==="rv"); document.body.classList.toggle("home",st.which==="home");
+  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk"); document.body.classList.toggle("home",st.which==="home"); document.body.classList.toggle("nb",st.which==="nb");
   if(st.which==="home") return connectHome();
+  if(st.which==="nb") return connectNb();
   if(st.which==="cov") return connectCov();
   if(st.which==="bk") return connectBk();
-  if(st.which==="rv") return connectRv();
   $("summary").textContent="Loading list…";
   const all=[]; let cursor=null;
   try{
@@ -1384,16 +1379,16 @@ async function connectHome(){
   try{ music=await hmMusic(); }
   catch(e){ showErr(e.code===401?"That token didn't work (401). Check it and try again.":"Can't reach the Worker ("+e.message+"). Check the Worker URL below."); return; }
   if(run!==hm.run) return;
-  const d=hm.d={music,amb:null,cov:null,bk:null,err:{},rv:null,pending:new Set(["amb","cov","bk","rv"]),at:Date.now()};
+  const d=hm.d={music,amb:null,cov:null,bk:null,err:{},pending:new Set(["amb","cov","bk"]),at:Date.now()};
   $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
   updateSw(); document.body.classList.add("conn"); hmRender();
-  await Promise.all([["amb",hmAmb],["cov",hmCov],["bk",hmBk],["rv",hmRv]].map(async([k,f])=>{
+  await Promise.all([["amb",hmAmb],["cov",hmCov],["bk",hmBk]].map(async([k,f])=>{
     try{ d[k]=await f(); }catch(e){ d[k]=null; d.err[k]=e.message; }
     d.pending.delete(k); if(run===hm.run){ d.at=Date.now(); hmRender(); }
   }));
 }
 const ago=t=>{ const s=Math.max(0,(Date.now()-t)/1000); return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" d ago"; };
-const IC={amb:'<path d="M3 12c3-8 6-8 9 0s6 8 9 0"/>',cov:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',rv:'<path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/>',bk:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/>',ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',chev:'<path d="m9 6 6 6-6 6"/>',pulse:'<path d="M3 12h3l3-8 4 16 3-8h5"/>'};
+const IC={amb:'<path d="M3 12c3-8 6-8 9 0s6 8 9 0"/>',cov:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',bk:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/>',ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',chev:'<path d="m9 6 6 6-6 6"/>',pulse:'<path d="M3 12h3l3-8 4 16 3-8h5"/>'};
 const ic=(k,sz)=>{ const e=document.createElement("span"); e.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'; return e.firstChild; };
 function hmRender(){
   const d=hm.d, p=$("homepane"); if(!d||st.which!=="home") return;
@@ -1420,8 +1415,7 @@ function hmRender(){
   const specs=[
     ["Ambient folders","amb","amb",a=>({val:nfmt(a.rev),of:nfmt(a.folders),sub:nfmt(a.clips)+" clips · reviewed folders",pv:pct(a.rev,a.folders)}),"amb","var(--acc)"],
     ["Book covers","cov","cov",c=>({val:nfmt(c.total-c.none),of:nfmt(c.total),sub:c.none?nfmt(c.none)+" books still need a cover":"Every book has a cover",pv:pct(c.total-c.none,c.total)}),"cov","var(--keep)"],
-    ["Book texts","bk","bk",b=>({val:nfmt(b.total-b.none),of:nfmt(b.total),sub:nfmt(b.mine)+" uploaded by you · "+nfmt(b.words)+" words"+(b.tx?"":" · status list missing"),pv:pct(b.total-b.none,b.total)}),"bk","var(--warn)"],
-    ["Reviews hidden","rv","rv",r=>({val:nfmt(r.hidden),sub:nfmt(r.reported)+" with reports · hidden from readers at 3+",pv:pct(r.hidden,Math.max(r.reported,1))}),"rv","var(--del)"]];
+    ["Book texts","bk","bk",b=>({val:nfmt(b.total-b.none),of:nfmt(b.total),sub:nfmt(b.mine)+" uploaded by you · "+nfmt(b.words)+" words"+(b.tx?"":" · status list missing"),pv:pct(b.total-b.none,b.total)}),"bk","var(--warn)"]];
   const T=(i,mob)=>tile(...specs[i],mob);
   const at=[];
   if(left>0) at.push([left,"Music clips to review","Mark each Keep or Delete","music","Review"]);
@@ -1429,7 +1423,6 @@ function hmRender(){
   if(m.r>0) at.push([m.r,"Retired clips","Step 2 · Delete retired","music","Open"]);
   if(d.cov&&d.cov.none>0) at.push([d.cov.none,"Books without a cover","Covers tab","cov","Open"]);
   if(d.bk&&d.bk.noneEn>0) at.push([d.bk.noneEn,"English books with no text","Books tab","bk","Open"]);
-  if(d.rv&&d.rv.reported>0) at.unshift([d.rv.reported,"Reviews with reports",nfmt(d.rv.hidden)+" hidden from readers","rv","Review"]);
   if(d.bk&&d.bk.ready>0) at.push([d.bk.ready,"Removed texts ready to delete","Older than 3 days","bk","Open"]);
   if(A&&A.folders>A.rev) at.push([A.folders-A.rev,"Ambient folders not reviewed","Ambient tab","amb","Open"]);
   const ev=[]; if(d.bk) for(const id in d.bk.up){ const u=d.bk.up[id], t=u.removed?(u.removedAt||u.at):u.at; if(t) ev.push([t,(u.removed?"Marked removed: ":"Saved text: ")+((d.bk.cat[id]&&d.bk.cat[id].title)||"Book "+id)]); }
@@ -1471,7 +1464,7 @@ function hmRender(){
   tl.append(el("div","h-lab","Overview"),el("h2",null,"Your library, live.")); tr.append(el("span","chip hi","Connected"),el("span","chip",upd),gear,btn("primary","Refresh",()=>connect())); top.append(tl,tr);
   const hero=el("section","h-card h-hero"), hh=el("div","h-hh"); hh.append(el("h3",null,"Music review"),btn("sm","Open",()=>goMode("music")));
   hero.append(hh,ring(240,56,nfmt(m.n)+" clips"),lg(leg,"c"),go(),el("div","h-note","Keep and delete marks are saved on this device."));
-  const tiles=el("div","h-tiles"); tiles.append(T(0),T(1),T(2),T(3)); const rt=el("div","h-rt"); rt.append(tiles,moodCard(8)); const cols=el("div","h-cols"); cols.append(hero,rt);
+  const tiles=el("div","h-tiles"); tiles.append(T(0),T(1),T(2)); const rt=el("div","h-rt"); rt.append(tiles,moodCard(8)); const cols=el("div","h-cols"); cols.append(hero,rt);
   const bot=el("div","h-cols"); bot.append(attCard(),stoCard(),actCard()); D.append(top,cols,bot);
   /* phones */
   const M=el("div","h-wrap h-m"), bar=el("div","h-mbar"), lm=el("div","h-lm"); lm.appendChild(ic("pulse",18));
@@ -1480,8 +1473,122 @@ function hmRender(){
   const heroM=el("section","h-card h-hero"), row=el("div","h-hrow"), side=el("div"), mb=el("div","h-big",nfmt(m.n)), mu=el("small",null," clips"); mu.style.color="var(--mut)"; mb.appendChild(mu); mb.style.fontSize="34px";
   side.append(el("div","h-lab","Music review"),mb,lg(leg,"v")); row.append(ring(112,24),side); heroM.append(row,go());
   const g2=el("div","h-g2"); g2.append(T(0,true),T(1,true));
-  M.append(bar,chips,heroM,attCard(true),g2,T(2,true),T(3,true),moodCard(4,true),stoCard(true),actCard());
+  M.append(bar,chips,heroM,attCard(true),g2,T(2,true),moodCard(4,true),stoCard(true),actCard());
   const keep=p.scrollTop; p.textContent=""; p.append(D,M); p.scrollTop=keep;
+}
+/* =================== Notebooks tab ===================
+   Runs a Kaggle notebook through the Worker (/api/kaggle/*). The Kaggle key lives only in the Worker. */
+IC.code='<path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m14 4-4 16"/>'; IC.ext='<path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/>';
+const nb={d:{},sel:null,timer:null,tick:null,setup:false};
+const nbList=()=>{ try{ const a=JSON.parse(ls("r2-nbs")||"null"); if(Array.isArray(a)&&a.length) return a; }catch(e){} return ["rabiulislam43/book-repair"]; };
+const nbHist=s=>{ try{ return JSON.parse(ls("r2-nbh:"+s)||"[]"); }catch(e){ return []; } };
+const nbD=s=>nb.d[s]||(nb.d[s]={status:null,failure:"",info:null,out:null,err:null,busy:false,start:Number(ls("r2-nbr:"+s))||0});
+const dur=ms=>{ const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=t%60,p=n=>String(n).padStart(2,"0"); return h?h+":"+p(m)+":"+p(x):p(m)+":"+p(x); };
+const durTxt=ms=>{ const t=Math.round(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60); return (h?h+"h ":"")+m+"m "+(t%60)+"s"; };
+const nbTypical=s=>{ const h=nbHist(s).find(z=>z.ms&&z.res==="complete"); return h?h.ms:30*60000; };
+const nbPct=(s,ms)=>Math.min(95,ms/nbTypical(s)*100);
+const NB_STEPS=["Queued","Starting","Running","Finishing","Complete"];
+const NB_CHIP={queued:["rn","● Queued"],running:["rn","● Running"],complete:["hi","● Complete"],error:["er","● Failed"],cancelacknowledged:["","Cancelled"]};
+async function nbApi(path,body){
+  const r=await fetch(st.root+path,{method:body?"POST":"GET",headers:Object.assign({Authorization:"Bearer "+st.tok},body?{"Content-Type":"application/json"}:{}),body:body?JSON.stringify(body):undefined});
+  if(r.status===401){ const e=new Error("401"); e.code=401; throw e; }
+  let j=null; try{ j=await r.json(); }catch(e){}
+  if(r.status===404&&!(j&&j.error)){ const e=new Error("setup"); e.code="setup"; throw e; }
+  if(!r.ok){ const e=new Error((j&&j.error)||("HTTP "+r.status)); e.code=r.status; throw e; }
+  return j||{};
+}
+async function nbRefresh(s,full){
+  const x=nbD(s), q="?slug="+enc(s);
+  try{
+    const r=await nbApi("/api/kaggle/status"+q), was=x.status; x.status=r.status; x.failure=r.failure||""; x.err=null;
+    if(!x.info||full){ try{ x.info=await nbApi("/api/kaggle/info"+q); }catch(e){ if(e.code==="setup"||e.code===401) throw e; } }
+    const done=x.status==="complete"||x.status==="error", wasRun=was==="running"||was==="queued";
+    if(done&&(!x.out||wasRun||full)){ try{ x.out=await nbApi("/api/kaggle/output"+q); }catch(e){ x.out=null; } }
+    if(done&&x.start){ const a=nbHist(s); a.unshift({at:Date.now(),ms:wasRun?Date.now()-x.start:null,res:x.status}); ls("r2-nbh:"+s,JSON.stringify(a.slice(0,8))); x.start=0; ls("r2-nbr:"+s,""); }
+  }catch(e){ x.err=e; }
+  return x;
+}
+async function nbRun(s){
+  const x=nbD(s); if(x.busy) return;
+  if(!confirm("Run "+s+"?\n\nThis starts a new run of its current code on Kaggle and uses your Kaggle compute time. Only one run can go at a time.")) return;
+  x.busy=true; nbRender();
+  try{ await nbApi("/api/kaggle/run",{slug:s}); x.status="queued"; x.start=Date.now(); ls("r2-nbr:"+s,String(x.start)); x.out=null; x.failure=""; toast("Started. Kaggle will queue it, then run it."); nbSchedule(); }
+  catch(e){ toast(e.code===409?"It is already running.":"Could not start: "+e.message); }
+  x.busy=false; nbRender();
+}
+function nbAdd(){
+  const v=(prompt("Kaggle notebook, as username/notebook-slug:","")||"").trim(); if(!v) return;
+  if(!/^[\w.-]+\/[\w.-]+$/.test(v)){ toast("Use the form username/notebook-slug"); return; }
+  const a=nbList(); if(a.includes(v)){ toast("Already added."); return; }
+  a.push(v); ls("r2-nbs",JSON.stringify(a)); nb.sel=v; nbRender(); nbRefresh(v,true).then(nbRender);
+}
+function nbRemove(s){ if(!confirm("Remove "+s+" from this list? It stays on Kaggle.")) return; ls("r2-nbs",JSON.stringify(nbList().filter(z=>z!==s))); nbRender(); }
+function nbStop(){ clearInterval(nb.timer); clearInterval(nb.tick); }
+function nbTick(){ document.querySelectorAll("[data-nbt]").forEach(e=>{ const x=nbD(e.dataset.nbt); if(!x.start) return; const ms=Date.now()-x.start; if(e.dataset.k==="t") e.textContent=dur(ms); else e.style.width=nbPct(e.dataset.nbt,ms)+"%"; }); }
+function nbSchedule(){
+  nbStop();
+  nb.tick=setInterval(()=>{ if(st.which!=="nb") return nbStop(); nbTick(); },1000);
+  nb.timer=setInterval(async()=>{ if(st.which!=="nb") return nbStop(); if(document.hidden) return;
+    const act=nbList().filter(s=>{ const t=nbD(s).status; return t==="running"||t==="queued"; }); if(!act.length) return;
+    for(const s of act) await nbRefresh(s); nbRender(); },20000);
+}
+async function connectNb(){
+  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Notebooks"; nb.setup=false;
+  const list=nbList(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
+  updateSw(); document.body.classList.add("conn"); nbRender();
+  const first=await nbRefresh(list[0],true);
+  if(first.err&&first.err.code===401){ showErr("That token didn't work (401). Check it and try again."); return; }
+  if(first.err&&first.err.code==="setup"){ nb.setup=true; nbRender(); return; }
+  nbRender(); await Promise.all(list.slice(1).map(z=>nbRefresh(z,true))); nbRender(); nbSchedule();
+}
+function nbRender(){
+  if(st.which!=="nb") return;
+  const p=$("nbpane"), list=nbList(); if(!nb.sel||!list.includes(nb.sel)) nb.sel=list[0];
+  const btn=(c,t,f)=>{ const b=el("button",c,t); b.onclick=f; return b; }, W=el("div","nb-wrap");
+  const dt=el("div","h-top nb-dtop"), tl=el("div"), tr=el("div","h-tr"); tl.append(el("div","h-lab","Notebooks"),el("h2",null,"Run it from here.")); tr.append(el("span","chip hi","Connected"),btn("sm","Add notebook",nbAdd)); dt.append(tl,tr);
+  const mt=el("div","nb-mtop"), bar=el("div","h-mbar"), lm=el("div","h-lm"), rf=btn("h-ib",null,()=>connectNb()); lm.appendChild(ic("pulse",18)); rf.appendChild(ic("ref",20)); rf.setAttribute("aria-label","Refresh"); bar.append(lm,el("h1",null,"Notebooks"),rf);
+  const cr=el("div","h-chips"); cr.append(el("span","chip hi","Connected"),btn("sm","Add notebook",nbAdd)); mt.append(bar,cr);
+  if(nb.setup){
+    const c=el("section","h-card"); c.append(el("h3",null,"Almost there"),el("div","h-note","Your Worker does not have the Kaggle routes yet. Add kaggle-routes.js to the Worker and set the Kaggle secrets (steps are at the top of that file), then check again."),btn("primary","Check again",()=>connectNb()));
+    W.append(dt,mt,c); p.textContent=""; p.appendChild(W); return;
+  }
+  const card=s=>{
+    const x=nbD(s), i=x.info||{}, h=nbHist(s)[0], sel=s===nb.sel, run=x.status==="running"||x.status==="queued", c=el("section","h-card nb-c1"+(sel?" h-hero":""));
+    if(!sel) c.style.cursor="pointer"; c.onclick=e=>{ if(e.target.closest("button,a")) return; if(nb.sel!==s){ nb.sel=s; nbRender(); } };
+    const hd=el("div","h-hh"), l=el("div"), ico=el("div","nb-ic"), nm=el("div"), t=el("h3",null,i.title||s.split("/")[1]);
+    l.style.cssText="display:flex;align-items:center;gap:14px;min-width:0;flex:1"; ico.appendChild(ic("code",22)); nm.style.minWidth="0"; t.style.fontSize="22px"; nm.append(t,el("span","h-note",s)); l.append(ico,nm);
+    const [cc,ct]=NB_CHIP[x.status]||["",x.status?pretty(x.status):(x.err?"Unavailable":"Checking…")]; hd.append(l,el("span","chip "+cc,ct)); c.appendChild(hd);
+    const ch=el("div"); ch.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+    if(i.isPrivate!=null) ch.appendChild(el("span","chip",i.isPrivate?"Private":"Public")); if(i.gpu) ch.appendChild(el("span","chip","GPU"+(i.machine?" · "+i.machine:""))); if(i.version) ch.appendChild(el("span","chip","Version "+i.version)); if((i.datasets||[])[0]) ch.appendChild(el("span","chip","Input: "+String(i.datasets[0]).split("/").pop()));
+    if(ch.children.length) c.appendChild(ch);
+    if(run){
+      const row=el("div"), big=el("div","h-big",x.start?dur(Date.now()-x.start):"…"); row.style.cssText="display:flex;align-items:baseline;gap:12px"; big.dataset.nbt=s; big.dataset.k="t";
+      row.append(big,el("span","h-note",x.start?"elapsed · usually about "+Math.round(nbTypical(s)/60000)+" min":"started outside this page"));
+      const trk=el("div","h-trk"), b=document.createElement("i"); b.style.background="var(--acc)"; b.style.width=(x.start?nbPct(s,Date.now()-x.start):0)+"%"; b.dataset.nbt=s; b.dataset.k="p"; trk.appendChild(b); c.append(row,trk);
+    } else if(x.status==="complete"||x.status==="error"){
+      c.appendChild(el("div","h-note",x.status==="error"?"The last run failed."+(x.failure?" "+x.failure:""):(h&&h.ms?"Took "+durTxt(h.ms)+" · ":"")+(h?ago(h.at):"")));
+    }
+    if(NB_CHIP[x.status]){ const cur=x.status==="queued"?0:x.status==="running"||x.status==="error"?2:5, sp=el("div","nb-sp"); NB_STEPS.forEach((n,k)=>{ const d=el("div",(k<cur?"d":"")+(k===cur?(x.status==="error"?" n er":" n"):"")); d.append(el("i"),document.createTextNode(n)); sp.appendChild(d); }); c.appendChild(sp); }
+    const bw=el("div"), rb=btn("primary",x.busy?"Starting…":run?"Running…":"Run notebook",()=>nbRun(s)), a=el("a","nb-a","Open on Kaggle");
+    bw.style.cssText="display:flex;gap:10px;flex-wrap:wrap"; rb.disabled=x.busy||run||x.status==null; rb.style.minHeight="48px"; a.href="https://www.kaggle.com/code/"+s; a.target="_blank"; a.rel="noopener"; a.appendChild(ic("ext",16)); bw.append(rb,a); c.appendChild(bw);
+    c.appendChild(el("div","h-note",x.err?"Could not reach Kaggle: "+x.err.message:(i.gpu?"Each run uses your weekly Kaggle GPU time. Only one run at a time.":"Only one run at a time.")));
+    if(list.length>1) c.appendChild(btn("sm","Remove from list",()=>nbRemove(s)));
+    return c;
+  };
+  const sx=nbD(nb.sel), sh=nbHist(nb.sel), last=sh[0], files=(sx.out&&sx.out.files)||[], kb=n=>n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";
+  const lc=el("section","h-card nb-c2"), st1=NB_CHIP[sx.status];
+  lc.appendChild(el("h3",null,"Last run"));
+  const ns=el("div","nb-stats"); for(const [k,v] of [["Result",st1?st1[1].replace("● ",""):"—"],["Took",last&&last.ms?durTxt(last.ms):"—"],["Finished",last?ago(last.at):"—"]]){ const d=el("div"); d.append(el("div","h-lab",k),el("b",null,v)); ns.appendChild(d); } lc.appendChild(ns);
+  const fc=el("section","h-card nb-c3"); fc.appendChild(el("h3",null,"Output files"));
+  if(!files.length) fc.appendChild(el("div","h-note","Files from the latest finished run show up here."));
+  for(const f of files.slice(0,12)){ const r=el(f.url?"a":"div","h-li"), d=el("div"); if(f.url){ r.href=f.url; r.target="_blank"; r.rel="noopener"; } d.append(el("b",null,f.name||"file"),el("span","h-note",f.url?"Tap to download":"")); r.appendChild(d); if(f.size) r.appendChild(el("span","chip",kb(f.size))); fc.appendChild(r); }
+  const hc=el("section","h-card nb-c4"); hc.appendChild(el("h3",null,"Run history")); hc.appendChild(el("div","h-note","Runs started from this page"));
+  if(!sh.length) hc.appendChild(el("div","h-note","No runs started here yet."));
+  for(const z of sh){ const r=el("div","h-li"), d=el("div"); d.append(el("b",null,z.ms?"Took "+durTxt(z.ms):"Finished"),el("span","h-note",ago(z.at))); r.append(el("span","chip "+(z.res==="complete"?"hi":"er"),z.res==="complete"?"Done":"Failed"),d); hc.appendChild(r); }
+  const gc=el("section","h-card nb-c5"); gc.appendChild(el("h3",null,"Run log")); const lg=sx.out&&sx.out.log;
+  if(lg){ const pre=el("div","nb-log",lg); gc.appendChild(pre); setTimeout(()=>{ pre.scrollTop=pre.scrollHeight; },0); } else gc.appendChild(el("div","h-note","The log appears when a run finishes. Kaggle does not stream it while it runs."));
+  const L=el("div","nb-l"), R=el("div","nb-r"), cols=el("div","nb-cols"); L.append(...list.map(card),gc); R.append(lc,fc,hc); cols.append(L,R); W.append(dt,mt,cols);
+  const keep=p.scrollTop; p.textContent=""; p.appendChild(W); p.scrollTop=keep;
 }
 $("bkq").oninput=()=>{ bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 document.querySelectorAll("#bkfl button").forEach(b=>b.onclick=()=>{ bk.fl=(bk.fl===b.dataset.f)?"":b.dataset.f; bk.shown=150; bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); });
@@ -1490,178 +1597,9 @@ $("bkdel").onclick=bkDelete;
 $("bksave").onclick=async()=>{ const v=$("bkbase").value.trim().replace(/\/+$/,""); if(!/^https?:\/\//.test(v)){ alert("Enter a full address that starts with https://"); return; }
   ls("bk-base",v); const c=$("bkcat").value.trim(); if(/^https?:\/\//.test(c)) ls("cov-catalog",c); await bkLoadBooks(); bkFilter(); bk.sel=bk.rows[0]||null; renderBk(); };
 
-
-/* ---------- Reviews: moderate book ratings and reviews (Reviews Worker: tools/reviews-admin-worker) ---------- */
-const rv={base:ls("rv-base")||"",tab:"queue",min:"3",items:[],next:null,loading:false,err:null,scan:null,scanning:"",scanErr:null,chk:null,log:null,logErr:null,cat:null};
-async function rvApi(path,body){
-  if(!rv.base) throw new Error("The Reviews Worker address is not set.");
-  let r; try{ r=await fetch(rv.base.replace(/\/+$/,"")+path,{method:body?"POST":"GET",headers:Object.assign({Authorization:"Bearer "+st.tok},body?{"content-type":"application/json"}:{}),body:body?JSON.stringify(body):undefined}); }
-  catch(e){ throw new Error("Can't reach the Reviews Worker. Check its address under “Reviews Worker address”."); }
-  let j=null; try{ j=await r.json(); }catch(e){}
-  if(!r.ok){ const e=new Error(r.status===401?"The Reviews Worker did not accept the token (401). Its ADMIN_TOKEN must be the same as your Admin token.":((j&&j.error)||("HTTP "+r.status))); e.code=r.status; e.hint=j&&j.hint; throw e; }
-  return j;
-}
-async function rvCat(){
-  if(rv.cat) return rv.cat; rv.cat={};
-  try{ const rc=await fetch(catUrl(),{cache:"no-cache"}); if(rc.ok){ const j=JSON.parse(await rc.text()), rows=Array.isArray(j)?j:(Array.isArray(j&&j.b)?j.b:(Object.values(j||{}).find(v=>Array.isArray(v))||[]));
-    for(const row of rows) if(Array.isArray(row)&&/^\d+$/.test(String(row[0]))) rv.cat[row[0]]=String(row[1]||""); } }catch(e){}
-  return rv.cat;
-}
-const rvTitle=id=>(rv.cat&&rv.cat[id])||"Book #"+id;
-const rvShort=u=>u.length>10?u.slice(0,8)+"…":u;
-const rvDate=t=>{ const d=t?new Date(typeof t==="number"?t*1000:t):null; return d&&!isNaN(d)?d.toLocaleDateString([],{day:"numeric",month:"short",year:"numeric"}):""; };
-const RV_WHY={spam:"Spam",offensive:"Offensive",spoiler:"Spoiler",other:"Other"};
-
-function rvSetup(first){
-  const c=el("div","card2"); c.appendChild(el("h4",null,first?"Set up the Reviews Worker":"Reviews Worker address"));
-  if(first) c.appendChild(el("p",null,"One-time setup. Deploy tools/reviews-admin-worker (see its README), then paste its address here. It uses the same admin token as this page."));
-  const row=el("div","rv-in"), inp=el("input"); inp.placeholder="https://wordtrail-reviews.…workers.dev"; inp.value=rv.base; inp.setAttribute("aria-label","Reviews Worker address");
-  const b=el("button","primary","Save & test"); b.onclick=async()=>{
-    const v=inp.value.trim().replace(/\/+$/,""); if(!/^https:\/\//.test(v)){ toast("Enter a full address that starts with https://"); return; }
-    rv.base=v; b.disabled=true;
-    try{ const j=await rvApi("/rv/ping"); ls("rv-base",v); toast("Connected to the Reviews Worker (Firebase project "+j.project+")."); rv.items=[]; rv.next=null; rvLoadQueue(true); }
-    catch(e){ rv.base=ls("rv-base")||""; toast(e.message); b.disabled=false; }
-  };
-  row.append(inp,b); c.appendChild(row); return c;
-}
-function rvErr(e){ const c=el("div","card2 rv-err"); c.appendChild(el("b",null,"Could not load")); c.appendChild(el("p",null,e.message)); if(e.hint) c.appendChild(el("p","note",e.hint)); return c; }
-
-function rvRender(){
-  const p=$("rvpane"); if(!p||st.which!=="rv") return; const keep=p.scrollTop, w=el("div","rv-wrap"); p.textContent=""; p.appendChild(w);
-  if(!rv.base){ w.appendChild(rvSetup(true)); return; }
-  const bar=el("div","rv-bar"); [["queue","Queue"],["check","Totals check"],["sig","Signals"],["log","Log"]].forEach(([k,t])=>{ const b=el("button",rv.tab===k?"on":"",t); b.onclick=()=>{ rv.tab=k; if(k==="log"&&!rv.log) rvLoadLog(); rvRender(); }; bar.appendChild(b); });
-  bar.appendChild(el("span","rv-sp")); const rf=el("button",null,"Refresh"); rf.onclick=()=>{ if(rv.tab==="log") rvLoadLog(); else if(rv.tab==="queue") rvLoadQueue(true); else rvScanAll(); }; bar.appendChild(rf); w.appendChild(bar);
-  w.appendChild(rv.tab==="queue"?rvQueueView():rv.tab==="check"?rvCheckView():rv.tab==="sig"?rvSigView():rvLogView());
-  const d=el("details"); d.appendChild(el("summary","note","Reviews Worker address")); d.appendChild(rvSetup(false)); w.appendChild(d);
-  p.scrollTop=keep;
-}
-
-/* --- Queue --- */
-async function rvLoadQueue(reset){
-  if(rv.loading) return; rv.loading=true; rv.err=null; if(reset){ rv.items=[]; rv.next=null; } rvRender();
-  try{ await rvCat(); const j=await rvApi("/rv/queue?min="+rv.min+(rv.next?"&cursor="+encodeURIComponent(rv.next):"")); rv.items=rv.items.concat(j.items); rv.next=j.next; }
-  catch(e){ rv.err=e; }
-  rv.loading=false; rvRender();
-}
-function rvQueueView(){
-  const v=el("div","rv-view"), f=el("div","rv-seg");
-  [["3","Hidden from readers (3+ reports)"],["1","All reported (1+)"]].forEach(([k,t])=>{ const b=el("button",rv.min===k?"on":"",t); b.onclick=()=>{ rv.min=k; rvLoadQueue(true); }; f.appendChild(b); });
-  v.appendChild(f);
-  if(rv.err){ v.appendChild(rvErr(rv.err)); return v; }
-  if(rv.loading&&!rv.items.length){ v.appendChild(el("div","note","Loading…")); return v; }
-  if(!rv.items.length){ const c=el("div","card2"); c.append(el("h4",null,"Nothing to review"),el("p",null,rv.min==="3"?"No review has 3 or more reports.":"No review has been reported.")); v.appendChild(c); return v; }
-  rv.items.forEach(it=>v.appendChild(rvCard(it)));
-  if(rv.next){ const b=el("button",null,rv.loading?"Loading…":"Load more"); b.disabled=rv.loading; b.onclick=()=>rvLoadQueue(false); v.appendChild(b); }
-  return v;
-}
-function rvCard(it){
-  const c=el("section","card2 rv-card"), gone=!it.c, hid=it.x>=3;
-  const hd=el("div","rv-hd"), t=el("b",null,rvTitle(it.book)); hd.append(t,el("span","note","Book #"+it.book+" · reviewer "+(it.n||"(no name)")+" · "+rvShort(it.uid)+(rvDate(it.t)?" · "+rvDate(it.t):""))); c.appendChild(hd);
-  const m=el("div","rv-meta"); m.appendChild(el("span","rv-st","★".repeat(it.r)+"☆".repeat(Math.max(0,5-it.r))));
-  m.appendChild(el("span",gone?"chip no":hid?"chip no":"chip hi",gone?"Text removed":hid?"Hidden from readers":"Visible"));
-  m.appendChild(el("span","chip",it.x+" report"+(it.x===1?"":"s")));
-  Object.keys(it.reasons).forEach(k=>m.appendChild(el("span","chip",(RV_WHY[k]||k)+" ×"+it.reasons[k]))); c.appendChild(m);
-  c.appendChild(el("blockquote","rv-txt"+(gone?" gone":""),gone?"(text removed)":it.c));
-  if(gone&&it.saved) c.appendChild(el("div","note","Saved copy, comes back on Restore: “"+it.saved+"”"));
-  if(gone&&it.saved===null) c.appendChild(el("div","note","No saved copy of the text, so Restore only clears the reports."));
-  const a=el("div","rv-act"), bs=[], add=(cls,txt,act)=>{ const b=el("button",cls,txt); b.onclick=()=>rvDo(it,act,bs); bs.push(b); a.appendChild(b); };
-  if(it.c) add("danger","Hide text","hide");
-  if(gone||hid) add("","Restore","restore"); else if(it.x>0) add("","Dismiss reports","dismiss");
-  c.appendChild(a); return c;
-}
-async function rvDo(it,act,bs){
-  const msg={hide:"Hide this review's text?\n\nThe stars still count and the vote is kept. A copy of the text is saved so you can restore it.",
-    restore:"Restore this review?\n\nIts reports are cleared"+(!it.c&&it.saved?" and the saved text comes back.":" and readers can see it again."),
-    dismiss:"Dismiss the "+it.x+" report(s)?\n\nThe review stays visible and its reports are cleared."}[act];
-  if(!confirm(msg)) return; bs.forEach(b=>b.disabled=true);
-  try{ await rvApi("/rv/act",{book:it.book,uid:it.uid,act,ut:it.ut}); toast({hide:"Text hidden.",restore:"Review restored.",dismiss:"Reports dismissed."}[act]); rv.log=null; rv.scan=null; await rvLoadQueue(true); }
-  catch(e){ toast(e.message); bs.forEach(b=>b.disabled=false); if(e.code===409) rvLoadQueue(true); }
-}
-
-/* --- Totals check --- */
-async function rvScanAll(){
-  if(rv.scanning) return; rv.scanErr=null; const rows=[], tr=[]; let after=null, tk=null; rv.scanning="Reading votes…"; rvRender();
-  try{ await rvCat();
-    do{ const j=await rvApi("/rv/scan"+(after?"?after="+encodeURIComponent(after):"")); rows.push(...j.rows); after=j.next; rv.scanning="Reading votes… "+nfmt(rows.length); rvRender(); }while(after);
-    rv.scanning="Reading totals…"; rvRender();
-    do{ const j=await rvApi("/rv/totals"+(tk?"?pageToken="+encodeURIComponent(tk):"")); tr.push(...j.rows); tk=j.next; }while(tk);
-    rv.scan={rows,totals:tr,at:Date.now()};
-  }catch(e){ rv.scanErr=e; }
-  rv.scanning=""; rvRender();
-}
-function rvDiff(){
-  const cnt={}, tot={}; for(const r of rv.scan.rows){ if(r[2]<1||r[2]>5) continue; (cnt[r[0]]||(cnt[r[0]]=[0,0,0,0,0,0]))[r[2]]++; }
-  for(const t of rv.scan.totals) tot[t[0]]=t.slice(1);
-  const out=[]; for(const b of new Set([...Object.keys(cnt),...Object.keys(tot)])){ const c=cnt[b]||[0,0,0,0,0,0], exp=[c[1]+c[2]+c[3]+c[4]+c[5],c[1]+2*c[2]+3*c[3]+4*c[4]+5*c[5],c[1],c[2],c[3],c[4],c[5]], got=tot[b]||null;
-    if(got?exp.some((x,i)=>x!==got[i]):exp[0]>0) out.push({b,exp,got}); }
-  return out;
-}
-const rvFmt=a=>a?a[0]+" rating"+(a[0]===1?"":"s")+", sum "+a[1]:"missing";
-async function rvRepair(book,btn){
-  if(!confirm("Rewrite the totals of “"+rvTitle(book)+"” from its votes?\n\nNo vote is changed or deleted.")) return false;
-  if(btn) btn.disabled=true;
-  try{ const j=await rvApi("/rv/repair",{book}); if(rv.scan&&j.totals){ const k=Object.keys(j.totals), row=[book,...["n","s","c1","c2","c3","c4","c5"].map(x=>j.totals[x])]; const i=rv.scan.totals.findIndex(t=>t[0]===book); if(i>=0) rv.scan.totals[i]=row; else rv.scan.totals.push(row); } rv.log=null; toast("Totals repaired."); return true; }
-  catch(e){ toast(e.message); if(btn) btn.disabled=false; return false; }
-}
-function rvCheckView(){
-  const v=el("div","rv-view"), one=el("div","card2"); one.append(el("h4",null,"Check one book"),el("p",null,"Counts a book's votes and compares them with its stored average."));
-  const row=el("div","rv-in"), inp=el("input"), go=el("button","primary","Check"); inp.placeholder="Book number"; inp.inputMode="numeric"; inp.setAttribute("aria-label","Book number");
-  const res=el("div"); const show=()=>{ res.textContent=""; const k=rv.chk; if(!k) return; if(k.err){ res.appendChild(rvErr(k.err)); return; }
-    const r=el("div","rv-row"), d=el("div"); d.append(el("b",null,rvTitle(k.book)),el("span","note",k.ok?"Totals match the votes ("+rvFmt([k.counted.n,k.counted.s])+").":"Stored: "+rvFmt(k.stored?[k.stored.n,k.stored.s]:null)+" · Votes: "+rvFmt([k.counted.n,k.counted.s])));
-    r.append(el("span","chip "+(k.ok?"hi":"no"),k.ok?"OK":"Mismatch"),d); if(!k.ok){ const b=el("button",null,"Repair"); b.onclick=async()=>{ if(await rvRepair(k.book,b)){ k.ok=true; k.stored=k.counted; show(); } }; r.appendChild(b); } res.appendChild(r); };
-  go.onclick=async()=>{ const b=inp.value.trim().replace(/^#/,""); if(!/^[A-Za-z0-9_-]{1,40}$/.test(b)){ toast("Enter a book number."); return; } go.disabled=true; try{ await rvCat(); const j=await rvApi("/rv/check?book="+encodeURIComponent(b)); rv.chk=j; }catch(e){ rv.chk={err:e}; } go.disabled=false; show(); };
-  inp.addEventListener("keydown",e=>{ if(e.key==="Enter") go.click(); }); row.append(inp,go); one.append(row,res); show(); v.appendChild(one);
-  const all=el("div","card2"); all.append(el("h4",null,"Check all books"),el("p",null,"Reads every vote and every totals document, then lists the books whose average is wrong. Nothing is changed until you press Repair."));
-  const sb=el("button","primary",rv.scanning||(rv.scan?"Scan again":"Scan all books")); sb.disabled=!!rv.scanning; sb.onclick=rvScanAll; all.appendChild(sb);
-  if(rv.scanErr) all.appendChild(rvErr(rv.scanErr));
-  if(rv.scan){ const bad=rvDiff(); all.appendChild(el("p",null,nfmt(rv.scan.rows.length)+" votes · "+nfmt(rv.scan.totals.length)+" books with totals · "+(bad.length?nfmt(bad.length)+" book(s) with wrong totals":"all totals match")+" · "+new Date(rv.scan.at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})));
-    bad.slice(0,100).forEach(x=>{ const r=el("div","rv-row"), d=el("div"); d.append(el("b",null,rvTitle(x.b)),el("span","note","Stored: "+rvFmt(x.got&&[x.got[0],x.got[1]])+" · Votes: "+rvFmt([x.exp[0],x.exp[1]])));
-      const b=el("button",null,"Repair"); b.onclick=async()=>{ if(await rvRepair(x.b,b)) rvRender(); }; r.append(d,b); all.appendChild(r); });
-    if(bad.length>100) all.appendChild(el("div","note","Showing the first 100."));
-    if(bad.length>1){ const ra=el("button","danger","Repair all "+bad.length+" books"); ra.onclick=async()=>{ if(!confirm("Rewrite the totals of "+bad.length+" books from their votes?\n\nNo vote is changed or deleted.")) return; ra.disabled=true; let n=0; for(const x of bad){ try{ const j=await rvApi("/rv/repair",{book:x.b}); if(j.totals){ const row=[x.b,...["n","s","c1","c2","c3","c4","c5"].map(k=>j.totals[k])], i=rv.scan.totals.findIndex(t=>t[0]===x.b); if(i>=0) rv.scan.totals[i]=row; else rv.scan.totals.push(row); } n++; }catch(e){ toast(e.message); break; } } rv.log=null; toast(n+" book(s) repaired."); rvRender(); }; all.appendChild(ra); } }
-  v.appendChild(all); return v;
-}
-
-/* --- Signals (early signs of abuse; not proof) --- */
-function rvSignals(rows){
-  const by={}, per={}; for(const [b,u,r,x,h,t] of rows){ (by[u]||(by[u]=[])).push([b,r,t]); (per[b]||(per[b]=[])).push([u,r]); }
-  const burst=[], same=[], single=[];
-  for(const u in by){ const a=by[u].filter(v=>v[2]).sort((p,q)=>p[2]-q[2]); let best=0; for(let i=0,j=0;i<a.length;i++){ while(a[i][2]-a[j][2]>3600) j++; best=Math.max(best,i-j+1); }
-    if(best>=10) burst.push({u,n:by[u].length,best}); if(by[u].length>=10&&by[u].every(v=>v[1]===by[u][0][1])) same.push({u,n:by[u].length,r:by[u][0][1]}); }
-  for(const b in per) if(per[b].length===1&&(per[b][0][1]===5||per[b][0][1]===1)) single.push({b,u:per[b][0][0],r:per[b][0][1]});
-  return {burst:burst.sort((a,b)=>b.best-a.best),same:same.sort((a,b)=>b.n-a.n),single};
-}
-function rvSigView(){
-  const v=el("div","rv-view"), c=el("div","card2"); c.append(el("h4",null,"Signals"),el("p",null,"Early signs worth a look. None of these is proof of abuse."));
-  const sb=el("button","primary",rv.scanning||(rv.scan?"Scan again":"Scan votes")); sb.disabled=!!rv.scanning; sb.onclick=rvScanAll; c.appendChild(sb); if(rv.scanErr) c.appendChild(rvErr(rv.scanErr)); v.appendChild(c);
-  if(!rv.scan) return v;
-  const g=rvSignals(rv.scan.rows), sec=(title,note,list,line)=>{ const k=el("div","card2"); k.append(el("h4",null,title+" ("+nfmt(list.length)+")"),el("p","note",note)); if(!list.length) k.appendChild(el("p",null,"None found.")); list.slice(0,50).forEach(x=>{ const r=el("div","rv-row"), d=el("div"), l=line(x); d.append(el("b",null,l[0]),el("span","note",l[1])); r.appendChild(d); k.appendChild(r); }); if(list.length>50) k.appendChild(el("div","note","Showing the first 50.")); v.appendChild(k); };
-  sec("Rating bursts","One account with 10 or more ratings inside one hour.",g.burst,x=>["Account "+rvShort(x.u),x.best+" ratings in an hour · "+x.n+" in total · full id "+x.u]);
-  sec("Same star every time","One account with 10 or more ratings, all with the same number of stars.",g.same,x=>["Account "+rvShort(x.u),x.n+" ratings, all "+x.r+" star"+(x.r===1?"":"s")+" · full id "+x.u]);
-  sec("Single 1★ or 5★ ratings","Books with exactly one rating, and it is 1 or 5 stars.",g.single,x=>[rvTitle(x.b),"Book #"+x.b+" · "+x.r+" star"+(x.r===1?"":"s")+" · account "+rvShort(x.u)]);
-  return v;
-}
-
-/* --- Log --- */
-async function rvLoadLog(){ rv.logErr=null; try{ await rvCat(); rv.log=(await rvApi("/rv/log?limit=50")).items; }catch(e){ rv.logErr=e; rv.log=[]; } rvRender(); }
-function rvLogView(){
-  const v=el("div","rv-view"); if(rv.logErr){ v.appendChild(rvErr(rv.logErr)); return v; } if(!rv.log){ v.appendChild(el("div","note","Loading…")); return v; }
-  const c=el("div","card2"); c.appendChild(el("h4",null,"Recent actions")); if(!rv.log.length) c.appendChild(el("p",null,"Nothing has been done here yet."));
-  const NM={hide:"Text hidden",restore:"Restored",dismiss:"Reports dismissed",repair:"Totals repaired"};
-  rv.log.forEach(x=>{ const r=el("div","rv-row"), d=el("div"); d.append(el("b",null,(NM[x.act]||x.act)+" · "+rvTitle(x.book)),el("span","note",[rvDate(x.t),x.uid?"reviewer "+rvShort(x.uid):"",x.note||"",x.c0&&x.act==="hide"?"was: “"+x.c0+"”":""].filter(Boolean).join(" · "))); r.appendChild(d); c.appendChild(r); });
-  v.appendChild(c); return v;
-}
-async function connectRv(){
-  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Reviews";
-  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
-  updateSw(); document.body.classList.add("conn"); rvRender(); if(rv.base) rvLoadQueue(true);
-}
-async function hmRv(){ if(!rv.base) return {off:true}; return await rvApi("/rv/summary"); }
-
 document.addEventListener("keydown",e=>{
-  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; if(st.which==="home") return; const a=$("a");
+  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; if(st.which==="home"||st.which==="nb") return; const a=$("a");
   if(st.which==="cov"){ if(e.key==="ArrowRight") covStep(1); else if(e.key==="ArrowLeft") covStep(-1); return; }
-  if(st.which==="rv") return;
   if(st.which==="bk"){ if(e.key==="ArrowRight") bkStep(1); else if(e.key==="ArrowLeft") bkStep(-1); return; }
   if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }
   else if(e.key==="ArrowRight") play(Math.min(st.rows.length-1,st.idx+1));

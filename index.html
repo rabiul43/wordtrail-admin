@@ -93,6 +93,7 @@ body.amb #queue{display:none!important}
 .chev{color:var(--mut);font-size:22px;flex:none}
 .eclip{cursor:pointer}.eclip.playing{background:var(--soft);border-color:var(--acc)}
 .eclip.live,.eclip.keep{border-color:var(--keep)}
+.eclip.found{animation:wtfound 2.6s ease-out}@keyframes wtfound{0%,55%{box-shadow:0 0 0 3px var(--acc)}100%{box-shadow:0 0 0 0 transparent}}
 .eclip.del{opacity:.6}.eclip.del .etxt b{text-decoration:line-through;color:var(--mut)}.eclip.ret{opacity:.45}
 .epl{width:40px;height:40px;min-height:0;border-radius:50%;padding:0;flex:none;background:var(--acc);color:#fff;border:0}
 .eacts{display:flex;gap:6px;flex:none}.eacts button{min-height:34px;padding:2px 12px;font-weight:700}
@@ -317,7 +318,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
     <span id="mode" class="chip needconn"></span>
-  <input id="q" class="needconn" type="search" placeholder="Search clips (all sections)…" style="min-width:170px;width:240px">
+  <input id="q" class="needconn" type="search" placeholder="Search clips: name, author, license…" style="min-width:170px;width:240px">
   <select id="fstat" class="needconn"><option value="">All clips</option><option value="none">Unreviewed</option><option value="keep">Kept</option><option value="del">Marked to delete</option></select>
   <span style="flex:1"></span>
   <span id="hbtns" style="display:contents"><button id="sync" class="needconn" disabled>Sync list…</button>
@@ -454,15 +455,16 @@ async function connect0(){
   updateSw(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent; document.body.classList.toggle("amb",st.amb);
   $("mode").textContent=st.amb?"AMBIENT BUCKET":"MUSIC BUCKET"; document.body.classList.add("conn");
   regroup(); st.mood=Object.keys(st.moods).sort()[0]||null; st.idx=-1; st.path=[];
-  $("sync").disabled=false; renderNav(); renderList();
+  $("sync").disabled=false; renderNav(); renderList(); ambDeepLink();
 }
 
 /* Ambient mode switches on only when ambient-candidates.json is in the bucket; the music bucket behaves as before. */
 async function loadAmbient(all){
   st.amb=all.some(o=>o.key==="ambient-candidates.json"); st.meta={}; st.folderOf={}; st.index=null; st.baked=false;
-  const old=$("fstat").querySelector("[value=unrev]"); if(old) old.remove();
+  $("fstat").querySelectorAll("[value=unrev],[value=live]").forEach(x=>x.remove());
   if(!st.amb) return;
   const opt=document.createElement("option"); opt.value="unrev"; opt.textContent="Folders not reviewed"; $("fstat").appendChild(opt);
+  const lo=document.createElement("option"); lo.value="live"; lo.textContent="★ Live clips only"; $("fstat").appendChild(lo);
   try{
     const rc=await api("/api/file?key=ambient-candidates.json"); if(!rc.ok) throw new Error("HTTP "+rc.status);
     const cand=JSON.parse(await rc.text());
@@ -581,8 +583,9 @@ function renderExplorer(sec,words){
   const q=words.length>0, f=$("fstat").value, flat=q||!!f; st.flat=flat; if(!st.path) st.path=[];
   const all=ambAll(), P=st.path.join("/"), pre=P?P+"/":"";
   st.rows=flat?all.filter(o=>{
-    if(q){ const k=(stripMusic(o.key)+" "+fo(o.key)).toLowerCase(); if(!words.every(w=>k.includes(w))) return false; }
+    if(q){ const m=st.meta[o.key]||{}, raw=(stripMusic(o.key)+" "+fo(o.key)+" "+[m.author,m.license,m.title,m.url,isLive(o.key)?"live":""].filter(Boolean).join(" ")).toLowerCase(), k=raw+" "+raw.replace(/[-_\/.]+/g," "); if(!words.every(w=>k.includes(w))) return false; }
     if(f==="unrev") return !isRev(fo(o.key));
+    if(f==="live") return isLive(o.key);
     if(f) return (st.marks[o.key]||"none")===f;
     return true; }):all;
   const bar=el("div","ebar"), cr=el("div","crumbs");
@@ -631,6 +634,30 @@ function renderExplorer(sec,words){
     st.rows.forEach((o,i)=>{ if(fo(o.key)===P) sec.appendChild(clipRow(i,false)); });
   }else if(!list.length) sec.appendChild(el("p","note","Nothing in this folder."));
 }
+
+/* Link from the app: <dashboard>/#amb=<sound>&f=<file name>&u=<file address>&by=<author> opens the clip that is playing. */
+function readLink(){ const h=location.hash; if(!/^#amb=/.test(h)) return null; try{ const p=new URLSearchParams(h.slice(1)); return {n:p.get("amb")||"",f:p.get("f")||"",u:p.get("u")||"",by:p.get("by")||""}; }catch(e){ return null; } }
+function ambDeepLink(){
+  const L=st.link; if(!L||!st.amb) return; st.link=null;
+  try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){}   // so Refresh does not jump again
+  const all=ambAll(), base=s=>String(s||"").split("?")[0].split("/").pop().toLowerCase(), M=o=>st.meta[o.key]||{};
+  let hit=L.u?all.find(o=>M(o).url===L.u):null;
+  if(!hit&&L.f){ const f=L.f.toLowerCase(), c=all.filter(o=>base(o.key)===f||base(M(o).url)===f); hit=c.find(o=>L.by&&(M(o).author||"")===L.by)||c[0]||null; }
+  $("q").value=""; $("fstat").value="";
+  if(hit){
+    const j=all.indexOf(hit), fk=fo(hit.key); st.idx=j; goFolder(fk,false);
+    const e=$("r"+j); if(e){ e.scrollIntoView({block:"center"}); e.classList.add("found"); }
+    const n=(nameOf(hit.key).match(/-(\d+)\.mp3$/)||[,""])[1].replace(/^0+/,"");
+    toast("Found: "+nice(fk.split("/").pop())+(n?" · Clip "+n:"")+(M(hit).author?" · "+M(hit).author:"")+(isLive(hit.key)?" · LIVE":""));
+  }else{
+    $("q").value=[L.n,L.by].filter(Boolean).join(" "); st.idx=-1; renderList();
+    if(!st.rows.length&&L.by){ $("q").value=L.n; renderList(); }
+    toast("The exact file is not in this list; showing matches for \""+$("q").value+"\".");
+  }
+}
+addEventListener("hashchange",()=>{ const L=readLink(); if(!L) return; st.link=L;
+  if(st.which!=="amb"){ st.which="amb"; ls("r2-which","amb"); updateSw(); connect(); }
+  else if(document.body.classList.contains("conn")) ambDeepLink(); });
 
 function renderQueue(){
   const q=$("queue"); q.textContent=""; if(!st.rows.length) return;
@@ -2058,6 +2085,7 @@ document.addEventListener("keydown",e=>{
 $("tok").addEventListener("keydown",e=>{ if(e.key==="Enter") connect(); }); $("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("delnow").onclick=deleteNow; $("sync").onclick=syncAll; $("fstat").onchange=renderList; $("q").oninput=()=>{ st.idx=-1; renderList(); };
 const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER;
 let t0=ls0("r2-tok")||""; try{ if(!t0){ t0=sessionStorage.getItem("r2-tok")||""; if(t0) $("rem").checked=false; } }catch(e){}
+st.link=readLink(); if(st.link){ st.which="amb"; ls("r2-which","amb"); }
 $("tok").value=t0; updateSw();
 document.querySelectorAll("#rail .nv").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
 $("gear").onclick=e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; };

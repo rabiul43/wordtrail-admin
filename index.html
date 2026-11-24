@@ -94,6 +94,13 @@ body.amb #queue{display:none!important}
 .eclip{cursor:pointer}.eclip.playing{background:var(--soft);border-color:var(--acc)}
 .eclip.live,.eclip.keep{border-color:var(--keep)}
 .eclip.found{animation:wtfound 2.6s ease-out}@keyframes wtfound{0%,55%{box-shadow:0 0 0 3px var(--acc)}100%{box-shadow:0 0 0 0 transparent}}
+#rdlg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+#rdlg .box{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:14px;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:16px}
+#rdlg h3{margin:0 0 6px;font-size:17px}#rdlg p{margin:0 0 10px;color:var(--mut);font-size:14px;line-height:1.4}
+#rdlg label.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:9px 10px;margin-bottom:7px;cursor:pointer}
+#rdlg label.opt.on{border-color:var(--acc);background:var(--soft)}
+#rdlg .opt .t{flex:1;min-width:0}#rdlg .opt small{display:block;color:var(--mut)}
+#rdlg .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 .eclip.del{opacity:.6}.eclip.del .etxt b{text-decoration:line-through;color:var(--mut)}.eclip.ret{opacity:.45}
 .epl{width:40px;height:40px;min-height:0;border-radius:50%;padding:0;flex:none;background:var(--acc);color:#fff;border:0}
 .eacts{display:flex;gap:6px;flex:none}.eacts button{min-height:34px;padding:2px 12px;font-weight:700}
@@ -546,7 +553,9 @@ function renderFocus(sec){
     c.append(top,wave(hashOf(o.key)),el("div","score",m.score!=null?Number(m.score).toFixed(1):"–"),mt); cs.appendChild(c); });
   sec.appendChild(cs);
   const ac=el("div","acts"); const d=el("button","no","Delete  D"); d.onclick=()=>mark(st.idx,"del"); const k=el("button",null,"Keep  K"); k.onclick=()=>mark(st.idx,"keep");
-  const g=el("button","go","Make best and go to next folder  B"); g.onclick=()=>bestAndNext(st.idx); ac.append(d,k,g); sec.appendChild(ac);
+  const g=el("button","go","Make best and go to next folder  B"); g.onclick=()=>bestAndNext(st.idx); ac.append(d,k,g);
+  if(isLive(cur.key)){ const rp=el("button",null,"Replace live clip"); rp.onclick=()=>replaceLive(cur); ac.append(rp); }
+  sec.appendChild(ac);
   sec.appendChild(el("p","hint","Keys: Space play · ← → clip · ↑ ↓ folder · K keep · D delete · B best"+(m0.license==="CC-BY"?". Credit shown in app: "+pretty(parts[2])+" by "+(m0.author||"?")+", CC-BY":"")));
   setPP();
 }
@@ -721,13 +730,13 @@ function renderList(){
 function mark(i,val){
   const o=st.rows[i]; if(!o) return;
   if(st.retired[o.key]) return;
-  if(val==="del"&&isLive(o.key)){ alert("This is the live clip for its folder. Use Make best on another clip first."); return; }
+  if(val==="del"&&isLive(o.key)){ replaceLive(o); return; }   // the live clip cannot just be deleted: pick its replacement first
   if(st.marks[o.key]===val) delete st.marks[o.key]; else st.marks[o.key]=val;
   saveMarks(); const sc=$("list").scrollTop; renderNav(); renderList(); $("list").scrollTop=sc;
 }
 /* Make best: write the clip into ambient-index.json (backup once per session), then mark its folder-mates Delete. */
-async function makeBest(i){
-  const o=st.rows[i]; if(!st.amb||!o||st.retired[o.key]||st.busy) return false;
+async function makeBest(i,opts){
+  const o=typeof i==="object"?i:st.rows[i]; if(!st.amb||!o||st.retired[o.key]||st.busy) return false;
   const m=st.meta[o.key]; if(!m){ alert("This clip is not in ambient-candidates.json."); return false; }
   if(!st.index){ alert("ambient-index.json was not loaded, so Make best is off."); return false; }
   st.busy=true;
@@ -741,10 +750,58 @@ async function makeBest(i){
     const r=await putJson("ambient-index.json",JSON.stringify(idx));
     if(!r.ok){ alert("Writing ambient-index.json failed (HTTP "+r.status+"). Nothing changed."); return false; }
     st.index=idx; st.marks[o.key]="keep";
-    (st.fol[f]||[]).forEach(x=>{ if(x.key!==o.key&&!st.retired[x.key]) st.marks[x.key]="del"; });
+    if(opts&&opts.only) st.marks[opts.only]="del";   // Replace: only the old clip goes; the other clips stay as they are
+    else (st.fol[f]||[]).forEach(x=>{ if(x.key!==o.key&&!st.retired[x.key]) st.marks[x.key]="del"; });
     saveMarks(); return true;
   }catch(e){ alert("Make best failed: "+e.message); return false; }
   finally{ st.busy=false; }
+}
+/* Replace live clip: Delete on the clip the app plays opens this box. Pick the replacement; it becomes live (ambient-index.json, backed up once)
+   and ONLY the old clip is marked Delete. Nothing is erased until Clean-up. */
+function replaceLive(o){
+  if(!st.amb||st.busy||$("rdlg")) return;
+  const f=fo(o.key), oldM=st.meta[o.key]||{}, num=k=>(nameOf(k).match(/-(\d+)\.mp3$/)||[,""])[1].replace(/^0+/,"");
+  const cands=(st.fol[f]||[]).filter(x=>x.key!==o.key&&!st.retired[x.key]&&st.meta[x.key]);
+  const rank=x=>{ const m=st.meta[x.key]; return [st.marks[x.key]==="del"?1:0, st.marks[x.key]==="keep"?0:1, m.author&&m.author===oldM.author?0:1, -(Number(m.score)||0)]; };
+  cands.sort((a,b)=>{ const A=rank(a),B=rank(b); for(let n=0;n<A.length;n++) if(A[n]!==B[n]) return A[n]-B[n]; return a.key.localeCompare(b.key,undefined,{numeric:true}); });
+  try{ $("a").pause(); }catch(e){}
+  let pv=null; const stop=()=>{ if(pv){ pv.pause(); pv.removeAttribute("src"); pv=null; } };
+  const dlg=el("div"); dlg.id="rdlg"; const box=el("div","box"); dlg.appendChild(box);
+  const onKey=e=>{ if(e.key==="Escape"){ e.preventDefault(); close(); } if(e.key!=="Tab") e.stopPropagation(); };
+  const close=()=>{ stop(); document.removeEventListener("keydown",onKey,true); dlg.remove(); };
+  document.addEventListener("keydown",onKey,true);
+  dlg.onclick=e=>{ if(e.target===dlg) close(); };
+  const name=nice(f.split("/").pop())+(num(o.key)?" · Clip "+num(o.key):"")+(oldM.author?" · "+oldM.author:"");
+  const row=el("div","row");
+  if(!cands.length){
+    box.append(el("h3",null,"No replacement available"),
+      el("p",null,name+" is the live clip, and this folder has no other clip that can take its place. Add or keep another clip first, then try again."));
+    const ok=el("button",null,"OK"); ok.onclick=close; row.appendChild(ok); box.appendChild(row); document.body.appendChild(dlg); return;
+  }
+  box.append(el("h3",null,"This clip is live"),
+    el("p",null,name+" is what the app plays for this sound. Pick the clip that takes its place. Only the old clip is marked Delete; the other clips stay as they are."));
+  let sel=cands[0].key; const labs=[];
+  cands.forEach(x=>{ const m=st.meta[x.key]||{};
+    const lab=el("label","opt"+(x.key===sel?" on":"")); const rd=document.createElement("input"); rd.type="radio"; rd.name="rl"; rd.checked=x.key===sel;
+    rd.onchange=()=>{ sel=x.key; labs.forEach(l=>l.classList.toggle("on",l===lab)); };
+    const t=el("div","t"); t.appendChild(el("b",null,"Clip "+(num(x.key)||nameOf(x.key))));
+    t.appendChild(el("small",null,[m.dur?Math.round(m.dur)+" s":"",m.score!=null?"score "+Number(m.score).toFixed(1):"",m.author||"",m.license||"",st.marks[x.key]==="keep"?"kept":st.marks[x.key]==="del"?"marked delete":""].filter(Boolean).join(" · ")));
+    const pb=el("button","sm","▶"); pb.type="button"; pb.title="Listen";
+    pb.onclick=e=>{ e.preventDefault(); e.stopPropagation(); if(pv&&pv.dataset.key===x.key){ stop(); return; } stop(); pv=new Audio(streamUrl(x.key)); pv.dataset.key=x.key; pv.onended=stop; pv.play().catch(()=>{}); };
+    lab.append(rd,t,pb); labs.push(lab); box.appendChild(lab); });
+  const cancel=el("button",null,"Cancel"); cancel.onclick=close;
+  const go=el("button","go","Replace and delete");
+  go.onclick=async()=>{
+    const pick=cands.find(x=>x.key===sel); if(!pick) return;
+    go.disabled=true; go.textContent="Saving…"; stop();
+    const ok=await makeBest(pick,{only:o.key});
+    if(!ok){ go.disabled=false; go.textContent="Replace and delete"; return; }
+    close();
+    const j=st.rows.findIndex(r=>r.key===pick.key); if(j>=0) st.idx=j;
+    const sc=$("list").scrollTop; renderNav(); renderList(); $("list").scrollTop=sc;
+    toast("Replaced: Clip "+(num(pick.key)||"")+" is now live. The old clip is marked Delete (nothing is erased until Clean-up).");
+  };
+  row.append(cancel,go); box.appendChild(row); document.body.appendChild(dlg);
 }
 async function bestAndNext(i){
   const o=st.rows[i]; if(!o) return; const f=fo(o.key);
@@ -755,6 +812,7 @@ async function bestAndNext(i){
 }
 function advance(val){
   const i=st.idx; if(i<0) return; mark(i,val);
+  if(val==="del"&&st.rows[i]&&isLive(st.rows[i].key)) return;   // the Replace box is open: stay on this clip
   const next=$("fstat").value?i:i+1; if(st.rows.length) play(Math.min(st.rows.length-1,next));
 }
 

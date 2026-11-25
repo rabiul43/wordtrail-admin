@@ -102,6 +102,7 @@ body.amb #queue{display:none!important}
 #rdlg .opt .t{flex:1;min-width:0}#rdlg .opt small{display:block;color:var(--mut)}
 #rdlg .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 .eclip.del{opacity:.6}
+#delbar{margin:8px 14px;padding:10px 12px;border:1px solid var(--warn);border-radius:10px;background:var(--soft);font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}#delbar[hidden]{display:none}
 tr.found{animation:wtfoundbg 2.6s ease-out}@keyframes wtfoundbg{0%,55%{background:var(--soft)}100%{background:transparent}}.eclip.del .etxt b{text-decoration:line-through;color:var(--mut)}.eclip.ret{opacity:.45}
 .epl{width:40px;height:40px;min-height:0;border-radius:50%;padding:0;flex:none;background:var(--acc);color:#fff;border:0}
 .eacts{display:flex;gap:6px;flex:none}.eacts button{min-height:34px;padding:2px 12px;font-weight:700}
@@ -353,6 +354,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 </div></div>
 <main class="needconn">
   <div id="homepane"></div>
+  <div id="delbar" hidden></div>
   <nav id="moods"></nav>
   <section id="list"></section>
   <aside id="queue"></aside>
@@ -459,6 +461,7 @@ async function connect0(){
   st.retired={}; try{ const rr=await api("/api/file?key=retired.json"); if(rr.ok) st.retired=JSON.parse(await rr.text()); }catch(e){}
   try{ st.marks=JSON.parse(ls("r2-marks:"+st.base)||"{}"); }catch(e){ st.marks={}; }
   await loadAmbient(all);
+  st.rec=null; if(st.amb){ try{ const rr=await api("/api/file?key=recordings.json"); if(rr.ok) st.rec=JSON.parse(await rr.text()); }catch(e){} }   // the app's Rain, Wind, Fire... (what actually plays in the app)
   if(st.which==="amb"&&!st.amb){ st.which="music"; ls("r2-which","music"); toast("Ambient has no clips yet (ambient-candidates.json not found). Showing Music."); return connect0(); }
   st.mmeta={}; if(!st.amb){ try{ const rm=await api("/api/file?key=music.json"); if(rm.ok){ const d=JSON.parse(await rm.text()); for(const mo of Object.keys(d.moods||{})) for(const c of d.moods[mo]||[]) if(c&&c.f) st.mmeta[String(c.f).replace(/^music\//,"").toLowerCase()]={t:c.t||"",by:c.by||"",lic:c.lic||c.license||""}; } }catch(e){} }   // lets Search find music by title / author / license
   if(!st.amb&&/ambient/.test($("jsons").value)) $("jsons").value="music.json";
@@ -474,7 +477,7 @@ async function loadAmbient(all){
   $("fstat").querySelectorAll("[value=unrev],[value=live]").forEach(x=>x.remove());
   if(!st.amb) return;
   const opt=document.createElement("option"); opt.value="unrev"; opt.textContent="Folders not reviewed"; $("fstat").appendChild(opt);
-  const lo=document.createElement("option"); lo.value="live"; lo.textContent="★ Live clips only"; $("fstat").appendChild(lo);
+  const lo=document.createElement("option"); lo.value="live"; lo.textContent="★ Live / app clips only"; $("fstat").appendChild(lo);
   try{
     const rc=await api("/api/file?key=ambient-candidates.json"); if(!rc.ok) throw new Error("HTTP "+rc.status);
     const cand=JSON.parse(await rc.text());
@@ -558,6 +561,7 @@ function renderFocus(sec){
   const ac=el("div","acts"); const d=el("button","no","Delete  D"); d.onclick=()=>mark(st.idx,"del"); const k=el("button",null,"Keep  K"); k.onclick=()=>mark(st.idx,"keep");
   const g=el("button","go","Make best and go to next folder  B"); g.onclick=()=>bestAndNext(st.idx); ac.append(d,k,g);
   if(isLive(cur.key)){ const rp=el("button",null,"Replace live clip"); rp.onclick=()=>replaceLive(cur); ac.append(rp); }
+  { const ab=el("button",null,"App sound…"); ab.onclick=()=>appSoundDlg(cur); ac.append(ab); }
   sec.appendChild(ac);
   sec.appendChild(el("p","hint","Keys: Space play · ← → clip · ↑ ↓ folder · K keep · D delete · B best"+(m0.license==="CC-BY"?". Credit shown in app: "+pretty(parts[2])+" by "+(m0.author||"?")+", CC-BY":"")));
   setPP();
@@ -579,6 +583,7 @@ function clipRow(i,showFolder){
   r.append(pl,t);
   if(m.license) r.appendChild(el("span","chip"+(m.license==="CC0"?" hi":""),m.license));
   if(live) r.appendChild(el("span","chip hi","★ LIVE")); else if(v==="keep") r.appendChild(el("span","chip hi","✓ kept")); else if(v==="del") r.appendChild(el("span","chip no","will delete")); else if(v==="ret") r.appendChild(el("span","chip","retired"));
+  { const ap=appOf(o); if(ap.length) r.appendChild(el("span","chip hi","★ APP "+ap.map(k=>APPN[k]||k).join(", "))); }
   if(v!=="ret"){
     const ac=el("div","eacts");
     if(!live){ const mk=el("button","mk","★ Make live"); mk.title="Use this clip in the app for this folder; the other clips get marked for deletion";
@@ -587,7 +592,8 @@ function clipRow(i,showFolder){
       ac.appendChild(mk); }
     const kb=el("button",null,v==="keep"?"Kept ✓":"Keep"); kb.onclick=e=>{ e.stopPropagation(); mark(i,"keep"); };
     const db=el("button","no",v==="del"?"Undo delete":"Delete"); db.onclick=e=>{ e.stopPropagation(); mark(i,"del"); };
-    ac.append(kb,db); r.appendChild(ac);
+    const ab=el("button",null,"App sound…"); ab.title="Use this clip as the app's Rain, Wind, Fire…"; ab.onclick=e=>{ e.stopPropagation(); appSoundDlg(o); };
+    ac.append(kb,db,ab); r.appendChild(ac);
   }
   return r;
 }
@@ -597,7 +603,7 @@ function renderExplorer(sec,words){
   st.rows=flat?all.filter(o=>{
     if(q){ const m=st.meta[o.key]||{}, raw=(stripMusic(o.key)+" "+fo(o.key)+" "+[m.author,m.license,m.title,m.url,isLive(o.key)?"live":""].filter(Boolean).join(" ")).toLowerCase(), k=raw+" "+raw.replace(/[-_\/.]+/g," "); if(!words.every(w=>k.includes(w))) return false; }
     if(f==="unrev") return !isRev(fo(o.key));
-    if(f==="live") return isLive(o.key);
+    if(f==="live") return isLive(o.key)||appOf(o).length>0;
     if(f) return (st.marks[o.key]||"none")===f;
     return true; }):all;
   const bar=el("div","ebar"), cr=el("div","crumbs");
@@ -722,7 +728,7 @@ function jumpFolder(dir){
 }
 
 function renderList(){
-  const sec=$("list"); sec.textContent="";
+  const sec=$("list"); sec.textContent=""; renderDelBar();
   const words=($("q")?$("q").value:"").toLowerCase().split(/\s+/).filter(Boolean), searching=words.length>0;
   if(st.amb){ renderExplorer(sec,words); renderFolders(); return; }
   if(!st.mood&&!searching){ renderQueue(); return; }
@@ -753,6 +759,7 @@ function renderList(){
 function mark(i,val){
   const o=st.rows[i]; if(!o) return;
   if(st.retired[o.key]) return;
+  if(val==="del"&&appOf(o).length){ alert("This clip is the app's "+appOf(o).map(k=>APPN[k]||k).join(", ")+" sound. Use \"App sound…\" on another clip first."); return; }
   if(val==="del"&&isLive(o.key)){ replaceLive(o); return; }   // the live clip cannot just be deleted: pick its replacement first
   if(st.marks[o.key]===val) delete st.marks[o.key]; else st.marks[o.key]=val;
   saveMarks(); const sc=$("list").scrollTop; renderNav(); renderList(); $("list").scrollTop=sc;
@@ -778,6 +785,57 @@ async function makeBest(i,opts){
     saveMarks(); return true;
   }catch(e){ alert("Make best failed: "+e.message); return false; }
   finally{ st.busy=false; }
+}
+/* ---- What the app really plays: recordings.json (Rain, Wind, Fire...). "Make live" only changes ambient-index.json, which the app uses for one-off sounds. ---- */
+const APPN={rain:"Rain",wind:"Wind",waves:"Waves",river:"River",night:"Night",fire:"Fire",cafe:"Café",drone:"Drone",engine:"Engine room",brown:"Brown noise",crowd:"Crowd",train:"Train"};
+function appOf(o){   // which app sounds use this clip (matched by its full web address or its bucket path, never by file name alone)
+  if(!st.rec) return [];
+  const u=String((st.meta[o.key]||{}).url||"").split("?")[0];
+  return Object.keys(st.rec).filter(k=>{ const e=st.rec[k]; if(!e||!e.file) return false; const f=String(e.file).split("?")[0]; return (u&&f===u)||f===o.key||f.endsWith("/"+o.key); });
+}
+async function setAppSound(k,o){
+  const m=st.meta[o.key]||{}; let data;
+  try{ const r=await api("/api/file?key=recordings.json"); if(!r.ok){ alert("recordings.json: HTTP "+r.status+". Nothing changed."); return false; } data=JSON.parse(await r.text()); }
+  catch(e){ alert("recordings.json could not be read. Nothing changed."); return false; }
+  const ts=new Date().toISOString().replace(/[-:T]/g,"").slice(0,14), bak="recordings.bak-"+ts+".json";
+  if(!(await putJson(bak,JSON.stringify(data))).ok){ alert("Backup failed; nothing changed."); return false; }
+  const ne=Object.assign({},data[k]||{}); ["sb","pk","st","sh"].forEach(x=>delete ne[x]);   // the old level numbers belong to the old file
+  ne.file=m.url; ne.by=m.author||""; ne.license=m.license||""; data[k]=ne;
+  if(!(await putJson("recordings.json",JSON.stringify(data,null,2))).ok){ alert("Writing recordings.json failed; the backup is "+bak); return false; }
+  st.rec=data; return true;
+}
+function appSoundDlg(o){
+  if(!st.amb||$("rdlg")) return;
+  const m=st.meta[o.key]||{}, f=fo(o.key), n=(nameOf(o.key).match(/-(\d+)\.mp3$/)||[,""])[1].replace(/^0+/,"");
+  const name=nice(f.split("/").pop())+(n?" · Clip "+n:"")+(m.author?" · "+m.author:"");
+  const dlg=el("div"); dlg.id="rdlg"; const box=el("div","box"); dlg.appendChild(box); const row=el("div","row");
+  const onKey=e=>{ if(e.key==="Escape"){ e.preventDefault(); close(); } if(e.key!=="Tab") e.stopPropagation(); };
+  const close=()=>{ document.removeEventListener("keydown",onKey,true); dlg.remove(); };
+  document.addEventListener("keydown",onKey,true); dlg.onclick=e=>{ if(e.target===dlg) close(); };
+  const stop=(t,p)=>{ box.append(el("h3",null,t),el("p",null,p)); const ok=el("button",null,"OK"); ok.onclick=close; row.appendChild(ok); box.appendChild(row); document.body.appendChild(dlg); };
+  if(!st.rec) return stop("recordings.json not found","This bucket has no recordings.json, so the app's own sounds cannot be changed from here.");
+  if(!m.url) return stop("No web address","This clip has no web address in ambient-candidates.json, so the app cannot load it.");
+  box.append(el("h3",null,"Use as app sound"),el("p",null,name+". Pick which app sound plays this clip. Only the app's choice changes; no file is deleted. A backup of recordings.json is saved first."));
+  const keys=Object.keys(APPN); let sel=keys.find(k=>f.toLowerCase().includes(k))||keys[0]; const labs=[];
+  keys.forEach(k=>{ const e=st.rec[k], lab=el("label","opt"+(k===sel?" on":"")), rd=document.createElement("input"); rd.type="radio"; rd.name="as"; rd.checked=k===sel;
+    rd.onchange=()=>{ sel=k; labs.forEach(l=>l.classList.toggle("on",l===lab)); };
+    const t=el("div","t"); t.appendChild(el("b",null,APPN[k]));
+    t.appendChild(el("small",null,e&&e.file?(appOf(o).includes(k)?"already this clip":"now: "+nameOf(String(e.file).split("?")[0])+(e.by?" · "+e.by:"")):"no recording yet (the app makes the sound itself)"));
+    lab.append(rd,t); labs.push(lab); box.appendChild(lab); });
+  const cancel=el("button",null,"Cancel"); cancel.onclick=close; const go=el("button","go","Set as app sound");
+  go.onclick=async()=>{ go.disabled=true; go.textContent="Saving…"; const ok=await setAppSound(sel,o); if(!ok){ go.disabled=false; go.textContent="Set as app sound"; return; }
+    close(); const sc=$("list").scrollTop; renderNav(); renderList(); $("list").scrollTop=sc;
+    toast(APPN[sel]+" now plays "+name+". Phones pick it up within 24 hours (the app's Refresh lists does it at once). Its level numbers were cleared, so the app levels it roughly until you run tools/ambient_prep.py."); };
+  row.append(cancel,go); box.appendChild(row); document.body.appendChild(dlg);
+}
+function renderDelBar(){   // reminder: Delete only marks; the app keeps playing a clip until it is retired
+  const b=$("delbar"); if(!b) return;
+  if(!document.body.classList.contains("conn")){ b.hidden=true; return; }
+  const have=new Set((st.objs||[]).map(o=>o.key)); let n=0;
+  for(const k in st.marks) if(st.marks[k]==="del"&&!st.retired[k]&&have.has(k)&&!isLive(k)&&!appOf({key:k}).length) n++;
+  if(!n){ b.hidden=true; return; }
+  b.textContent=""; b.appendChild(el("span",null,n+(n>1?" clips are":" clip is")+" marked Delete but not retired yet. The app still plays "+(n>1?"them":"it")+" until you retire "+(n>1?"them":"it")+"."));
+  const bt=el("button","go","Retire now…"); bt.onclick=retire; b.appendChild(bt); b.hidden=false;
 }
 /* Replace live clip: Delete on the clip the app plays opens this box. Pick the replacement; it becomes live (ambient-index.json, backed up once)
    and ONLY the old clip is marked Delete. Nothing is erased until Clean-up. */
@@ -835,7 +893,7 @@ async function bestAndNext(i){
 }
 function advance(val){
   const i=st.idx; if(i<0) return; mark(i,val);
-  if(val==="del"&&st.rows[i]&&isLive(st.rows[i].key)) return;   // the Replace box is open: stay on this clip
+  if(val==="del"&&st.rows[i]&&(isLive(st.rows[i].key)||appOf(st.rows[i]).length)) return;   // the Replace box is open: stay on this clip
   const next=$("fstat").value?i:i+1; if(st.rows.length) play(Math.min(st.rows.length-1,next));
 }
 
@@ -898,7 +956,7 @@ const saveRetired=()=>putJson("retired.json",JSON.stringify(st.retired));
 
 /* Step 1: take the clips out of music.json. The files stay in R2, so phones with an old cached list still find them. */
 async function retire(){
-  const keys=Object.keys(st.marks).filter(k=>st.marks[k]==="del"&&!st.retired[k]&&!isLive(k)&&st.objs.some(o=>o.key===k));
+  const keys=Object.keys(st.marks).filter(k=>st.marks[k]==="del"&&!st.retired[k]&&!isLive(k)&&!appOf({key:k}).length&&st.objs.some(o=>o.key===k));
   if(!keys.length) return;
   const set=new Set(keys.map(k=>stripMusic(k).toLowerCase()));
   const names=$("jsons").value.split(",").map(s=>s.trim()).filter(Boolean);
@@ -952,7 +1010,7 @@ async function purge(){
    If it stops halfway, the clips are already out of the list and the rest stay under "2 · Delete retired". */
 async function deleteNow(){
   if(st.busy) return;
-  const keys=Object.keys(st.marks).filter(k=>st.marks[k]==="del"&&!st.retired[k]&&!isLive(k)&&st.objs.some(o=>o.key===k));
+  const keys=Object.keys(st.marks).filter(k=>st.marks[k]==="del"&&!st.retired[k]&&!isLive(k)&&!appOf({key:k}).length&&st.objs.some(o=>o.key===k));
   if(!keys.length) return;
   const set=new Set(keys.map(k=>stripMusic(k).toLowerCase()));
   const names=$("jsons").value.split(",").map(s=>s.trim()).filter(Boolean);

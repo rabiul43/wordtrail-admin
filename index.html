@@ -101,7 +101,8 @@ body.amb #queue{display:none!important}
 #rdlg label.opt.on{border-color:var(--acc);background:var(--soft)}
 #rdlg .opt .t{flex:1;min-width:0}#rdlg .opt small{display:block;color:var(--mut)}
 #rdlg .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
-.eclip.del{opacity:.6}.eclip.del .etxt b{text-decoration:line-through;color:var(--mut)}.eclip.ret{opacity:.45}
+.eclip.del{opacity:.6}
+tr.found{animation:wtfoundbg 2.6s ease-out}@keyframes wtfoundbg{0%,55%{background:var(--soft)}100%{background:transparent}}.eclip.del .etxt b{text-decoration:line-through;color:var(--mut)}.eclip.ret{opacity:.45}
 .epl{width:40px;height:40px;min-height:0;border-radius:50%;padding:0;flex:none;background:var(--acc);color:#fff;border:0}
 .eacts{display:flex;gap:6px;flex:none}.eacts button{min-height:34px;padding:2px 12px;font-weight:700}
 .eacts .mk{background:var(--acc);color:#fff;border-color:var(--acc)}.eacts .no{color:var(--del);border-color:var(--del)}
@@ -234,16 +235,14 @@ body.bk #bkpane{flex-direction:column}
 @media (min-width:701px) and (max-width:1000px){#rail{width:76px;padding:20px 10px;align-items:center}.rl span,#rail .nv span{display:none}.rl{margin:0 0 20px}#rail .nv{justify-content:center;padding:0}}
 @media (max-width:700px){#app{flex-direction:column}#rail{order:2;width:100%;height:calc(72px + env(safe-area-inset-bottom));padding:0 0 env(safe-area-inset-bottom);flex-direction:row;gap:0;border-right:0;border-top:1px solid var(--line);overflow:visible}.rl{display:none}#rail .nv{flex:1;flex-direction:column;justify-content:center;gap:4px;padding:0;min-height:44px;border-radius:0;font-size:11px;text-align:center;background:transparent!important;box-shadow:none!important}#rail .nv.on{color:var(--acc)}}
 /* ---- Reviews tab ---- */
-#rvpane,#pfpane,#cgpane,#sypane,#qlpane,#lnpane{display:none}body.ln #lnpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.ql #qlpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.sy #sypane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.cg #cgpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.pf #pfpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}
+#rvpane,#pfpane,#cgpane,#sypane{display:none}body.sy #sypane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.cg #cgpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}body.pf #pfpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}
 body.rv #rvpane{display:block!important;flex:1;min-width:0;min-height:0;overflow:auto;padding:16px 24px}
 body.sy #moods,body.sy #list,body.sy #queue,body.sy #fpane,body.sy #cpane,body.sy #spane,body.sy #tabs,body.sy footer,body.sy #prog,body.sy #q,body.sy #fstat,body.sy #hbtns{display:none!important}
-body.ql #moods,body.ql #list,body.ql #queue,body.ql #fpane,body.ql #cpane,body.ql #spane,body.ql #tabs,body.ql footer,body.ql #prog,body.ql #q,body.ql #fstat,body.ql #hbtns{display:none!important}
-body.ln #moods,body.ln #list,body.ln #queue,body.ln #fpane,body.ln #cpane,body.ln #spane,body.ln #tabs,body.ln footer,body.ln #prog,body.ln #q,body.ln #fstat,body.ln #hbtns{display:none!important}
 body.cg #moods,body.cg #list,body.cg #queue,body.cg #fpane,body.cg #cpane,body.cg #spane,body.cg #tabs,body.cg footer,body.cg #prog,body.cg #q,body.cg #fstat,body.cg #hbtns{display:none!important}
 body.pf #moods,body.pf #list,body.pf #queue,body.pf #fpane,body.pf #cpane,body.pf #spane,body.pf #tabs,body.pf footer,body.pf #prog,body.pf #q,body.pf #fstat,body.pf #hbtns{display:none!important}
 body.rv #moods,body.rv #list,body.rv #queue,body.rv #fpane,body.rv #cpane,body.rv #spane,body.rv #tabs,body.rv footer,body.rv #prog,body.rv #q,body.rv #fstat,body.rv #hbtns{display:none!important}
 .rv-wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-#rvpane .card2,#pfpane .card2,#cgpane .card2,#sypane .card2,#qlpane .card2,#lnpane .card2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0;display:flex;flex-direction:column;gap:10px}#rvpane .card2 h4,#pfpane .card2 h4,#cgpane .card2 h4,#sypane .card2 h4,#qlpane .card2 h4,#lnpane .card2 h4{margin:0;font-size:15px}#rvpane .card2 p,#pfpane .card2 p,#cgpane .card2 p,#sypane .card2 p,#qlpane .card2 p,#lnpane .card2 p{margin:0;color:var(--mut)}
+#rvpane .card2,#pfpane .card2,#cgpane .card2,#sypane .card2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0;display:flex;flex-direction:column;gap:10px}#rvpane .card2 h4,#pfpane .card2 h4,#cgpane .card2 h4,#sypane .card2 h4{margin:0;font-size:15px}#rvpane .card2 p,#pfpane .card2 p,#cgpane .card2 p,#sypane .card2 p{margin:0;color:var(--mut)}
 .rv-view{display:flex;flex-direction:column;gap:12px;min-width:0}
 .rv-bar,.rv-seg,.rv-meta,.rv-act{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .rv-bar button.on,.rv-seg button.on{background:var(--soft);border-color:var(--acc)}
@@ -271,8 +270,6 @@ body.rv #moods,body.rv #list,body.rv #queue,body.rv #fpane,body.rv #cpane,body.r
 .cg-c{border:0;font:600 11px JetBrains Mono,monospace;padding:4px 8px;border-radius:6px;min-height:28px;min-width:44px;background:var(--bg);color:var(--mut);white-space:nowrap}
 .cg-c.y{background:var(--ok);color:var(--okfg)}.cg-c.p{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}.cg-c.n{background:color-mix(in srgb,var(--del) 14%,transparent);color:var(--del)}
 button.cg-c{cursor:pointer}span.cg-c{display:inline-block;text-align:center}
-.ql-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}.ql-r b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ql-r .ql-m{display:flex;gap:6px;flex-wrap:wrap;grid-column:1/-1}.ql-r .ql-m .chip{cursor:default}.ql-seg button small{font:600 11px JetBrains Mono,monospace;color:var(--mut);margin-left:6px}.ql-seg button.on small{color:inherit}
-.ln-t{min-width:560px}.ln-r{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(6,minmax(0,1fr));gap:8px;align-items:center;padding:9px 14px;border-top:1px solid var(--line)}.ln-r.h{border-top:0;font:600 11px JetBrains Mono,monospace;text-transform:uppercase;color:var(--mut)}.ln-r>span:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}.ln-bar{fill:var(--acc)}.ln-bar:hover{opacity:.75}.ln-ax{fill:var(--mut);font:11px JetBrains Mono,monospace}
 .cg-src{display:flex;gap:6px;flex-wrap:wrap}.cg-src .chip{cursor:default}.cg-src .chip.bad{background:color-mix(in srgb,var(--del) 14%,transparent);color:var(--del)}
 .sy-bar{height:12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden}.sy-bar i{display:block;height:100%;background:var(--acc);min-width:2px}.sy-bar.warn i{background:var(--warn)}.sy-bar.bad i{background:var(--del)}
 .sy-big{font-size:26px;font-weight:800}.sy-row{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}.sy-row:first-of-type{border-top:0}.sy-row>div{flex:1;min-width:0}.sy-row b{display:block}.sy-row .note{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
@@ -324,7 +321,7 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 </head>
 <body>
 <div id="app">
-<div id="rail" class="needconn" role="navigation" aria-label="Sections"><div class="rl"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></i><span>Wordtrail</span></div><button class="nv" data-m="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Home</span></button><button class="nv" data-m="music"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></button><button class="nv" data-m="amb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c3-8 6-8 9 0s6 8 9 0"/></svg><span>Ambient</span></button><button class="nv" data-m="cov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Covers</span></button><button class="nv" data-m="bk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span>Books</span></button><button class="nv" data-m="rv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/></svg><span>Reviews</span></button><button class="nv" data-m="pf"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Stats</span></button><button class="nv" data-m="cg"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg><span>Matrix</span></button><button class="nv" data-m="ql"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></svg><span>Quality</span></button><button class="nv" data-m="ln"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .6 3.2 2.3 3.5 5.2"/></svg><span>Learners</span></button><button class="nv" data-m="sy"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg><span>System</span></button></div>
+<div id="rail" class="needconn" role="navigation" aria-label="Sections"><div class="rl"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3l3-8 4 16 3-8h5"/></svg></i><span>Wordtrail</span></div><button class="nv" data-m="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Home</span></button><button class="nv" data-m="music"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></button><button class="nv" data-m="amb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c3-8 6-8 9 0s6 8 9 0"/></svg><span>Ambient</span></button><button class="nv" data-m="cov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Covers</span></button><button class="nv" data-m="bk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span>Books</span></button><button class="nv" data-m="rv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/></svg><span>Reviews</span></button><button class="nv" data-m="pf"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6"/></svg><span>Stats</span></button><button class="nv" data-m="cg"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg><span>Matrix</span></button><button class="nv" data-m="sy"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg><span>System</span></button></div>
 <div id="col">
 <header>
   <h1>Wordtrail <b>Admin</b></h1>
@@ -387,8 +384,6 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
   <div id="rvpane"></div>
   <div id="pfpane"></div>
   <div id="cgpane"></div>
-  <div id="qlpane"></div>
-  <div id="lnpane"></div>
   <div id="sypane"></div>
   <div id="cpane"><div class="card2"><h4>Clean-up in 2 steps</h4><p>Nothing is removed until you press. Retired files are only deleted when you press step 2.</p><div id="cbtns"></div></div></div>
   <div id="spane"><div class="card2"><h4>Connection</h4><p id="swho"></p><button id="chg2">Change token / Worker</button><button id="forget2" class="danger">Disconnect &amp; forget</button></div>
@@ -411,13 +406,14 @@ button.h-card{cursor:pointer;font:inherit}button.h-card:hover{border-color:var(-
 const TARGET=100, FREE_GB=10;
 const $=id=>document.getElementById(id), enc=encodeURIComponent;
 function ls0(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["home","music","amb","cov","bk","rv","pf","cg","sy","ql","ln"].includes(ls0("r2-which"))?ls0("r2-which"):"home")};
+const st={base:"",tok:"",objs:[],moods:{},marks:{},mood:null,idx:-1,rows:[],url:null,jsonKeys:[],retired:{},amb:false,meta:{},folderOf:{},fol:{},index:null,baked:false,busy:false,root:"",which:(["home","music","amb","cov","bk","rv","pf","cg","sy"].includes(ls0("r2-which"))?ls0("r2-which"):"home")};
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
 function saveMarks(){ ls("r2-marks:"+st.base, JSON.stringify(st.marks)); }
 const mb=n=>(n/1048576).toFixed(1)+" MB";
 const stripMusic=k=>k.replace(/^music\//,"");
 const moodOf=k=>{ k=stripMusic(k); return k.includes("/")?k.split("/")[0]:"(root)"; };
 const nameOf=k=>k.split("/").pop();
+const mm=o=>(st.mmeta&&st.mmeta[stripMusic(o.key).toLowerCase()])||{};   // music.json details of a music clip: t title, by author, lic license
 const fo=k=>st.folderOf[k]||k.split("/").slice(0,-1).join("/");          // ambient: section/item/variation
 const isLive=k=>!!(st.amb&&st.index&&st.index[fo(k)]&&st.index[fo(k)].r2_key===k);
 const isRev=f=>!!(st.index&&st.index[f]&&st.index[f].reviewed);
@@ -441,7 +437,7 @@ async function connect0(){
   st.base=st.root+(st.which==="amb"?"/ambient":"");
   ls("r2-base",st.root); forgetTok();
   try{ if($("rem").checked) localStorage.setItem("r2-tok",st.tok); else sessionStorage.setItem("r2-tok",st.tok); }catch(e){}
-  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk"); document.body.classList.toggle("rv",st.which==="rv"); document.body.classList.toggle("pf",st.which==="pf"); document.body.classList.toggle("cg",st.which==="cg"); document.body.classList.toggle("sy",st.which==="sy"); document.body.classList.toggle("ql",st.which==="ql"); document.body.classList.toggle("ln",st.which==="ln"); document.body.classList.toggle("home",st.which==="home");
+  document.body.classList.toggle("cov",st.which==="cov"); document.body.classList.toggle("bk",st.which==="bk"); document.body.classList.toggle("rv",st.which==="rv"); document.body.classList.toggle("pf",st.which==="pf"); document.body.classList.toggle("cg",st.which==="cg"); document.body.classList.toggle("sy",st.which==="sy"); document.body.classList.toggle("home",st.which==="home");
   if(st.which==="home") return connectHome();
   if(st.which==="cov") return connectCov();
   if(st.which==="bk") return connectBk();
@@ -449,8 +445,6 @@ async function connect0(){
   if(st.which==="pf") return connectPf();
   if(st.which==="cg") return connectCg();
   if(st.which==="sy") return connectSy();
-  if(st.which==="ql") return connectQl();
-  if(st.which==="ln") return connectLn();
   $("summary").textContent="Loading list…";
   const all=[]; let cursor=null;
   try{
@@ -466,11 +460,12 @@ async function connect0(){
   try{ st.marks=JSON.parse(ls("r2-marks:"+st.base)||"{}"); }catch(e){ st.marks={}; }
   await loadAmbient(all);
   if(st.which==="amb"&&!st.amb){ st.which="music"; ls("r2-which","music"); toast("Ambient has no clips yet (ambient-candidates.json not found). Showing Music."); return connect0(); }
+  st.mmeta={}; if(!st.amb){ try{ const rm=await api("/api/file?key=music.json"); if(rm.ok){ const d=JSON.parse(await rm.text()); for(const mo of Object.keys(d.moods||{})) for(const c of d.moods[mo]||[]) if(c&&c.f) st.mmeta[String(c.f).replace(/^music\//,"").toLowerCase()]={t:c.t||"",by:c.by||"",lic:c.lic||c.license||""}; } }catch(e){} }   // lets Search find music by title / author / license
   if(!st.amb&&/ambient/.test($("jsons").value)) $("jsons").value="music.json";
   updateSw(); $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent; document.body.classList.toggle("amb",st.amb);
   $("mode").textContent=st.amb?"AMBIENT BUCKET":"MUSIC BUCKET"; document.body.classList.add("conn");
   regroup(); st.mood=Object.keys(st.moods).sort()[0]||null; st.idx=-1; st.path=[];
-  $("sync").disabled=false; renderNav(); renderList(); ambDeepLink();
+  $("sync").disabled=false; renderNav(); renderList(); ambDeepLink(); musDeepLink();
 }
 
 /* Ambient mode switches on only when ambient-candidates.json is in the bucket; the music bucket behaves as before. */
@@ -653,9 +648,9 @@ function renderExplorer(sec,words){
 }
 
 /* Link from the app: <dashboard>/#amb=<sound>&f=<file name>&u=<file address>&by=<author> opens the clip that is playing. */
-function readLink(){ const h=location.hash; if(!/^#amb=/.test(h)) return null; try{ const p=new URLSearchParams(h.slice(1)); return {n:p.get("amb")||"",f:p.get("f")||"",u:p.get("u")||"",by:p.get("by")||""}; }catch(e){ return null; } }
+function readLink(){ const h=location.hash, t=(/^#(amb|mus)=/.exec(h)||[])[1]; if(!t) return null; try{ const p=new URLSearchParams(h.slice(1)); return {type:t,n:p.get(t)||"",f:p.get("f")||"",u:p.get("u")||"",by:p.get("by")||""}; }catch(e){ return null; } }
 function ambDeepLink(){
-  const L=st.link; if(!L||!st.amb) return; st.link=null;
+  const L=st.link; if(!L||L.type==="mus"||!st.amb) return; st.link=null;
   try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){}   // so Refresh does not jump again
   const all=ambAll(), base=s=>String(s||"").split("?")[0].split("/").pop().toLowerCase(), M=o=>st.meta[o.key]||{};
   let hit=L.u?all.find(o=>M(o).url===L.u):null;
@@ -672,9 +667,28 @@ function ambDeepLink(){
     toast("The exact file is not in this list; showing matches for \""+$("q").value+"\".");
   }
 }
+/* Music link from the app: <dashboard>/#mus=<mood>&f=<file>&by=<author> opens the Music tab on that clip. */
+function musDeepLink(){
+  const L=st.link; if(!L||L.type!=="mus"||st.amb||!st.objs) return; st.link=null;
+  try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){}
+  const all=Object.values(st.moods).flat(), norm=x=>String(x||"").toLowerCase().replace(/^music\//,""), want=norm(L.f), base=x=>x.split("/").pop();
+  let hit=all.find(o=>norm(o.key)===want);
+  if(!hit){ const c=all.filter(o=>base(norm(o.key))===base(want)); hit=c.find(o=>moodOf(o.key)===L.n)||c[0]||null; }
+  $("q").value=""; $("fstat").value="";
+  if(hit){
+    st.mood=moodOf(hit.key); const j=(st.moods[st.mood]||[]).indexOf(hit); st.idx=j; renderNav(); renderList();
+    const e=$("r"+j); if(e){ e.scrollIntoView({block:"center"}); e.classList.add("found"); }
+    const m=mm(hit);
+    toast("Found: "+(m.t||nameOf(hit.key))+" · "+nice(st.mood)+(m.by?" · "+m.by:"")+(st.retired[hit.key]?" · RETIRED":""));
+  }else{
+    st.idx=-1; $("q").value=base(want).replace(/\.mp3$/i,""); renderList();
+    toast("The exact file is not in this list; showing matches for \""+$("q").value+"\".");
+  }
+}
 addEventListener("hashchange",()=>{ const L=readLink(); if(!L) return; st.link=L;
-  if(st.which!=="amb"){ st.which="amb"; ls("r2-which","amb"); updateSw(); connect(); }
-  else if(document.body.classList.contains("conn")) ambDeepLink(); });
+  const w=L.type==="mus"?"music":"amb";
+  if(st.which!==w){ st.which=w; ls("r2-which",w); updateSw(); connect(); }
+  else if(document.body.classList.contains("conn")){ ambDeepLink(); musDeepLink(); } });
 
 function renderQueue(){
   const q=$("queue"); q.textContent=""; if(!st.rows.length) return;
@@ -713,7 +727,7 @@ function renderList(){
   if(st.amb){ renderExplorer(sec,words); renderFolders(); return; }
   if(!st.mood&&!searching){ renderQueue(); return; }
   const f=$("fstat").value;
-  let pool=searching?Object.values(st.moods).flat().filter(o=>{ const k=stripMusic(o.key).toLowerCase(); return words.every(w=>k.includes(w)); }).sort((a,b)=>a.key.localeCompare(b.key,undefined,{numeric:true})):(st.moods[st.mood]||[]);
+  let pool=searching?Object.values(st.moods).flat().filter(o=>{ const m=mm(o), raw=(stripMusic(o.key)+" "+[m.t,m.by,m.lic].filter(Boolean).join(" ")).toLowerCase(), k=raw+" "+raw.replace(/[-_\/.]+/g," "); return words.every(w=>k.includes(w)); }).sort((a,b)=>a.key.localeCompare(b.key,undefined,{numeric:true})):(st.moods[st.mood]||[]);
   if(searching&&st.amb) pool.sort((a,b)=>fo(a.key).localeCompare(fo(b.key))||a.key.localeCompare(b.key,undefined,{numeric:true}));
   st.rows=pool.filter(o=>!f||(f==="unrev"?!isRev(fo(o.key)):(st.marks[o.key]||"none")===f));
   if(st.amb){ renderFocus(sec); renderQueue(); renderFolders(); return; }
@@ -724,6 +738,7 @@ function renderList(){
     const v=st.retired[o.key]?"ret":(st.marks[o.key]||""); const tr=tbl.insertRow(); tr.className=v+(i===st.idx?" playing":""); tr.id="r"+i;
     const c0=tr.insertCell(); const p=document.createElement("button"); p.className="sm"; p.textContent="▶"; p.onclick=()=>play(i); c0.appendChild(p);
     const c1=tr.insertCell(); c1.className="name"; c1.textContent=searching?stripMusic(o.key):nameOf(o.key);
+    { const m=mm(o); if(m.t||m.by){ const sm=el("small",null,[m.t,m.by,m.lic].filter(Boolean).join(" · ")); sm.style.cssText="display:block;color:var(--mut)"; c1.appendChild(sm); } }
     const c2=tr.insertCell(); c2.textContent=mb(o.size); c2.style.color="var(--mut)";
     const c3=tr.insertCell(); c3.style.whiteSpace="nowrap";
     const kb=document.createElement("button"); kb.className="sm"; kb.textContent="Keep"; kb.onclick=()=>mark(i,"keep");
@@ -1514,7 +1529,7 @@ async function connectHome(){
   }));
 }
 const ago=t=>{ const s=Math.max(0,(Date.now()-t)/1000); return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" d ago"; };
-const IC={amb:'<path d="M3 12c3-8 6-8 9 0s6 8 9 0"/>',cov:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',ql:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>',sy:'<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',cg:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',pf:'<path d="M5 20V11M12 20V4M19 20v-6"/>',rv:'<path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/>',bk:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/>',ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',chev:'<path d="m9 6 6 6-6 6"/>',pulse:'<path d="M3 12h3l3-8 4 16 3-8h5"/>'};
+const IC={amb:'<path d="M3 12c3-8 6-8 9 0s6 8 9 0"/>',cov:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',sy:'<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',cg:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',pf:'<path d="M5 20V11M12 20V4M19 20v-6"/>',rv:'<path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8L6.7 19.7l1-6L3.3 9.4l6-.9z"/>',bk:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/>',ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',chev:'<path d="m9 6 6 6-6 6"/>',pulse:'<path d="M3 12h3l3-8 4 16 3-8h5"/>'};
 const ic=(k,sz)=>{ const e=document.createElement("span"); e.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'; return e.firstChild; };
 function hmRender(){
   const d=hm.d, p=$("homepane"); if(!d||st.which!=="home") return;
@@ -1556,7 +1571,6 @@ function hmRender(){
     if(y.verBad) at.unshift([1,"App version is not the expected one","Live "+y.ver+" · expected "+y.expect,"sy","Check"]);
     if(y.pct!=null&&y.pct>=80) at.unshift([y.pct,"R2 storage is "+y.pct+"% of the free tier",y.pctAt,"sy","Check"]);
     if(y.down.length) at.unshift([y.down.length,"Workers not answering",y.down.join(", "),"sy","Check"]); }
-  { const q=qlLast(); if(q&&q.total>0) at.push([q.total,"Books with quality gaps",q.sub+" · as of "+ago(q.at),"ql","Open"]); }
   if(d.rv&&d.rv.reported>0) at.unshift([d.rv.reported,"Reviews with reports",nfmt(d.rv.hidden)+" hidden from readers","rv","Review"]);
   if(d.bk&&d.bk.ready>0) at.push([d.bk.ready,"Removed texts ready to delete","Older than 3 days","bk","Open"]);
   if(A&&A.folders>A.rev) at.push([A.folders-A.rev,"Ambient folders not reviewed","Ambient tab","amb","Open"]);
@@ -1942,11 +1956,11 @@ async function cgPacks(){
 }
 async function cgLoad(force){
   if(cg.loading) return; if(!force&&cg.d&&Date.now()-cg.at<600000){ cgRender(); return; }
-  cg.loading=true; cgRender(); qlRender();
+  cg.loading=true; cgRender();
   const names=["Catalog","Text status","Uploaded texts","Covers","Sync index","Packs","IELTS list"], fns=[cgCatalog,cgTexts,cgUploads,cgCovers,cgSync,cgPacks,cgAcademic];
   const res=await Promise.all(fns.map(f=>f().then(v=>({v}),e=>({e:e.message||String(e)}))));
   cg.src=names.map((n,i)=>({n,ok:!res[i].e,err:res[i].e||"",note:i===5&&res[i].v?res[i].v.via+" · "+res[i].v.count+" files":""}));
-  cg.d=res[0].e?null:cgBuild(res[0].v,res.slice(1).map(r=>r.v||null)); cg.at=Date.now(); cg.loading=false; cgRender(); qlSave(); qlRender();
+  cg.d=res[0].e?null:cgBuild(res[0].v,res.slice(1).map(r=>r.v||null)); cg.at=Date.now(); cg.loading=false; cgRender();
 }
 function cgBuild(cat,[tx,up,cv,sy,pk,ac]){
   const rows=Object.keys(cat).sort((a,b)=>a-b).map(id=>{
@@ -2015,133 +2029,6 @@ async function connectCg(){
   st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Coverage";
   $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
   updateSw(); document.body.classList.add("conn"); cgRender(); cgLoad(false);
-}
-
-
-/* ---------- Quality: work queues built from the Coverage data, ordered by listens (nothing is written) ---------- */
-const ql={q:"cover",shown:25,s:undefined,sErr:"",rv:undefined,rvErr:"",loading:false};
-const QL_Q=[
- ["cover","No cover",r=>r.c.cover==="n","Covers tab: add one.","cov"],
- ["text","No own text",r=>r.c.text==="n"||r.c.text==="p","“source” = a copy exists online but you have none of your own. Books tab.","bk"],
- ["sync","Sync not precise",r=>r.c.sync==="n"||r.c.sync==="p","Some or all tracks are not timed to the text.",null],
- ["packs","Missing packs",r=>r.c.tr==="n"||r.c.tfng==="n"||r.c.sound==="n","No translation, TFNG or sound pack in the packs/ folder.",null],
- ["ielts","IELTS missing packs",r=>r.c.ielts==="y"&&(r.c.tr==="n"||r.c.tfng==="n"||r.c.sound==="n"),"IELTS-friendly books that still lack a pack: the most useful to finish first.",null],
- ["rev","Reviews",null,"Hidden or reported reviews are handled in the Reviews tab.","rv"]];
-const qlGaps=r=>{ const g=[]; if(r.c.cover==="n") g.push("no cover"); if(r.c.text==="n") g.push("no text"); else if(r.c.text==="p") g.push("source text only"); if(r.c.sync==="n") g.push("no sync"); else if(r.c.sync==="p") g.push("sync "+r.l.sync);
-  if(r.c.tr==="n") g.push("no translation"); if(r.c.tfng==="n") g.push("no TFNG"); if(r.c.sound==="n") g.push("no sound"); return g; };
-function qlRows(){
-  if(!cg.d) return null; let rows=cg.d.rows; if(cg.en) rows=rows.filter(r=>/^english$/i.test(r.lang));
-  const out={}; for(const [id,,fn] of QL_Q){ if(!fn) continue; const a=rows.filter(fn); a.sort((x,y)=>((ql.s&&ql.s[y.id]?+ql.s[y.id][0]||0:0)-(ql.s&&ql.s[x.id]?+ql.s[x.id][0]||0:0))||(x.id-y.id)); out[id]=a; }
-  out.all=rows; return out;
-}
-function qlSave(){ try{ const q=qlRows(); if(!q) return; const ids=new Set(); const parts=[]; for(const [id,l,fn] of QL_Q){ if(!fn) continue; q[id].forEach(r=>ids.add(r.id)); if(q[id].length) parts.push(nfmt(q[id].length)+" "+l.toLowerCase()); }
-  ls("ql-last",JSON.stringify({at:Date.now(),total:ids.size,sub:parts.slice(0,3).join(" · ")||"nothing missing"})); }catch(e){} }
-function qlLast(){ try{ const j=JSON.parse(ls("ql-last")||"null"); return j&&j.at?j:null; }catch(e){ return null; } }
-async function qlLoadExtra(){
-  if(ql.s===undefined){ try{ ql.s=await pfFetchStats(); }catch(e){ ql.s=null; ql.sErr=e.message||String(e); } }
-  if(ql.rv===undefined){ if(!rv.base) ql.rv=null; else{ try{ ql.rv=await rvApi("/rv/summary"); }catch(e){ ql.rv=null; ql.rvErr=e.message||String(e); } } }
-  qlRender();
-}
-function qlCsv(rows,name){
-  const q=v=>'"'+String(v).replace(/"/g,'""')+'"', out=[["id","title","language","listens","gaps"].map(q).join(",")];
-  rows.forEach(r=>out.push([r.id,r.title,r.lang,ql.s&&ql.s[r.id]?ql.s[r.id][0]:"",qlGaps(r).join("; ")].map(q).join(",")));
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob(["﻿"+out.join("\n")],{type:"text/csv"})); a.download="wordtrail-quality-"+name+".csv"; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000);
-}
-function qlRender(){
-  const p=$("qlpane"); if(!p||st.which!=="ql") return; const keep=p.scrollTop, w=el("div","rv-wrap"); p.textContent=""; p.appendChild(w);
-  const bar=el("div","rv-bar"); bar.appendChild(el("b",null,"Quality")); bar.appendChild(el("span","rv-sp"));
-  const busy=cg.loading, rf=el("button",null,busy?"Loading…":"Refresh"); rf.disabled=busy; rf.onclick=()=>{ ql.s=undefined; ql.rv=undefined; cgLoad(true); qlLoadExtra(); }; bar.appendChild(rf); w.appendChild(bar);
-  if(cg.loading&&!cg.d){ w.appendChild(el("div","note","Loading every source…")); p.scrollTop=keep; return; }
-  if(!cg.d){ const c=el("div","card2 rv-err"); c.append(el("b",null,"The catalog could not be loaded"),el("p",null,"Check the catalog address under Covers or Books settings. Details are on the Matrix page.")); w.appendChild(c); p.scrollTop=keep; return; }
-  const bad=(cg.src||[]).filter(x=>!x.ok); if(bad.length) w.appendChild(el("div","note","Not loaded: "+bad.map(x=>x.n).join(", ")+". Queues that depend on them stay empty, not clean."));
-  if(ql.s===null) w.appendChild(el("div","note","Listen counts are not available ("+ql.sErr+"), so books are listed by number, not by popularity."));
-  const Q=qlRows(), seg=el("div","rv-seg ql-seg");
-  QL_Q.forEach(([id,l])=>{ const n=id==="rev"?(ql.rv?ql.rv.reported:null):Q[id].length; const b=el("button",ql.q===id?"on":"",l); if(n!=null) b.appendChild(el("small",null,nfmt(n))); b.onclick=()=>{ ql.q=id; ql.shown=25; qlRender(); }; seg.appendChild(b); });
-  w.appendChild(seg);
-  const def=QL_Q.find(x=>x[0]===ql.q);
-  if(ql.q==="rev"){
-    const c=el("div","card2"); c.appendChild(el("h4",null,"Reviews needing attention"));
-    if(!rv.base) c.appendChild(el("p",null,"The Reviews Worker is not set up yet (Reviews tab)."));
-    else if(ql.rv===undefined) c.appendChild(el("p",null,"Loading…"));
-    else if(!ql.rv) c.appendChild(el("p",null,"Could not load: "+ql.rvErr));
-    else c.appendChild(el("p",null,nfmt(ql.rv.reported)+" with reports · "+nfmt(ql.rv.hidden)+" hidden from readers."));
-    const g=el("button","primary","Open Reviews"); g.onclick=()=>goMode("rv"); c.appendChild(g); w.appendChild(c); p.scrollTop=keep; return; }
-  const rows=Q[ql.q], note=el("div","note",nfmt(rows.length)+" of "+nfmt(Q.all.length)+" books"+(cg.en?" (English only)":"")+". "+def[3]+(ql.s?" Most listened first.":"")); w.appendChild(note);
-  const ctl=el("div","pf-ctl"), en=el("label"), cb=el("input"), ex=el("button",null,"Export CSV ("+nfmt(rows.length)+")"); cb.type="checkbox"; cb.checked=cg.en; cb.onchange=()=>{ cg.en=cb.checked; ql.shown=25; qlSave(); qlRender(); }; en.append(cb,"English only");
-  ex.style.width="auto"; ex.style.padding="0 14px"; ex.onclick=()=>qlCsv(rows,ql.q); ctl.append(en,ex); w.appendChild(ctl);
-  const box=el("div","card2"); box.style.padding="0";
-  if(!rows.length) box.appendChild(el("div","ql-r","Nothing in this queue."));
-  rows.slice(0,ql.shown).forEach(r=>{ const row=el("div","ql-r"), t=el("div"); t.append(el("b",null,r.title),el("span","note","Book #"+r.id+(ql.s&&ql.s[r.id]?" · "+nfmt(ql.s[r.id][0])+" listens":""))); row.appendChild(t);
-    if(def[4]){ const g=el("button",null,"Open"); g.onclick=()=>{ toast("Book #"+r.id+": find it with the search box."); goMode(def[4]); }; row.appendChild(g); }
-    const m=el("div","ql-m"); qlGaps(r).forEach(x=>m.appendChild(el("span","chip no",x))); row.appendChild(m); box.appendChild(row); });
-  w.appendChild(box);
-  if(rows.length>ql.shown){ const m=el("button",null,"Show more ("+nfmt(rows.length-ql.shown)+" left)"); m.onclick=()=>{ ql.shown+=50; qlRender(); }; w.appendChild(m); }
-  p.scrollTop=keep;
-}
-async function connectQl(){
-  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Quality";
-  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
-  updateSw(); document.body.classList.add("conn"); qlRender(); cgLoad(false); qlLoadExtra();
-}
-
-
-/* ---------- Learners: opt-in, anonymous daily summaries (stats Worker GET /learn; see tools/learn-patch) ---------- */
-const ln={d:null,err:null,loading:false,at:0};
-async function lnFetch(){
-  let r; try{ r=await fetch(perf.stats.replace(/\/+$/,"")+"/learn",{headers:{Authorization:"Bearer "+st.tok}}); }catch(e){ throw new Error("Can't reach the stats Worker. Check its address on the Stats page under “Data sources”."); }
-  let j=null; try{ j=await r.json(); }catch(e){}
-  if(r.status===401) throw new Error("The stats Worker did not accept the token (401). It needs the same ADMIN_TOKEN secret (tools/learn-patch/README.md).");
-  if(r.status===404||(r.ok&&!(j&&j.v===1&&Array.isArray(j.days)))){ const e=new Error("The stats Worker has no /learn endpoint yet. Add it with tools/learn-patch (README there)."); e.setup=true; throw e; }
-  if(r.status===501) throw new Error("The stats Worker has no D1 database bound as DB (tools/learn-patch/README.md, step 4).");
-  if(!r.ok) throw new Error("The stats Worker answered HTTP "+r.status+".");
-  return j;
-}
-async function lnLoad(force){
-  if(ln.loading) return; if(!force&&ln.d&&Date.now()-ln.at<300000){ lnRender(); return; }
-  ln.loading=true; ln.err=null; lnRender();
-  try{ ln.d=await lnFetch(); ln.at=Date.now(); }catch(e){ ln.err=e; }
-  ln.loading=false; lnRender();
-}
-function lnDays(d){ /* every one of the last 30 finished days, zero-filled, oldest first */
-  const by={}, out=[], now=Date.now(); d.days.forEach(x=>{ by[x.day]=x; });
-  for(let i=30;i>=1;i--){ const k=new Date(now-i*864e5).toISOString().slice(0,10); out.push(by[k]||{day:k,devices:0,m:0,r:0,c:0,n:0,q:0}); } return out;
-}
-function lnPlot(days){
-  const W=640,H=170,L=34,B=22,T=8,mx=Math.max(1,...days.map(x=>x.devices)), bw=(W-L)/days.length, ns="http://www.w3.org/2000/svg", svg=document.createElementNS(ns,"svg");
-  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("role","img"); svg.setAttribute("aria-label","Learners per day, last 30 days");
-  const add=(t,a,tx)=>{ const e=document.createElementNS(ns,t); for(const k in a) e.setAttribute(k,a[k]); if(tx!=null) e.textContent=tx; svg.appendChild(e); return e; };
-  [0,mx].forEach(v=>{ const y=T+(H-B-T)*(1-v/mx); add("line",{x1:L,x2:W,y1:y,y2:y,stroke:"var(--line)"}); add("text",{x:L-6,y:y+4,"text-anchor":"end",class:"ln-ax"},v); });
-  days.forEach((x,i)=>{ const h=(H-B-T)*x.devices/mx, bx=L+i*bw+1.5, r=add("rect",{x:bx,y:H-B-h,width:Math.max(2,bw-3),height:Math.max(h,x.devices?2:0),rx:2,class:"ln-bar"}); const t=document.createElementNS(ns,"title"); t.textContent=x.day+": "+x.devices+" learner"+(x.devices===1?"":"s")+", "+x.m+" min"; r.appendChild(t); });
-  add("text",{x:L,y:H-6,class:"ln-ax"},days[0].day.slice(5)); add("text",{x:W,y:H-6,"text-anchor":"end",class:"ln-ax"},days[days.length-1].day.slice(5));
-  return svg;
-}
-function lnRender(){
-  const p=$("lnpane"); if(!p||st.which!=="ln") return; const keep=p.scrollTop, w=el("div","rv-wrap"); p.textContent=""; p.appendChild(w);
-  const bar=el("div","rv-bar"); bar.appendChild(el("b",null,"Learners")); if(ln.at&&!ln.loading) bar.appendChild(el("span","note","Updated "+sysT(ln.at))); bar.appendChild(el("span","rv-sp"));
-  const rf=el("button",null,ln.loading?"Loading…":"Refresh"); rf.disabled=ln.loading; rf.onclick=()=>lnLoad(true); bar.appendChild(rf); w.appendChild(bar);
-  if(ln.loading&&!ln.d){ w.appendChild(el("div","note","Loading…")); p.scrollTop=keep; return; }
-  if(ln.err){ const c=el("div","card2 rv-err"); c.append(el("b",null,ln.err.setup?"Not set up yet":"Could not load"),el("p",null,ln.err.message)); w.appendChild(c); p.scrollTop=keep; return; }
-  if(!ln.d){ p.scrollTop=keep; return; }
-  const days=lnDays(ln.d), last7=days.slice(-7), sum=(a,f)=>a.reduce((s,x)=>s+x[f],0), act=ln.d.active||{}, activeDays=last7.filter(x=>x.devices>0).length, dev7=sum(last7,"devices");
-  w.appendChild(el("div","note","Only people who turned on “Share anonymous learning activity” are counted, so these figures describe them, not all readers. Finished days only: today appears tomorrow."));
-  if(!ln.d.days.length){ const c=el("div","card2"); c.append(el("h4",null,"No data yet"),el("p",null,"Nobody has opted in yet, or no day has finished since the app update went out. Turn it on yourself in the app (Settings > Audio) and come back tomorrow to check the path works.")); w.appendChild(c); p.scrollTop=keep; return; }
-  const k=el("div","pf-kpi"), kp=(l,v,sub)=>{ const d=el("div"); d.append(el("small",null,l),el("b",null,v),el("small",null,sub)); k.appendChild(d); };
-  kp("Yesterday",nfmt(act.d1||0),"learners"); kp("Last 7 days",nfmt(act.d7||0),"learners"); kp("Last 30 days",nfmt(act.d30||0),"learners");
-  kp("Came back",nfmt(ln.d.returning7||0),"on 2+ days this week");
-  kp("Minutes a day",dev7?Math.round(sum(last7,"m")/dev7)+"":"–","per learner, last 7 days");
-  const rv=sum(last7,"r"); kp("Review accuracy",rv?Math.round(sum(last7,"c")/rv*100)+"%":"–",rv?nfmt(rv)+" reviews, last 7 days":"no reviews");
-  w.appendChild(k);
-  const pl=el("div","pf-plot"); pl.appendChild(el("h4",null,"Learners per day")); pl.firstChild.style.margin="0 0 6px"; pl.appendChild(lnPlot(days)); w.appendChild(pl);
-  const sc=el("div","pf-scroll"), t=el("div","ln-t"), h=el("div","ln-r h"); ["Day","Learners","Minutes","Reviews","Correct","New words","Questions"].forEach(x=>h.appendChild(el("span",null,x))); t.appendChild(h);
-  days.slice(-14).reverse().forEach(x=>{ const r=el("div","ln-r"); [x.day,nfmt(x.devices),nfmt(x.m),nfmt(x.r),x.r?Math.round(x.c/x.r*100)+"%":"–",nfmt(x.n),nfmt(x.q)].forEach(v=>r.appendChild(el("span",null,v))); t.appendChild(r); });
-  sc.appendChild(t); w.appendChild(sc);
-  const ex=el("button",null,"Export CSV (30 days)"); ex.style.width="auto"; ex.style.padding="0 14px"; ex.onclick=()=>{ const q=v=>'"'+String(v)+'"', o=[["day","learners","minutes","reviews","correct","new_words","questions"].map(q).join(",")]; days.forEach(x=>o.push([x.day,x.devices,x.m,x.r,x.c,x.n,x.q].map(q).join(","))); const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob(["﻿"+o.join("\n")],{type:"text/csv"})); a.download="wordtrail-learners.csv"; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); }; w.appendChild(ex);
-  p.scrollTop=keep;
-}
-async function connectLn(){
-  st.amb=false; document.body.classList.remove("amb"); $("summary").textContent="Learners";
-  $("gwho").textContent="Connected: "+st.root.replace(/^https?:\/\//,""); $("swho").textContent=$("gwho").textContent;
-  updateSw(); document.body.classList.add("conn"); lnRender(); lnLoad(false);
 }
 
 /* ---------- System: R2 storage, Worker health, free AI allowance, live app version ---------- */
@@ -2265,7 +2152,7 @@ async function hmSys(){
 document.addEventListener("keydown",e=>{
   if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; if(st.which==="home") return; const a=$("a");
   if(st.which==="cov"){ if(e.key==="ArrowRight") covStep(1); else if(e.key==="ArrowLeft") covStep(-1); return; }
-  if(st.which==="rv"||st.which==="pf"||st.which==="cg"||st.which==="sy"||st.which==="ql"||st.which==="ln") return;
+  if(st.which==="rv"||st.which==="pf"||st.which==="cg"||st.which==="sy") return;
   if(st.which==="bk"){ if(e.key==="ArrowRight") bkStep(1); else if(e.key==="ArrowLeft") bkStep(-1); return; }
   if(e.code==="Space"){ e.preventDefault(); a.paused?a.play():a.pause(); }
   else if(e.key==="ArrowRight") play(Math.min(st.rows.length-1,st.idx+1));
@@ -2279,7 +2166,7 @@ document.addEventListener("keydown",e=>{
 $("tok").addEventListener("keydown",e=>{ if(e.key==="Enter") connect(); }); $("go").onclick=connect; $("retire").onclick=retire; $("purge").onclick=purge; $("delnow").onclick=deleteNow; $("sync").onclick=syncAll; $("fstat").onchange=renderList; $("q").oninput=()=>{ st.idx=-1; renderList(); };
 const DEFAULT_WORKER="https://wordtrail-admin.test-rabiulclaud-1.workers.dev"; $("base").value=ls("r2-base")||DEFAULT_WORKER;
 let t0=ls0("r2-tok")||""; try{ if(!t0){ t0=sessionStorage.getItem("r2-tok")||""; if(t0) $("rem").checked=false; } }catch(e){}
-st.link=readLink(); if(st.link){ st.which="amb"; ls("r2-which","amb"); }
+st.link=readLink(); if(st.link){ st.which=st.link.type==="mus"?"music":"amb"; ls("r2-which",st.which); }
 $("tok").value=t0; updateSw();
 document.querySelectorAll("#rail .nv").forEach(b=>b.onclick=()=>{ if(b.dataset.m===st.which) return; $("a").pause(); st.which=b.dataset.m; ls("r2-which",st.which); updateSw(); connect(); });
 $("gear").onclick=e=>{ e.stopPropagation(); $("gmenu").hidden=!$("gmenu").hidden; };
